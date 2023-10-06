@@ -20,12 +20,9 @@ export class EditCategoriesComponent implements OnInit {
       const id = queryParams.get('id');
       if (id !== null) {
         this.id = id;
-        const data = {
-          domain_name : 'tenant1',
-          id : this.id
-        }
-        this.categories.getCategory(data).subscribe(data => {
-          this.categoryForm.patchValue(data);
+
+        this.categories.getCategory(id).subscribe(data => {
+          this.categoryForm.patchValue(data.payload);
         }, error => {
           Swal.fire(
             'Lỗi!',
@@ -44,7 +41,6 @@ export class EditCategoriesComponent implements OnInit {
     const dataToSend = {
       ...this.categoryForm.value,
       update_date: new Date().toISOString(),
-      domain_name : 'tenant1',
       id : this.id
     };
     
