@@ -13,6 +13,10 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       {
+        path: 'categories',
+        loadChildren: () => import('./views/pages/categories/categories.module').then(m => m.CategoriesModule)
+      },
+      {
         path: 'dashboard',
         loadChildren: () => import('./views/pages/dashboard/dashboard.module').then(m => m.DashboardModule)
       },
