@@ -43,7 +43,7 @@ export class EditCategoriesComponent implements OnInit {
       update_date: new Date().toISOString(),
       id : this.id
     };
-    
+
       this.categories.updateCategory(dataToSend).subscribe(
         response => {
          Swal.fire(
@@ -64,6 +64,6 @@ export class EditCategoriesComponent implements OnInit {
     }else {
       alert("Không để trống")
     }
-    
+
   }
 }

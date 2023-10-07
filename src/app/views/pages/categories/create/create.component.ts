@@ -23,7 +23,7 @@ export class CreateComponent implements OnInit {
         created_date: new Date().toISOString(),
         update_date: null,
       };
-      console.log(dataToSend);
+      // console.log(dataToSend);
       this.categories.createCategory(dataToSend).subscribe(
         (response) => {
           this.categoryForm.reset();

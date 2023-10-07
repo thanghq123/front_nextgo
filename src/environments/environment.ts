@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-apiTennatv1 : 'http://127.0.0.1:8000/tenant/api/v1/',
-domain_name : 'tenant1'
+  apiTennatv1 : 'http://127.0.0.1:8000/tenant/api/v1/',
+  domain_name : 'tenant1'
 };
 
 /*

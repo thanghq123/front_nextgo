@@ -12,7 +12,7 @@ import Swal from 'sweetalert2';
 })
 export class CategoriesListComponent implements OnInit, AfterViewInit {
   ListsCategories: Observable<Categories[]>;
-  
+
   constructor(private categoriesService: CategoriesService) {
     this.ListsCategories = new Observable();
   }
@@ -58,7 +58,7 @@ export class CategoriesListComponent implements OnInit, AfterViewInit {
         // If confirmed, delete the category
         this.categoriesService.deleteCategory(id).subscribe(
           (response) => {
-           
+
             Swal.fire('Đã xóa!', 'Danh mục của bạn đã được xóa.', 'success');
             // Navigate to the list after successful deletion
             location.reload();
@@ -76,6 +76,8 @@ export class CategoriesListComponent implements OnInit, AfterViewInit {
       (response : any) => {
         if(response.status == true){
           this.ListsCategories =of(response.payload);
+          // console.log(this.ListsCategories);
+
           this.ListsCategories.subscribe((categories) => {
             setTimeout(() => {
                 const dataTable = new DataTable('#dataTableExample');
@@ -93,6 +95,6 @@ export class CategoriesListComponent implements OnInit, AfterViewInit {
         Swal.fire('Lỗi!', 'Có lỗi xảy ra khi xóa danh mục.', 'error');
       }
     );
-    
+
   }
 }

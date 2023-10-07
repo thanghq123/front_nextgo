@@ -17,6 +17,14 @@ const routes: Routes = [
         loadChildren: () => import('./views/pages/categories/categories.module').then(m => m.CategoriesModule)
       },
       {
+        path: 'brands',
+        loadChildren: () => import('./views/pages/brands/brands.module').then(m => m.BrandsModule)
+      },
+      {
+        path: 'item-units',
+        loadChildren: () => import('./views/pages/item-units/item-units.module').then(m => m.ItemUnitsModule)
+      },
+      {
         path: 'dashboard',
         loadChildren: () => import('./views/pages/dashboard/dashboard.module').then(m => m.DashboardModule)
       },
@@ -56,11 +64,11 @@ const routes: Routes = [
         path: 'general',
         loadChildren: () => import('./views/pages/general/general.module').then(m => m.GeneralModule)
       },
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' }, 
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       // { path: '**', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },
-  { 
+  {
     path: 'error',
     component: ErrorPageComponent,
     data: {
