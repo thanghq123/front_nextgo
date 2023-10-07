@@ -31,8 +31,9 @@ export class CreateComponent implements OnInit {
           this.router.navigate(['../categories/list']);
         },
         (error) => {
-          console.log(error);
-          Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
+          if(error.error.status == false){
+            Swal.fire('Lỗi!',`${error.error.meta.errors.name[0]}`, 'error');
+          }
         }
       );
     } else {

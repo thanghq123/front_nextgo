@@ -61,10 +61,12 @@ export class CategoriesListComponent implements OnInit, AfterViewInit {
            
             Swal.fire('Đã xóa!', 'Danh mục của bạn đã được xóa.', 'success');
             // Navigate to the list after successful deletion
-            location.reload();
+            this.refreshCategories();
           },
           (error) => {
-            Swal.fire('Lỗi!', 'Có lỗi xảy ra khi xóa danh mục.', 'error');
+            if(error.success == false){
+              Swal.fire('Lỗi!',`${error.meta.name}`, 'error');
+            }
           }
         );
       }
@@ -90,6 +92,7 @@ export class CategoriesListComponent implements OnInit, AfterViewInit {
         // Navigate to the list after successful deletion
       },
       (error) => {
+        console.log(error);
         Swal.fire('Lỗi!', 'Có lỗi xảy ra khi xóa danh mục.', 'error');
       }
     );

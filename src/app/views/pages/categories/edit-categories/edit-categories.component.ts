@@ -9,6 +9,7 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
   styleUrls: ['./edit-categories.component.scss']
 })
 export class EditCategoriesComponent implements OnInit {
+  originalData: any;
   id:string;
   categoryForm = new FormGroup({
     name: new FormControl('', Validators.required)
@@ -23,12 +24,13 @@ export class EditCategoriesComponent implements OnInit {
 
         this.categories.getCategory(id).subscribe(data => {
           this.categoryForm.patchValue(data.payload);
+          this.originalData = { ...data.payload };
         }, error => {
-          Swal.fire(
-            'Lỗi!',
-            'Có lỗi xảy ra khi gửi dữ liệu.',
-            'error'
-          );
+          console.log(error.error.meta);
+          if(error.error.status == false){
+            Swal.fire('Lỗi!',`${error.error.meta}`, 'error');
+            this.router.navigate(['../categories/list']);
+          }
         });
       } else {
         this.router.navigate(['../categories/list']);
@@ -36,6 +38,9 @@ export class EditCategoriesComponent implements OnInit {
     })
   }
 
+  isFormChanged() {
+    return this.categoryForm.value.name !== this.originalData.name;
+  }
   onSubmit() {
     if (this.categoryForm.valid) {
     const dataToSend = {
@@ -54,11 +59,9 @@ export class EditCategoriesComponent implements OnInit {
         this.router.navigate(['/categories/list'])
         },
         error => {
-          Swal.fire(
-            'Lỗi!',
-            'Có lỗi xảy ra khi gửi dữ liệu.',
-            'error'
-          );
+          if(error.error.status == false){
+            Swal.fire('Lỗi!',`Có lỗi xảy ra vui lòng hiện hệ quản trị viên`, 'error');
+          }
         }
       );
     }else {
