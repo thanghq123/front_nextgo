@@ -6,7 +6,7 @@ import { environment } from "src/environments/environment";
   providedIn: "root",
 })
 export class BrandsService {
-  private apiUrl = environment.apiTennatv1 + "brands";
+  private apiUrl = environment.apiTennatv1 + "categories";
   private readonly domain_name: String;
 
   constructor(private http: HttpClient) {

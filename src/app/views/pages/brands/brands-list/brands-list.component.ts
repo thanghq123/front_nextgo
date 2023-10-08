@@ -82,13 +82,17 @@ export class BrandsListComponent implements OnInit, AfterViewInit {
               },
             });
             // Navigate to the list after successful deletion
-            // this.refreshData();
+
             setTimeout(() => {
               location.reload();
             }, 1000);
+            // this.refreshData();
+            // this.refreshCategories();
           },
           (error) => {
-            Swal.fire('Lỗi!', 'Có lỗi xảy ra khi xóa.', 'error');
+            if(error.success == false){
+              Swal.fire('Lỗi!',`${error.meta.name}`, 'error');
+            }
           }
         );
       }
