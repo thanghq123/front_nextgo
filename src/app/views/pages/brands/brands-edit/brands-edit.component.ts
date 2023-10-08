@@ -2,8 +2,8 @@ import { Component, OnInit } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import Swal from "sweetalert2";
 import { Router, ActivatedRoute, ParamMap } from "@angular/router";
+
 import { BrandsService } from "src/app/service/brands.service";
-import { log } from "console";
 
 @Component({
   selector: "app-brands-edit",

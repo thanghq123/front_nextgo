@@ -9,6 +9,7 @@ import { CarouselModule } from 'ngx-owl-carousel-o';
 import { SortablejsModule } from 'ngx-sortablejs';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { ReactiveFormsModule } from '@angular/forms';
+
 import { ItemUnitsComponent } from './item-units.component';
 import { ItemUnitsListComponent } from './item-units-list/item-units-list.component';
 import { ItemUnitsCreateComponent } from './item-units-create/item-units-create.component';

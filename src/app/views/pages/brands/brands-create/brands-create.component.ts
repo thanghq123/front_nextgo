@@ -1,9 +1,9 @@
-import { BrandsService } from "src/app/service/brands.service";
 import { Component, OnInit } from "@angular/core";
-import { FormGroup, FormControl, Validators } from "@angular/forms";
 import Swal from "sweetalert2";
 import { Router } from "@angular/router";
+import { FormGroup, FormControl, Validators } from "@angular/forms";
 
+import { BrandsService } from "src/app/service/brands.service";
 @Component({
   selector: "app-brands-create",
   templateUrl: "./brands-create.component.html",

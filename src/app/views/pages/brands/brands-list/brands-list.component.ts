@@ -1,11 +1,11 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import Swal from 'sweetalert2';
+import { DataTable } from 'simple-datatables';
+
 
 import { Brands } from 'src/app/interface/brands/brands';
 import { BrandsService } from 'src/app/service/brands.service';
-import { DataTable } from 'simple-datatables';
-import { log } from 'console';
 
 
 
