@@ -9,5 +9,15 @@ export const MENU: MenuItem[] = [
     label: 'Categories',
     icon: 'home',
     link: '/categories/list'
+  },
+  {
+    label: 'Thương hiệu',
+    icon: 'target',
+    link: '/brands/list'
+  },
+  {
+    label: 'Đơn vị tính',
+    icon: 'target',
+    link: '/item-units/list'
   }
 ];
