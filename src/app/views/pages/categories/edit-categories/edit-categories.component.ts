@@ -88,6 +88,7 @@ export class EditCategoriesComponent implements OnInit {
               },
             });
           }
+
         },
         (error) => {
           Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');

@@ -35,6 +35,13 @@ const routes: Routes = [
       {
         path: 'suppliers',
         loadChildren: () => import('./views/pages/suppliers/suppliers.module').then(m => m.SuppliersModule)
+      },{
+        path: 'brands',
+        loadChildren: () => import('./views/pages/brands/brands.module').then(m => m.BrandsModule)
+      },
+      {
+        path: 'item-units',
+        loadChildren: () => import('./views/pages/item-units/item-units.module').then(m => m.ItemUnitsModule)
       },
       {
         path: 'dashboard',
@@ -76,11 +83,11 @@ const routes: Routes = [
         path: 'general',
         loadChildren: () => import('./views/pages/general/general.module').then(m => m.GeneralModule)
       },
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' }, 
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       // { path: '**', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },
-  { 
+  {
     path: 'error',
     component: ErrorPageComponent,
     data: {
