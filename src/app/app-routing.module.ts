@@ -17,6 +17,26 @@ const routes: Routes = [
         loadChildren: () => import('./views/pages/categories/categories.module').then(m => m.CategoriesModule)
       },
       {
+        path: 'warranties',
+        loadChildren: () => import('./views/pages/warranties/warranties.module').then(m => m.WarrantiesModule)
+      },
+      {
+        path: 'group_customers',
+        loadChildren: () => import('./views/pages/group-customers/group-customers.module').then(m => m.GroupCustomersModule)
+      },
+      {
+        path: 'customers',
+        loadChildren: () => import('./views/pages/customers/customers.module').then(m => m.CustomersModule)
+      },
+      {
+        path: 'group_suppliers',
+        loadChildren: () => import('./views/pages/group_suppliers/group-suppliers.module').then(m => m.GroupSuppliersModule)
+      },
+      {
+        path: 'suppliers',
+        loadChildren: () => import('./views/pages/suppliers/suppliers.module').then(m => m.SuppliersModule)
+      },
+      {
         path: 'dashboard',
         loadChildren: () => import('./views/pages/dashboard/dashboard.module').then(m => m.DashboardModule)
       },
