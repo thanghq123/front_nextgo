@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { DataTable } from 'simple-datatables';
-import { CategoriesService } from 'src/app/service/categories.service';
+import { CategoriesService } from 'src/app/service/categories/categories.service';
 import { Categories } from 'src/app/interface/categories/categories';
 import { Observable,of } from 'rxjs';
 import Swal from 'sweetalert2';
@@ -56,7 +56,7 @@ export class CategoriesListComponent implements OnInit, AfterViewInit {
     }).then((result) => {
       if (result.isConfirmed) {
         // If confirmed, delete the category
-        this.categoriesService.deleteCategory(id).subscribe(
+        this.categoriesService.delete(id).subscribe(
           (response) => {
 
             Swal.fire('Đã xóa!', 'Danh mục của bạn đã được xóa.', 'success');
