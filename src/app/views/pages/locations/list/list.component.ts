@@ -95,8 +95,8 @@ export class ListComponent implements OnInit, AfterViewInit {
       next: (res: any) => {
         // console.log(res.status);
         if(res.status == true){
-          this.listLocations = of(res.payload) ;
-          // console.log(this.listBrands);
+          this.listLocations = of(res.payload.data) ;
+          // console.log(res.payload.data);
           this.listLocations.subscribe(
             (res)=> {
               setTimeout(() => {

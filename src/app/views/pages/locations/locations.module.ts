@@ -9,6 +9,10 @@ import { CarouselModule } from 'ngx-owl-carousel-o';
 import { SortablejsModule } from 'ngx-sortablejs';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { ReactiveFormsModule } from '@angular/forms';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NgxMaskModule, IConfig } from 'ngx-mask';
+import { FormsModule } from '@angular/forms';
+
 
 import { CreateComponent } from './create/create.component';
 import { EditComponent } from './edit/edit.component';
@@ -60,7 +64,10 @@ const routes: Routes = [
       ghostClass: 'bg-light',
     }),
     SweetAlert2Module.forRoot(),
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgSelectModule,
+    FormsModule,
+    NgxMaskModule.forRoot({ validation: true})
   ]
 })
 export class LocationsModule { }

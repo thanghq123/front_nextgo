@@ -1,8 +1,8 @@
 export interface Locations {
   id?: number;
   name: string;
-  image ?: string | null;
-  description ?: Text | null;
+  image ?: File | null;
+  description ?: string | null;
   tel: string;
   email ?: string | null;
   province_code ?: number | null;
