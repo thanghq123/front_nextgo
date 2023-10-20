@@ -3,7 +3,7 @@ import { Observable, of } from 'rxjs';
 import Swal from 'sweetalert2';
 import { DataTable } from 'simple-datatables';
 import { ItemUnits } from 'src/app/interface/item_units/item-units';
-import { ItemUnitsService } from 'src/app/service/item-units.service';
+import { ItemUnitsService } from 'src/app/service/item_units/item-units.service';
 
 @Component({
   selector: 'app-item-units-list',

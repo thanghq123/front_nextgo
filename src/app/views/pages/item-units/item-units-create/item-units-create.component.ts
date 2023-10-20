@@ -3,7 +3,7 @@ import Swal from "sweetalert2";
 import { Router } from "@angular/router";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 
-import { ItemUnitsService } from 'src/app/service/item-units.service';
+import { ItemUnitsService } from 'src/app/service/item_units/item-units.service';
 
 @Component({
   selector: 'app-item-units-create',

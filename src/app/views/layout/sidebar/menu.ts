@@ -45,5 +45,15 @@ export const MENU: MenuItem[] = [
     label: 'Nhà Cung Cấp',
     icon: 'home',
     link: '/suppliers/list'
+  },
+  {
+    label: 'Chi nhánh',
+    icon: 'target',
+    link: '/locations/list'
+  },
+  {
+    label: 'Kho & tồn',
+    icon: 'target',
+    link: '/item-units/list'
   }
 ];
