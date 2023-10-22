@@ -12,6 +12,7 @@ import { ItemUnitsService } from 'src/app/service/item_units/item-units.service'
 })
 export class ItemUnitsListComponent implements OnInit {
   listUnits: Observable<ItemUnits[]>;
+  isLoading = false;
 
   constructor(
     private _unitsService: ItemUnitsService
@@ -93,11 +94,13 @@ export class ItemUnitsListComponent implements OnInit {
   }
 
   refreshData(): void{
+    this.isLoading = true;
     this._unitsService.get().subscribe({
       next: (res: any) => {
         // console.log(res.status);
         if(res.status == true){
           this.listUnits = of(res.payload) ;
+          this.isLoading = false;
           // console.log(this.listBrands);
           this.listUnits.subscribe(
             (res)=> {

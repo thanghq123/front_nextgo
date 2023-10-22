@@ -12,7 +12,12 @@
       <h6 class="card-title">Quản lí chi nhánh</h6>
       <button routerLink="/locations/create"  type="button" class="btn btn-primary">Thêm mới</button>
       <div class="table-responsive">
-          <table id="dataTableExample" class="table">
+        <div *ngIf="isLoading" class="d-flex justify-content-center">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+          <table *ngIf="!isLoading" id="dataTableExample" class="table">
           <thead>
               <tr>
               <th>ID</th>

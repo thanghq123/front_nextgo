@@ -14,6 +14,7 @@ import { LocationsService } from 'src/app/service/locations/locations.service';
 })
 export class ListComponent implements OnInit, AfterViewInit {
   listLocations: Observable<Locations[]>;
+  isLoading = false;
 
   constructor(private _locaService: LocationsService) {
     this.listLocations = new Observable();
@@ -91,12 +92,14 @@ export class ListComponent implements OnInit, AfterViewInit {
   }
 
   refreshData(): void{
+    this.isLoading = true;
     this._locaService.GetData().subscribe({
       next: (res: any) => {
         // console.log(res.status);
         if(res.status == true){
-          this.listLocations = of(res.payload.data) ;
-          // console.log(res.payload.data);
+          this.listLocations = of(res.payload) ;
+          this.isLoading = false;
+          // console.log(res);
           this.listLocations.subscribe(
             (res)=> {
               setTimeout(() => {
@@ -104,6 +107,7 @@ export class ListComponent implements OnInit, AfterViewInit {
                 db.on('datatable.init', () => {
                   this.addDeleteEventHandlers();
               });
+
               }, 0)
             })
 

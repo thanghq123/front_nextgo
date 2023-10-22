@@ -16,6 +16,7 @@ import { BrandsService } from 'src/app/service/brands/brands.service';
 })
 export class BrandsListComponent implements OnInit, AfterViewInit {
   listBrands: Observable<Brands[]>;
+  isLoading = false;
 
   constructor(
     private _brandService: BrandsService
@@ -100,11 +101,13 @@ export class BrandsListComponent implements OnInit, AfterViewInit {
   }
 
   refreshData(): void{
+    this.isLoading = true;
     this._brandService.getData().subscribe({
       next: (res: any) => {
         // console.log(res.status);
         if(res.status == true){
           this.listBrands = of(res.payload) ;
+          this.isLoading = false;
           // console.log(this.listBrands);
           this.listBrands.subscribe(
             (res)=> {

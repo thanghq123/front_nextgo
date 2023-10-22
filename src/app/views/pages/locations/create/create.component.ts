@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormControl,
+  Validators,
+} from '@angular/forms';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { debounceTime, switchMap } from 'rxjs/operators';
@@ -7,13 +12,14 @@ import { Subject } from 'rxjs';
 
 import { LocationsService } from 'src/app/service/locations/locations.service';
 import { AresService } from 'src/app/service/ares/ares.service';
-import { log } from 'console';
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
   styleUrls: ['./create.component.scss'],
 })
 export class CreateComponent implements OnInit {
+  private readonly domain_name: String;
   status: any = [];
   is_main: any = [];
   private provinceChangeSubject = new Subject<number>();
@@ -22,7 +28,8 @@ export class CreateComponent implements OnInit {
   districts: any = [];
   wards: any = [];
   isWardDataLoaded: boolean = false;
-  img: File | null;
+  img: File | '';
+
   locationsForm = new FormGroup({
     name: new FormControl('', Validators.required),
     image: new FormControl(''),
@@ -39,10 +46,13 @@ export class CreateComponent implements OnInit {
   });
 
   constructor(
+    private formBuilder: FormBuilder,
     private _locaService: LocationsService,
     private AresService: AresService,
     private router: Router
-  ) {}
+  ) {
+    this.domain_name = environment.domain_name;
+  }
 
   ngOnInit(): void {
     this.status = [
@@ -105,6 +115,7 @@ export class CreateComponent implements OnInit {
 
     if (files && files.length > 0) {
       const img = files[0];
+      // console.log(this.img);
 
       // Kiểm tra loại tệp
       const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
@@ -112,7 +123,7 @@ export class CreateComponent implements OnInit {
         Swal.fire({
           icon: 'error',
           title: 'Lỗi!',
-          text: 'Loại tệp không hợp lệ. Chỉ chấp nhận các tệp JPG, PNG hoặc GIF.'
+          text: 'Loại tệp không hợp lệ. Chỉ chấp nhận các tệp JPG, PNG hoặc GIF.',
         }).then(() => {
           // Sau khi hiển thị lỗi, reset giá trị của input file
           event.target.value = '';
@@ -126,7 +137,7 @@ export class CreateComponent implements OnInit {
         Swal.fire({
           icon: 'error',
           title: 'Lỗi!',
-          text: 'Kích thước tệp quá lớn. Vui lòng chọn một tệp nhỏ hơn 5MB.'
+          text: 'Kích thước tệp quá lớn. Vui lòng chọn một tệp nhỏ hơn 5MB.',
         }).then(() => {
           // Sau khi hiển thị lỗi, reset giá trị của input file
           event.target.value = '';
@@ -141,7 +152,7 @@ export class CreateComponent implements OnInit {
       Swal.fire({
         icon: 'error',
         title: 'Lỗi!',
-        text: 'Không có tệp nào được chọn.'
+        text: 'Không có tệp nào được chọn.',
       }).then(() => {
         // Sau khi hiển thị lỗi, reset giá trị của input file
         event.target.value = '';
@@ -150,35 +161,29 @@ export class CreateComponent implements OnInit {
     }
   }
 
-
-
-
   onSubmit() {
     if (this.locationsForm.valid) {
-      const dataToSend = {
-        name: String(this.locationsForm.value.name),
+      const formData = new FormData();
 
-        province_code: Number(this.locationsForm.value.province_code) || null,
-        district_code: Number(this.locationsForm.value.district_code) || null,
-        ward_code: Number(this.locationsForm.value.ward_code) || null,
-        address_detail: String(this.locationsForm.value.address_detail) || null,
+      const locationsData = this.locationsForm.value;
+      formData.append('domain_name', String(this.domain_name));
+      if (this.locationsForm.value.image) {
+      formData.append('image', this.img);
+      }
+      formData.append('name', String(locationsData.name));
+      formData.append('email', String(locationsData.email));
+      formData.append('tel', String(locationsData.tel));
+      formData.append('status', String(locationsData.status));
+      formData.append('is_main', String(locationsData.is_main));
+      formData.append('address_detail', String(locationsData.address_detail));
+      formData.append('created_by', '1');
+      formData.append('province_code', String(locationsData.province_code));
+      formData.append('district_code', String(locationsData.district_code));
+      formData.append('ward_code', String(locationsData.ward_code));
+      formData.append('description', String(locationsData.description));
+      // console.log(this.img);
 
-        email: String(this.locationsForm.value.email) || null,
-        tel: String(this.locationsForm.value.tel),
-        description: String(this.locationsForm.value.description) || null,
-        image: this.img || null,
-
-        status: Number(this.locationsForm.value.status),
-        is_main: Number(this.locationsForm.value.is_main),
-        created_by: 1,
-
-        // created_at: new Date(),
-        // updated_at: null,
-      };
-
-      console.log(dataToSend);
-
-      this._locaService.create(dataToSend).subscribe(
+      this._locaService.createFormData(formData).subscribe(
         (response: any) => {
           if (response.status == true) {
             this.locationsForm.reset();
@@ -188,7 +193,7 @@ export class CreateComponent implements OnInit {
               showConfirmButton: false,
               timer: 3000,
               title: 'Thành công!',
-              text: 'Thêm khách hàng thành công',
+              text: 'Thêm chi nhánh thành công',
               icon: 'success',
               timerProgressBar: true,
               didOpen: (toast) => {
@@ -196,14 +201,14 @@ export class CreateComponent implements OnInit {
                 toast.addEventListener('mouseleave', Swal.resumeTimer);
               },
             });
-            this.router.navigate(['../suppliers/list']);
+            this.router.navigate(['../locations/list']);
           } else {
             console.log(response);
             const errorMessages = [];
-            for (const key in response.meta.errors) {
-              const messages = response.meta.errors[key];
+            for (const key in response.meta) {
+              const messages = response.meta[key];
               for (const message of messages) {
-                errorMessages.push(`${key}: ${message}`);
+                errorMessages.push(`${message}`);
               }
             }
             this.showNextMessage(errorMessages);
