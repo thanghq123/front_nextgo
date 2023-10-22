@@ -1,35 +1,31 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import Swal from 'sweetalert2';
 import { DataTable } from 'simple-datatables';
-
-
-import { Brands } from 'src/app/interface/brands/brands';
-import { BrandsService } from 'src/app/service/brands/brands.service';
+import { Observable,of } from 'rxjs';
+import Swal from 'sweetalert2';
+import { Locations } from 'src/app/interface/locations/locations';
+import { LocationsService } from 'src/app/service/locations/locations.service';
 
 
 
 @Component({
-  selector: 'app-brands-list',
-  templateUrl: './brands-list.component.html',
-  styleUrls: ['./brands-list.component.scss']
+  selector: 'app-list',
+  templateUrl: './list.component.html',
+  styleUrls: ['./list.component.scss']
 })
-export class BrandsListComponent implements OnInit, AfterViewInit {
-  listBrands: Observable<Brands[]>;
+export class ListComponent implements OnInit, AfterViewInit {
+  listLocations: Observable<Locations[]>;
   isLoading = false;
 
-  constructor(
-    private _brandService: BrandsService
-    ) {
-      this.listBrands = new Observable();
-  }
+  constructor(private _locaService: LocationsService) {
+    this.listLocations = new Observable();
+   }
 
   ngOnInit(): void {
     this.refreshData();
   }
 
   ngAfterViewInit(): void {
-    this.listBrands.subscribe(() => {
+    this.listLocations.subscribe(() => {
       setTimeout(() => {
         const db = new DataTable('#dataTableExample');
         setTimeout(() => {
@@ -47,14 +43,12 @@ export class BrandsListComponent implements OnInit, AfterViewInit {
     Array.from(deleteButtons).forEach((button) => {
       button.addEventListener('click', (event) => {
         const id = (event.target as Element).getAttribute('id');
-        this.deleteBrand(Number(id));
+        this.deleteLocation(Number(id));
       });
     });
   }
 
-  // ...
-
-  deleteBrand(id: number) {
+  deleteLocation(id: number) {
     Swal.fire({
       title: 'Bạn có chắc chắn muốn xóa?',
       text: 'Bạn sẽ không thể hoàn tác lại hành động này!',
@@ -66,7 +60,7 @@ export class BrandsListComponent implements OnInit, AfterViewInit {
     }).then((result) => {
       if (result.isConfirmed) {
         // If confirmed, delete the category
-        this._brandService.deleteBrand(id).subscribe(
+        this._locaService.delete(id).subscribe(
           (response) => {
             Swal.fire({
               toast: true,
@@ -74,7 +68,7 @@ export class BrandsListComponent implements OnInit, AfterViewInit {
               showConfirmButton: false,
               timer: 1000,
               title: "Đã xóa!",
-              text: "Thương hiệu đã được xóa.",
+              text: "Đơn vị đã được xóa.",
               icon: "success",
               timerProgressBar: true,
               didOpen: (toast) => {
@@ -83,12 +77,9 @@ export class BrandsListComponent implements OnInit, AfterViewInit {
               },
             });
             // Navigate to the list after successful deletion
-
             setTimeout(() => {
               location.reload();
             }, 1000);
-            // this.refreshData();
-            // this.refreshCategories();
           },
           (error) => {
             if(error.success == false){
@@ -102,20 +93,21 @@ export class BrandsListComponent implements OnInit, AfterViewInit {
 
   refreshData(): void{
     this.isLoading = true;
-    this._brandService.getData().subscribe({
+    this._locaService.GetData().subscribe({
       next: (res: any) => {
         // console.log(res.status);
         if(res.status == true){
-          this.listBrands = of(res.payload) ;
+          this.listLocations = of(res.payload) ;
           this.isLoading = false;
-          // console.log(this.listBrands);
-          this.listBrands.subscribe(
+          // console.log(res);
+          this.listLocations.subscribe(
             (res)=> {
               setTimeout(() => {
                 const db = new DataTable('#dataTableExample');
                 db.on('datatable.init', () => {
                   this.addDeleteEventHandlers();
               });
+
               }, 0)
             })
 
@@ -123,11 +115,9 @@ export class BrandsListComponent implements OnInit, AfterViewInit {
       },
       error: (err: any) => {
         console.log(err);
-        Swal.fire('Lỗi!', 'Có lỗi xảy ra.', 'error');
+        Swal.fire('Lỗi!', 'Có lỗi xảy ra. Vui lòng liên hệ QTV.', 'error');
       }
     })
   }
-
-
 
 }

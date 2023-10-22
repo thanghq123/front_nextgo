@@ -76,7 +76,7 @@ export class CategoriesListComponent implements OnInit, AfterViewInit {
       (response : any) => {
         if(response.status == true){
           this.ListsCategories =of(response.payload);
-          // console.log(this.ListsCategories);
+          console.log(this.ListsCategories);
 
           this.ListsCategories.subscribe((categories) => {
             setTimeout(() => {

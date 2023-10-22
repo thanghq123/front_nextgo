@@ -5,6 +5,7 @@ import { AuthGuard } from './core/guard/auth.guard';
 import { ErrorPageComponent } from './views/pages/error-page/error-page.component';
 
 
+
 const routes: Routes = [
   { path:'auth', loadChildren: () => import('./views/pages/auth/auth.module').then(m => m.AuthModule) },
   {
@@ -42,6 +43,10 @@ const routes: Routes = [
       {
         path: 'item-units',
         loadChildren: () => import('./views/pages/item-units/item-units.module').then(m => m.ItemUnitsModule)
+      },
+      {
+        path: 'locations',
+        loadChildren: () => import('./views/pages/locations/locations.module').then(m => m.LocationsModule)
       },
       {
         path: 'dashboard',
