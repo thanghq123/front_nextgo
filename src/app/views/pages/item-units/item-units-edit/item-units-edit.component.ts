@@ -28,7 +28,7 @@ export class ItemUnitsEditComponent implements OnInit {
       if (id !== null) {
         this.id = id;
         this.isLoading = true;
-        this._unitsService.find(id).subscribe(
+        this._unitsService.GetOneRecord(id).subscribe(
           (data) => {
             this.name = data.payload["name"];
             // console.log(this.name);

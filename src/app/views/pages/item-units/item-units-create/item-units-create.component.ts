@@ -22,12 +22,10 @@ export class ItemUnitsCreateComponent implements OnInit {
     if (this.unitsForm.valid) {
       // console.log(this.brandForm.value);
       const dataToSend = {
-        ...this.unitsForm.value,
-        // created_date: new Date().toISOString(),
-        // update_date: null,
+        name: String(this.unitsForm.value.name) || "",
       };
 
-      this._unitsService.store(dataToSend).subscribe(
+      this._unitsService.create(dataToSend).subscribe(
         (response: any) => {
 
           if (response.status == true) {
