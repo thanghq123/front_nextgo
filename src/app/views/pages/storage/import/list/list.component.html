@@ -31,17 +31,19 @@
               </tr>
           </thead>
           <tbody>
-              <!-- <tr *ngFor="let location of listLocations | async">
-              <td>{{ location.id }}</td>
-              <td>{{ location.name }}</td>
-              <td>{{ location.tel }}</td>
-              <td>{{ location.email }}</td>
-              <td>{{ location.address_detail }}</td>
+              <tr *ngFor="let value of listStorageImport | async">
+              <td>{{ value.id }}</td>
+              <td>{{ value.partner_id }}</td>
+              <td>{{ value.inventory_id }}</td>
+              <td>{{ value.created_by }}</td>
+              <td>{{ value.status }}</td>
+              <td>{{ value.created_at }}</td>
+              <td>{{ value.update_at }}</td>
               <td>
-                  <a [routerLink]="['../edit', location.id]" class="btn btn-success mx-2">Sửa</a>
-                 <button  data-id="{{location.id}}" class="btn btn-danger">Xóa</button>
+                  <a [routerLink]="['../edit', value.id]" class="btn btn-success mx-2">Sửa</a>
+                 <button  data-id="{{value.id}}" class="btn btn-danger">Xóa</button>
               </td>
-              </tr> -->
+              </tr>
           </tbody>
           <tfoot>
               <tr>

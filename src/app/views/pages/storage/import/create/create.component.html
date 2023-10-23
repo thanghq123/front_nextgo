@@ -1,1 +1,73 @@
-<p>create works!</p>
+<nav class="page-breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a routerLink=".">Danh mục</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+      Thêm mới đơn kho
+    </li>
+  </ol>
+</nav>
+
+<div class="row">
+  <div class="col-md-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h2 style="text-align: center;">Tạo đơn nhập kho</h2>
+        <h6 class="card-title">Thông tin cơ bản</h6>
+        <form class="forms-sample" [formGroup]="storageImport" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label for="exampleInputUsername1" class="form-label">
+              Mã đơn
+              <!-- <span class="text-danger">(*)</span> -->
+            </label>
+            <input type="text" class="form-control" id="exampleInputUsername1" formControlName="inventory_transaction_id" autocomplete="off"
+              placeholder="Nhập mã đơn" />
+            <!-- <div *ngIf="storageImport.controls.name.invalid && storageImport.controls.name.touched"
+              class="alert alert-danger mt-2">
+              Không để trống tên chi nhánh
+            </div> -->
+          </div>
+          <div class="mb-3">
+            <label for="exampleInputUsername1" class="form-label">
+              Lý do nhập
+              <span class="text-danger">(*)</span>
+            </label>
+            <input type="text" class="form-control" id="exampleInputUsername1" formControlName="reason" autocomplete="off"
+              placeholder="Nhập lý do nhập" />
+            <!-- <div *ngIf="storageImport.controls.name.invalid && storageImport.controls.name.touched"
+              class="alert alert-danger mt-2">
+              Không để trống tên chi nhánh
+            </div> -->
+          </div>
+          <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label">Ghi chú</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" formControlName="note" rows="5"></textarea>
+          </div>
+          <br>
+          <h6 class="card-title">Nhà cung cấp</h6>
+          <div class="mb-3">
+            <label for="exampleInputUsername1" class="form-label">
+              Chọn Huyện
+            </label>
+            <ng-select [searchable]="true" formControlName="district_code"
+              placeholder="Chọn Tỉnh">
+              <ng-option *ngFor="let item of listSupplier" [value]="item.id">
+                {{item.name}}
+              </ng-option>
+            </ng-select>
+          </div>
+
+
+          <button type="submit" [disabled]="storageImport.invalid" class="btn btn-primary me-2">
+            Tạo mới
+          </button>
+          <button class="btn btn-secondary" routerLink="/storage/import/list">
+            Trở về
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+

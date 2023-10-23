@@ -15,7 +15,7 @@ import { FormsModule } from '@angular/forms';
 
 import { ImportComponent } from './import.component';
 import { CreateComponent } from './create/create.component';
-import { ListComponent } from './list/list.component';
+// import { ListComponent } from './list/list.component';
 
 const routes: Routes = [
   {
@@ -24,13 +24,13 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'list',
+        redirectTo: 'create',
         pathMatch: 'full'
       },
-      {
-        path: 'list',
-        component:  ListComponent
-      },
+      // {
+      //   path: 'list',
+      //   component:  ListComponent
+      // },
       // {
       //   path: 'edit/:id',
       //   component: EditComponent
@@ -47,7 +47,7 @@ const routes: Routes = [
   declarations: [
     CreateComponent,
     ImportComponent,
-    ListComponent
+    // ListComponent
   ],
   imports: [
     CommonModule,
