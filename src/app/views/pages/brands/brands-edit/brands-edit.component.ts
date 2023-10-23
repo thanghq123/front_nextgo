@@ -29,7 +29,7 @@ export class BrandsEditComponent implements OnInit {
       if (id !== null) {
         this.id = id;
         this.isLoading = true;
-        this._brandService.getBrand(id).subscribe(
+        this._brandService.GetOneRecord(id).subscribe(
           (data) => {
             this.name = data.payload["name"];
             // console.log(this.name);
@@ -59,7 +59,7 @@ export class BrandsEditComponent implements OnInit {
         id: this.id,
       };
 
-      this._brandService.updateBrand(dataToSend).subscribe(
+      this._brandService.update(dataToSend).subscribe(
         (response) => {
           if (response.status == true) {
             Swal.fire({
