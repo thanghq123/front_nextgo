@@ -26,6 +26,8 @@ export class CreateComponent implements OnInit {
     inventory_transaction_id: new FormControl(''),
     reason: new FormControl('', Validators.required),
     note: new FormControl(''),
+    partner_id: new FormControl(''),
+
 
   })
   constructor(
@@ -33,11 +35,11 @@ export class CreateComponent implements OnInit {
     private _location: LocationsService
   ) {
     this._supplier.GetData().subscribe((res: any) =>{
-      // console.log( res.payload.data);
       this.listSupplier = res.payload.data;
-      // console.log(res.payload.data);
-
     })
+    // this._location.GetData().subscribe((res: any) => {
+    //   this.listLocation = res.payload.data;
+    // })
   }
 
   ngOnInit(): void {
