@@ -3,7 +3,7 @@ import { FormGroup, FormControl, Validators } from "@angular/forms";
 import Swal from "sweetalert2";
 import { Router, ActivatedRoute, ParamMap } from "@angular/router";
 
-import { BrandsService } from "src/app/service/brands.service";
+import { BrandsService } from "src/app/service/brands/brands.service";
 
 @Component({
   selector: "app-brands-edit",
@@ -16,6 +16,7 @@ export class BrandsEditComponent implements OnInit {
   brandForm = new FormGroup({
     name: new FormControl("", [Validators.required, Validators.maxLength(255)]),
   });
+  isLoading = false;
   constructor(
     private _brandService: BrandsService,
     private _route: ActivatedRoute,
@@ -27,12 +28,12 @@ export class BrandsEditComponent implements OnInit {
       const id = queryParams.get("id");
       if (id !== null) {
         this.id = id;
-
-        this._brandService.getBrand(id).subscribe(
+        this.isLoading = true;
+        this._brandService.GetOneRecord(id).subscribe(
           (data) => {
             this.name = data.payload["name"];
             // console.log(this.name);
-
+            this.isLoading = false;
             this.brandForm.patchValue(data.payload);
           },
           (error) => {
@@ -58,23 +59,47 @@ export class BrandsEditComponent implements OnInit {
         id: this.id,
       };
 
-      this._brandService.updateBrand(dataToSend).subscribe(
+      this._brandService.update(dataToSend).subscribe(
         (response) => {
-          Swal.fire({
-            toast: true,
-            position: "top-end",
-            showConfirmButton: false,
-            timer: 3000,
-            title: "Thành công!",
-            text: "Bạn đã cập nhật danh mục thành công",
-            icon: "success",
-            timerProgressBar: true,
-            didOpen: (toast) => {
-              toast.addEventListener("mouseenter", Swal.stopTimer);
-              toast.addEventListener("mouseleave", Swal.resumeTimer);
-            },
-          });
-          this._router.navigate(["/brands/list"]);
+          if (response.status == true) {
+            Swal.fire({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 3000,
+              title: 'Thành công!',
+              text: 'Cập nhật thành công',
+              icon: 'success',
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer);
+                toast.addEventListener('mouseleave', Swal.resumeTimer);
+              },
+            });
+            this._router.navigate(['/brands/list']);
+          } else {
+            console.log(response);
+            const errorMessages = [];
+            for (const key in response.meta.errors) {
+              errorMessages.push(...response.meta.errors[key]);
+            }
+            const message = errorMessages.join(' ');
+
+            Swal.fire({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 3000,
+              title: 'Thất bại!',
+              text: message,
+              icon: 'error',
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer);
+                toast.addEventListener('mouseleave', Swal.resumeTimer);
+              },
+            });
+          }
         },
         (error) => {
           // console.log((error));

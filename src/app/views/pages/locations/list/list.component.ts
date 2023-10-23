@@ -1,31 +1,31 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import Swal from 'sweetalert2';
 import { DataTable } from 'simple-datatables';
-import { ItemUnits } from 'src/app/interface/item_units/item-units';
-import { ItemUnitsService } from 'src/app/service/item_units/item-units.service';
+import { Observable,of } from 'rxjs';
+import Swal from 'sweetalert2';
+import { Locations } from 'src/app/interface/locations/locations';
+import { LocationsService } from 'src/app/service/locations/locations.service';
+
+
 
 @Component({
-  selector: 'app-item-units-list',
-  templateUrl: './item-units-list.component.html',
-  styleUrls: ['./item-units-list.component.scss']
+  selector: 'app-list',
+  templateUrl: './list.component.html',
+  styleUrls: ['./list.component.scss']
 })
-export class ItemUnitsListComponent implements OnInit {
-  listUnits: Observable<ItemUnits[]>;
+export class ListComponent implements OnInit, AfterViewInit {
+  listLocations: Observable<Locations[]>;
   isLoading = false;
 
-  constructor(
-    private _unitsService: ItemUnitsService
-    ) {
-      this.listUnits = new Observable();
-  }
+  constructor(private _locaService: LocationsService) {
+    this.listLocations = new Observable();
+   }
 
   ngOnInit(): void {
     this.refreshData();
   }
 
   ngAfterViewInit(): void {
-    this.listUnits.subscribe(() => {
+    this.listLocations.subscribe(() => {
       setTimeout(() => {
         const db = new DataTable('#dataTableExample');
         setTimeout(() => {
@@ -43,14 +43,12 @@ export class ItemUnitsListComponent implements OnInit {
     Array.from(deleteButtons).forEach((button) => {
       button.addEventListener('click', (event) => {
         const id = (event.target as Element).getAttribute('id');
-        this.deleteItem(Number(id));
+        this.deleteLocation(Number(id));
       });
     });
   }
 
-  // ...
-
-  deleteItem(id: number) {
+  deleteLocation(id: number) {
     Swal.fire({
       title: 'Bạn có chắc chắn muốn xóa?',
       text: 'Bạn sẽ không thể hoàn tác lại hành động này!',
@@ -62,7 +60,7 @@ export class ItemUnitsListComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         // If confirmed, delete the category
-        this._unitsService.delete(id).subscribe(
+        this._locaService.delete(id).subscribe(
           (response) => {
             Swal.fire({
               toast: true,
@@ -95,20 +93,21 @@ export class ItemUnitsListComponent implements OnInit {
 
   refreshData(): void{
     this.isLoading = true;
-    this._unitsService.GetData().subscribe({
+    this._locaService.GetData().subscribe({
       next: (res: any) => {
         // console.log(res.status);
         if(res.status == true){
-          this.listUnits = of(res.payload.data) ;
-          // console.log(this.listBrands);
+          this.listLocations = of(res.payload) ;
           this.isLoading = false;
-          this.listUnits.subscribe(
+          // console.log(res);
+          this.listLocations.subscribe(
             (res)=> {
               setTimeout(() => {
                 const db = new DataTable('#dataTableExample');
                 db.on('datatable.init', () => {
                   this.addDeleteEventHandlers();
               });
+
               }, 0)
             })
 
@@ -120,4 +119,5 @@ export class ItemUnitsListComponent implements OnInit {
       }
     })
   }
+
 }

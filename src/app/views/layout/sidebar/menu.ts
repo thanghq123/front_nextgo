@@ -58,6 +58,14 @@ export const MENU: MenuItem[] = [
         label: 'Bán hàng',
         link: 'shop/tabshop',
       },
-    ]
+    ]},
+{    label: 'Chi nhánh',
+    icon: 'target',
+    link: '/locations/list'
+  },
+  {
+    label: 'Kho & tồn',
+    icon: 'target',
+    link: '/item-units/list'
   }
 ];

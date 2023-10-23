@@ -5,7 +5,7 @@ import { DataTable } from 'simple-datatables';
 
 
 import { Brands } from 'src/app/interface/brands/brands';
-import { BrandsService } from 'src/app/service/brands.service';
+import { BrandsService } from 'src/app/service/brands/brands.service';
 
 
 
@@ -16,6 +16,7 @@ import { BrandsService } from 'src/app/service/brands.service';
 })
 export class BrandsListComponent implements OnInit, AfterViewInit {
   listBrands: Observable<Brands[]>;
+  isLoading = false;
 
   constructor(
     private _brandService: BrandsService
@@ -65,7 +66,7 @@ export class BrandsListComponent implements OnInit, AfterViewInit {
     }).then((result) => {
       if (result.isConfirmed) {
         // If confirmed, delete the category
-        this._brandService.deleteBrand(id).subscribe(
+        this._brandService.delete(id).subscribe(
           (response) => {
             Swal.fire({
               toast: true,
@@ -100,11 +101,13 @@ export class BrandsListComponent implements OnInit, AfterViewInit {
   }
 
   refreshData(): void{
-    this._brandService.getData().subscribe({
+    this.isLoading = true;
+    this._brandService.GetData().subscribe({
       next: (res: any) => {
         // console.log(res.status);
         if(res.status == true){
           this.listBrands = of(res.payload.data) ;
+          this.isLoading = false;
           // console.log(this.listBrands);
           this.listBrands.subscribe(
             (res)=> {

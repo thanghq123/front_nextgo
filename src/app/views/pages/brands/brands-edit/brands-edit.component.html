@@ -11,8 +11,14 @@
       <div class="card-body">
 
         <h6 class="card-title">Cập nhật thương hiệu</h6>
+        <div *ngIf="isLoading" class="loadingcustomcss">
+          <button  class="btn btn-primary" type="button" disabled>
+              <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+              Loading...
+            </button>
+       </div>
 
-        <form class="forms-sample" [formGroup]="brandForm" (ngSubmit)="onSubmit()">
+        <form class="forms-sample" *ngIf="!isLoading" [formGroup]="brandForm" (ngSubmit)="onSubmit()">
           <div class="mb-3">
             <label for="exampleInputUsername1" class="form-label">Tên thương hiệu</label>
             <input type="text" class="form-control" id="exampleInputUsername1" formControlName="name" autocomplete="off"
