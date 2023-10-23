@@ -1,0 +1,189 @@
+<nav class="page-breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a routerLink=".">Danh mục</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Thêm mới sản phẩm</li>
+  </ol>
+</nav>
+<div *ngIf="isLoading" class="loadingcustomcss">
+  <button class="btn btn-primary" type="button" disabled>
+    <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+    Loading...
+  </button>
+</div>
+<form class="forms-sample" [formGroup]="productsForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading">
+
+  <div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+
+          <h6 class="card-title">Thêm mới Danh mục</h6>
+
+          <div class="mb-3">
+            <label for="nameProducts" class="form-label">Tên sản phẩm</label>
+            <input type="text" class="form-control" id="nameProducts" formControlName="name" autocomplete="off"
+              placeholder="Nhập tên danh mục">
+            <div *ngIf="productsForm.controls.name.invalid && productsForm.controls.name.touched"
+              class="alert alert-danger mt-2">
+              Không để trống tên sản phẩm
+            </div>
+          </div>
+          <div class="mb-3">
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="mb-3">
+                  <label class="form-label">Đơn vị tính</label>
+                  <ng-select [searchable]="true" formControlName="type" placeholder="Chọn đơn vị tính">
+                    <ng-option *ngFor="let item of item_units" [value]="item.id">{{item.name}}</ng-option>
+                  </ng-select>
+                </div>
+              </div><!-- Col -->
+              <div class="col-sm-6">
+                <div class="mb-3">
+                  <label class="form-label" for="weight">Khối lượng</label>
+                  <input type="text" id="weight" class="form-control">
+                </div>
+              </div><!-- Col -->
+            </div><!-- Row -->
+          </div>
+
+          <div class="mb-3">
+            <label for="des" class="form-label">Mô tả</label>
+            <textarea class="form-control" id="des" rows="5"></textarea>
+          </div>
+          <!-- <button type="submit" [disabled]="productsForm.invalid" class="btn btn-primary me-2">Tạo mới</button>
+            <button class="btn btn-secondary" routerLink="/categories/list">Trở về</button> -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+
+          <h6 class="card-title">Phân loại</h6>
+
+          <div class="mb-3">
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="mb-3">
+                  <label class="form-label">Danh mục</label>
+                  <ng-select [searchable]="true" formControlName="type" placeholder="Chọn danh mục">
+                    <ng-option *ngFor="let item of categories" [value]="item.id">{{item.name}}</ng-option>
+                  </ng-select>
+                </div>
+              </div><!-- Col -->
+              <div class="col-sm-6">
+                <div class="mb-3">
+                  <label class="form-label">Thương hiệu</label>
+                  <ng-select [searchable]="true" formControlName="type" placeholder="Chọn thương hiệu">
+                    <ng-option *ngFor="let item of brands" [value]="item.id">{{item.name}}</ng-option>
+                  </ng-select>
+                </div>
+              </div><!-- Col -->
+
+              <div class="col-sm-6">
+                <div class="mb-3">
+                  <label class="form-label">Bảo hành</label>
+                  <ng-select [searchable]="true" formControlName="type" placeholder="Chọn bảo hành">
+                    <ng-option *ngFor="let item of warranties" [value]="item.id">{{item.name}}</ng-option>
+                  </ng-select>
+                </div>
+              </div><!-- Col -->
+              <div class="col-sm-6">
+                <div class="mb-3">
+                  <label class="form-label">Hình thức quản lý</label>
+                  <ng-select [searchable]="true" formControlName="type" placeholder="Chọn Hình thức quản lí">
+                    <ng-option *ngFor="let item of manage_type" [value]="item.id">{{item.name}}</ng-option>
+                  </ng-select>
+                </div>
+              </div><!-- Col -->
+
+
+
+
+            </div><!-- Row -->
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+
+          <h6 class="card-title">Thuộc tính</h6>
+          <ngb-alert [dismissible]="false" [type]="'warning'">
+            <h4 class="alert-heading mb-2">Lưu ý!</h4>
+            <p class="mb-0"><b>Tên thuộc tính</b> có thể là Kích thước, Màu sắc, Chất liệu…</p>
+            <hr>
+            <p class="mb-0"> <b>Giá trị của thuộc tính</b> có thể là S - M - L (Kích thước), Xanh - Đỏ - Hồng (Màu sắc),
+              Vải Cotton - Da lộn - Lụa (Chất liệu).</p>
+          </ngb-alert>
+          <button type="button" (click)="openBasicModal(addAttributes)"
+            class="btn border text-primary border-primary btn-icon-text">
+            <i class="feather icon-plus btn-icon-plus"></i>
+            Thêm thuộc tính
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+
+<ng-template #addAttributes let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Thuộc tính sản phẩm</h5>
+    <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <div class="row bg-body p-4 mt-4 rounded position-relative " *ngFor="let item of itemBoxTypeQualityArray" >
+      <div class="position-absolute top-0 end-0">
+        <i class="feather icon-x   fs-4 text-danger"></i>
+      </div>
+      <div class="col-12 d-flex align-items-center">
+        <label class="form-label" for="weight" style="width: 20%;">Thuộc tính</label>
+        <input type="text" id="weight" class="form-control" placeholder="Nhập thuộc tính">
+      </div>
+      <div class="col-12 d-flex mt-4">
+        <label class="form-label" style="width: 20%;">Giá trị</label>
+        <div class="w-100">
+          <input type="text" class="form-control" [(ngModel)]="newItemText" (keyup.enter)="addItem()" placeholder="Nhập giá trị và ấn enter">
+        <ul class="list-group mt-2" [sortablejs]="simpleItems">
+          <li class="list-group-item d-flex mt-1  align-items-center justify-content-between p-1" *ngFor="let item of simpleItems; let i = index">
+            <div>
+              <i data-feather="move" appFeatherIcon class="icon-sm handle me-2"></i>
+            {{ item.text }}
+            </div>
+            <button class="btn btn-danger btn-sm float-end" (click)="removeItem(i)"><i class="feather icon-trash-2 btn-icon-trash-2"></i></button>
+          </li>
+        </ul>
+        </div>
+
+        <!-- <ul class="list-group w-100" [sortablejs]="simpleItems">
+            <li class="list-group-item" *ngFor="let item of simpleItems"> <i data-feather="move" appFeatherIcon class="icon-sm handle me-2"></i> {{ item }}</li>
+          </ul> -->
+      </div>
+
+    </div>
+    <button type="button" (click)="addAttributesForm()"
+    class="btn border text-primary border-primary btn-icon-text w-100 mt-4">
+    <i class="feather icon-plus btn-icon-plus"></i>
+    Thêm thuộc tính
+  </button>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close('by: close button')">Close</button>
+    <button type="button" class="btn btn-primary" (click)="modal.close('by: save button')">Save changes</button>
+  </div>
+</ng-template>
+<!-- Close result -->
+<p *ngIf="dataAttributes != ''" class="mt-2">{{dataAttributes}}</p>

@@ -14,7 +14,7 @@ import { HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
 import { HttpClientModule } from '@angular/common/http';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
-
+import { SortablejsModule } from 'ngx-sortablejs';
 @NgModule({
   declarations: [
     AppComponent,
@@ -27,7 +27,8 @@ import { CommonModule } from '@angular/common';
     LayoutModule,
     HttpClientModule,
     NgbModule,
-    CommonModule
+    CommonModule,
+    SortablejsModule.forRoot({ animation: 150 }),
   ],
   providers: [
     AuthGuard,

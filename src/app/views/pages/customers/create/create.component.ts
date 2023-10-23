@@ -57,7 +57,7 @@ export class CreateComponent implements OnInit {
     ];
 
     this.GroupCustomersService.GetData().subscribe((data: any) => {
-      this.GroupsCustomers = data.payload;
+      this.GroupsCustomers = data.payload.data;
     });
 
     this.AresService.getProvinces().subscribe((data: any) => {

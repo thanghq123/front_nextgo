@@ -87,7 +87,7 @@ export class ListComponent implements OnInit {
    this.warrantiesService.GetData().subscribe(
       (response : any) => {
         if(response.status == true){
-          this.Warranties =of(response.payload);
+          this.Warranties =of(response.payload.data);
           this.Warranties.subscribe((categories) => {
             setTimeout(() => {
                 const dataTable = new DataTable('#dataTableExample');

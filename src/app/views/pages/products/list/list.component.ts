@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ViewChild, AfterViewInit } from '@angular/core';
 import { DataTable } from 'simple-datatables';
-import { GroupCustomers } from 'src/app/interface/group_customers/group-customers';
+import { ProductsService } from 'src/app/service/products/products.service';
+import { Products } from 'src/app/interface/products/products';
 import { Observable,of } from 'rxjs';
-import { GroupCustomersService } from 'src/app/service/group_customers/group-customers.service';
 import Swal from 'sweetalert2';
 @Component({
   selector: 'app-list',
@@ -10,11 +10,10 @@ import Swal from 'sweetalert2';
   styleUrls: ['./list.component.scss']
 })
 export class ListComponent implements OnInit {
+  ListsProducts: Observable<Products[]>;
 
-  groupCustomers: Observable<GroupCustomers[]>;
-  
-  constructor(private GroupCustomersService: GroupCustomersService) {
-    this.groupCustomers = new Observable();
+  constructor(private ProductsService: ProductsService) {
+    this.ListsProducts = new Observable();
   }
 
   ngOnInit(): void {
@@ -22,7 +21,7 @@ export class ListComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    this.groupCustomers.subscribe(() => {
+    this.ListsProducts.subscribe(() => {
       setTimeout(() => {
         const dataTable = new DataTable('#dataTableExample');
         dataTable.on('datatable.init', () => {
@@ -56,22 +55,10 @@ export class ListComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         // If confirmed, delete the category
-        this.GroupCustomersService.delete(id).subscribe(
+        this.ProductsService.delete(id).subscribe(
           (response) => {
-            Swal.fire({
-              toast: true,
-              position: "top-end",
-              showConfirmButton: false,
-              timer: 3000,
-              title: "Thành công!",
-              text: "Danh mục bảo hành của bạn đã được xóa.",
-              icon: "success",
-              timerProgressBar: true,
-              didOpen: (toast) => {
-                toast.addEventListener("mouseenter", Swal.stopTimer);
-                toast.addEventListener("mouseleave", Swal.resumeTimer);
-              },
-            });
+
+            Swal.fire('Đã xóa!', 'Danh mục của bạn đã được xóa.', 'success');
             // Navigate to the list after successful deletion
             location.reload();
           },
@@ -84,15 +71,18 @@ export class ListComponent implements OnInit {
   }
 
   refreshCategories(): void {
-   this.GroupCustomersService.GetData().subscribe(
+   this.ProductsService.GetData().subscribe(
       (response : any) => {
         if(response.status == true){
-          this.groupCustomers =of(response.payload.data);
-          // console.log(response.payload);
+          this.ListsProducts =of(response.payload.data);
+          // console.log(this.ListsCategories);
+          console.log(this.ListsProducts);
           
-          this.groupCustomers.subscribe((groupCustomers) => {
+          this.ListsProducts.subscribe((categories) => {
             setTimeout(() => {
                 const dataTable = new DataTable('#dataTableExample');
+                // Here, use the 'categories' data to populate your DataTable
+                // ...
                 dataTable.on('datatable.init', () => {
                     this.addDeleteEventHandlers();
                 });
@@ -105,7 +95,6 @@ export class ListComponent implements OnInit {
         Swal.fire('Lỗi!', 'Có lỗi xảy ra khi xóa danh mục.', 'error');
       }
     );
-    
-  }
 
+  }
 }

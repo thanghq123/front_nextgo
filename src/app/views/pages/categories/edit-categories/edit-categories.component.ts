@@ -27,7 +27,7 @@ export class EditCategoriesComponent implements OnInit {
 
         this.categories.GetOneRecord(id).subscribe(
           (data) => {
-            this.categoryForm.patchValue(data.payload);
+            this.categoryForm.patchValue(data.payload.data);
           },
           (error) => {
             Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
