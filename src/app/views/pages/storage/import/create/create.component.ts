@@ -7,8 +7,14 @@ import {
 } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { Router, ParamMap } from '@angular/router';
-import { debounceTime, switchMap, distinctUntilChanged, map } from 'rxjs/operators';
+import {
+  debounceTime,
+  switchMap,
+  distinctUntilChanged,
+  map,
+} from 'rxjs/operators';
 import { Observable, Subject, of } from 'rxjs';
+import { ChangeDetectorRef } from '@angular/core';
 
 import { SuppliersService } from 'src/app/service/suppliers/suppliers.service';
 import { LocationsService } from 'src/app/service/locations/locations.service';
@@ -19,29 +25,27 @@ const states: Product[] = [
     id: 1,
     name: 'San pham 1',
     import_price: 3,
-    quantity: 3
+    quantity: 3,
   },
-   {
+  {
     id: 2,
     name: 'San pham 2',
     import_price: 6,
-    quantity: 3
+    quantity: 3,
   },
   {
     id: 3,
     name: 'San pham 3',
     import_price: 5,
-    quantity: 3
+    quantity: 3,
   },
 ];
 
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
-  styleUrls: ['./create.component.scss']
+  styleUrls: ['./create.component.scss'],
 })
-
-
 export class CreateComponent implements OnInit {
   import_priceValue: number = 0;
   quantity: number = 0;
@@ -50,28 +54,28 @@ export class CreateComponent implements OnInit {
   listLocation: any = [];
   products: any[] = [];
   input: any[] = [];
-  import_price = new FormControl(0);
+  tempProducts: any[] = [];
   storageImport = new FormGroup({
     inventory_transaction_id: new FormControl(''),
     reason: new FormControl('', Validators.required),
     note: new FormControl(''),
     partner_id: new FormControl(''),
 
-
     import_price: new FormControl(''),
     quantity: new FormControl(''),
     // input: new FormControl(''),
   });
   inputSerach = new FormGroup({
-input: new FormControl(''),
-  })
+    input: new FormControl(''),
+  });
   constructor(
     private _supplier: SuppliersService,
     private _location: LocationsService,
+    private cdr: ChangeDetectorRef,
   ) {
-    this._supplier.GetData().subscribe((res: any) =>{
+    this._supplier.GetData().subscribe((res: any) => {
       this.listSupplier = res.payload.data;
-    })
+    });
     // this._location.GetData().subscribe((res: any) => {
     //   this.listLocation = res.payload.data;
     // })
@@ -80,75 +84,37 @@ input: new FormControl(''),
   search = (text$: Observable<string>) =>
     text$.pipe(
       debounceTime(200),
-      map(term => term === '' ? []
-        : states.filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10))
+      map((term) =>
+        term === ''
+          ? []
+          : states
+              .filter(
+                (v) => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1
+              )
+              .slice(0, 10)
+      )
     );
-    formatter = (x: {name: string}) => x.name;
+  formatter = (x: { name: string }) => x.name;
 
-  ngOnInit(): void {
-
-
-    // this._location.GetData().subscribe((data: any) => {
-    //   this.listLocation =
-    //   data.status != 'error'
-    //       ? data.results
-    //       : [{ id: 0, name: `${data.message}` }];
-    // });
-
-
-
-    // console.log(this.listSupplier);
-    this.import_price.valueChanges.subscribe(() => {
-      this.updatePrice();
-    });
-
-
-
-
-  }
-
-
-  updatePrice() {
-    for (const product of this.products) {
-      product.total = Number(this.import_price.value) * product.quantity;
-    }
-  }
-  searchProduct(){
-    // this.input.push(this.inputSerach.value.input)
-    // console.log(this.input);
-    const i = 0;
-
-    if(this.inputSerach.valid){
-    // states.forEach(value => {
-    //   if(this.input[0].name == value.name){
+  ngOnInit(): void {}
+  searchProduct() {
+    if (this.inputSerach.valid) {
       console.log(this.product.name);
-
-      // const input = this.inputSerach.value.input != null && this.inputSerach.value.input != '' ? this.inputSerach.value.input : null;
-      // const input2 = '';
-      // console.log(input2.name);
-
-      if(this.product){
-        // if(of(input))
+      if (this.product) {
         this.products.push(this.product);
         this.inputSerach.reset();
+        // this.cdr.detectChanges();
       }
 
-        console.log(this.products);
-        console.log(states);
-
-
-        // this.storageImport.patchValue(this.products[i])
-        // i+1;
-  //     }
-  //     this.input = [];
-  //     console.log(this.products);
-    // });
+      console.log(states);
+    }
   }
-}
-  // onImportPrice(){
-  //   this.calculatorPrice()
-  // }
 
+  // updateImportPrice(i: number) {
+  //   setTimeout(() => {
+  //     return this.products[i].import_price = this.storageImport.value.import_price;
+  //   }, 0);
+  // }
 
   calculateTotal(index: number): number {
     return this.products[index].import_price * this.products[index].quantity;
@@ -158,8 +124,5 @@ input: new FormControl(''),
     this.products.splice(index, 1);
   }
 
-  onSubmit(){
-
-  }
-
+  onSubmit() {}
 }

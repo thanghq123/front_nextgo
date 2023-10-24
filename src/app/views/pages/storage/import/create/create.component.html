@@ -154,8 +154,8 @@
                         <tr *ngFor="let value of products;  let i = index">
                           <th>{{ i + 1 }}</th>
                           <td>{{value.name}}</td>
-                          <td><input type="number" formControlName="import_price"  [(ngModel)]="products[i].import_price" class="form-control" id="exampleInputText1" placeholder="Nhập giá"></td>
-                          <td><input type="number" formControlName="quantity" [(ngModel)]="products[i].quantity" class="form-control" id="exampleInputText1" placeholder="Nhập số lượng"></td>
+                          <td><input type="number" formControlName="import_price"  [(ngModel)]=".import_price"  class="form-control" id="exampleInputText1" placeholder="Nhập giá"></td>
+                          <td><input type="number" formControlName="quantity" [(ngModel)]="quantity" class="form-control" id="exampleInputText1" placeholder="Nhập số lượng"></td>
                           <td>{{ calculateTotal(i) }}</td>
                           <th><button (click)="removeProduct(i)" class="btn btn-danger">Xóa</button></th>
                         </tr>
