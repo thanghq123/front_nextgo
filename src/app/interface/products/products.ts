@@ -9,6 +9,7 @@ export interface Products {
     warranty_id ?: number | null;
     item_unit_id ?: number | null;
     category_id ?: number | null;
+    attributes ?: any;
     status : number;
     variations ?: any; 
     created_at ?: Date | null;
