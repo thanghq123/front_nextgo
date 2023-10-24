@@ -92,33 +92,80 @@
                 <label for="exampleInputUsername1" class="form-label">
                   Chi nhánh
                 </label>
-                <ng-select
-                  [searchable]="true"
-                  placeholder="Chọn chi nhánh"
-                >
-                  <ng-option *ngFor="let item of listSupplier" [value]="item.id">
+                <ng-select [searchable]="true" placeholder="Chọn chi nhánh">
+                  <ng-option
+                    *ngFor="let item of listSupplier"
+                    [value]="item.id"
+                  >
                     {{ item.name }}
                   </ng-option>
                 </ng-select>
               </div>
-            </div><!-- Col -->
+            </div>
+            <!-- Col -->
             <div class="col-sm-6">
               <div class="mb-3">
                 <label for="exampleInputUsername1" class="form-label">
                   Kho
                 </label>
-                <ng-select
-                  [searchable]="true"
-                  placeholder="Chọn nhà kho"
-                >
-                  <ng-option *ngFor="let item of listSupplier" [value]="item.id">
+                <ng-select [searchable]="true" placeholder="Chọn nhà kho">
+                  <ng-option
+                    *ngFor="let item of listSupplier"
+                    [value]="item.id"
+                  >
                     {{ item.name }}
                   </ng-option>
                 </ng-select>
               </div>
-            </div><!-- Col -->
+            </div>
+            <!-- Col -->
           </div>
+          <div class="mb-3">
+            <form (ngSubmit)="searchProduct()" [formGroup]="inputSerach">
+              <ng-template #rt let-r="result" let-t="term">
+                <!-- <img [src]="'https://upload.wikimedia.org/wikipedia/commons/thumb/' + r['flag']" class="me-1" style="width: 16px"> -->
+                <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+              </ng-template>
 
+              <label for="typeahead-template" class="form-label">Tìm kiếm phiên bản sản phẩm:</label>
+              <input id="typeahead-template" type="text" class="form-control" [(ngModel)]="product" formControlName='input' [ngbTypeahead]="search" [resultTemplate]="rt"
+                [inputFormatter]="formatter" />
+              <button type="submit" hidden>Tìm kiếm</button>
+            </form>
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <!-- <h6 class="card-title">Hoverable Table</h6> -->
+              <div class="table-responsive">
+
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Phiên bản sản phẩm</th>
+                        <th>Giá nhập</th>
+                        <th>Số lượng</th>
+                        <th>Thành tiền</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ng-container *ngIf="products && products.length">
+                        <tr *ngFor="let value of products;  let i = index">
+                          <th>{{ i + 1 }}</th>
+                          <td>{{value.name}}</td>
+                          <td><input type="number" formControlName="import_price"  [(ngModel)]="products[i].import_price" class="form-control" id="exampleInputText1" placeholder="Nhập giá"></td>
+                          <td><input type="number" formControlName="quantity" [(ngModel)]="products[i].quantity" class="form-control" id="exampleInputText1" placeholder="Nhập số lượng"></td>
+                          <td>{{ calculateTotal(i) }}</td>
+                          <th><button (click)="removeProduct(i)" class="btn btn-danger">Xóa</button></th>
+                        </tr>
+                    </ng-container>
+                    </tbody>
+                  </table>
+
+              </div>
+            </div>
+          </div>
           <button
             type="submit"
             [disabled]="storageImport.invalid"

@@ -28,7 +28,7 @@ import { CommonModule } from '@angular/common';
     LayoutModule,
     HttpClientModule,
     NgbModule,
-    CommonModule
+    CommonModule,
   ],
   providers: [
     AuthGuard,

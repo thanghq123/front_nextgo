@@ -16,6 +16,8 @@ import { FormsModule } from '@angular/forms';
 import { ImportComponent } from './import.component';
 import { CreateComponent } from './create/create.component';
 // import { ListComponent } from './list/list.component';
+import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
+
 
 const routes: Routes = [
   {
@@ -64,7 +66,8 @@ const routes: Routes = [
     ReactiveFormsModule,
     NgSelectModule,
     FormsModule,
-    NgxMaskModule.forRoot({ validation: true})
+    NgxMaskModule.forRoot({ validation: true}),
+    NgbTypeaheadModule
   ]
 })
 export class ImportModule { }
