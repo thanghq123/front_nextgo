@@ -3,7 +3,7 @@
     <li class="breadcrumb-item">
       <a routerLink=".">Danh mục</a>
     </li>
-    <li class="breadcrumb-item active" aria-current="page">Thêm mới đơn kho</li>
+    <li class="breadcrumb-item active" aria-current="page">Xác nhận đơn kho</li>
   </ol>
 </nav>
 
@@ -11,14 +11,25 @@
   <div class="col-md-12 grid-margin stretch-card">
     <div class="card">
       <div class="card-body">
-        <h2 style="text-align: center">Tạo đơn nhập kho</h2>
+        <h2 style="text-align: center">Xác nhận nhập kho</h2>
         <h6 class="card-title">Thông tin cơ bản</h6>
+        <div *ngIf="isLoading" class="loadingcustomcss">
+          <button class="btn btn-primary" type="button" disabled>
+            <span
+              class="spinner-grow spinner-grow-sm"
+              role="status"
+              aria-hidden="true"
+            ></span>
+            Loading...
+          </button>
+        </div>
         <form
           class="forms-sample"
-          [formGroup]="storageImportForm"
+          [formGroup]="storageConfirmForm"
+          *ngIf="!isLoading"
           (ngSubmit)="onSubmit()"
         >
-          <!-- <div class="mb-3">
+          <div class="mb-3">
             <label for="exampleInputUsername1" class="form-label">
               Mã đơn
               <span class="text-danger">(*)</span>
@@ -30,12 +41,13 @@
               formControlName="inventory_transaction_id"
               autocomplete="off"
               placeholder="Nhập mã đơn"
+              [readonly]="true"
             />
-            <div *ngIf="storageImport.controls.name.invalid && storageImport.controls.name.touched"
+            <!-- <div *ngIf="storageImport.controls.name.invalid && storageImport.controls.name.touched"
               class="alert alert-danger mt-2">
               Không để trống tên chi nhánh
-            </div>
-          </div> -->
+            </div> -->
+          </div>
           <div class="mb-3">
             <label for="exampleInputUsername1" class="form-label">
               Lý do nhập
@@ -48,6 +60,7 @@
               formControlName="reason"
               autocomplete="off"
               placeholder="Nhập lý do nhập"
+              [readonly]="true"
             />
             <!-- <div *ngIf="storageImport.controls.name.invalid && storageImport.controls.name.touched"
               class="alert alert-danger mt-2">
@@ -63,6 +76,7 @@
               id="exampleFormControlTextarea1"
               formControlName="note"
               rows="5"
+              [readonly]="true"
             ></textarea>
           </div>
 
@@ -72,15 +86,14 @@
             <label for="exampleInputUsername1" class="form-label">
               Chọn nhà cung cấp
             </label>
-            <ng-select
-              [searchable]="true"
-              formControlName="partner_id"
-              placeholder="Chọn nhà cung cấp"
-            >
-              <ng-option *ngFor="let item of listSupplier" [value]="item.id">
-                {{ item.name }}
-              </ng-option>
-            </ng-select>
+            <input
+              type="text"
+              class="form-control"
+              id="exampleInputUsername1"
+              formControlName="partner_name"
+              autocomplete="off"
+              [readonly]="true"
+            />
           </div>
 
           <br />
@@ -91,14 +104,14 @@
                 <label for="exampleInputUsername1" class="form-label">
                   Chi nhánh
                 </label>
-                <ng-select [searchable]="true" placeholder="Chọn chi nhánh">
-                  <ng-option
-                    *ngFor="let item of listSupplier"
-                    [value]="item.id"
-                  >
-                    {{ item.name }}
-                  </ng-option>
-                </ng-select>
+                <input
+              type="text"
+              class="form-control"
+              id="exampleInputUsername1"
+              formControlName="inventory_name"
+              autocomplete="off"
+              [readonly]="true"
+            />
               </div>
             </div>
             <!-- Col -->
@@ -107,40 +120,17 @@
                 <label for="exampleInputUsername1" class="form-label">
                   Kho
                 </label>
-                <ng-select [searchable]="true" placeholder="Chọn nhà kho">
-                  <ng-option
-                    *ngFor="let item of listSupplier"
-                    [value]="item.id"
-                  >
-                    {{ item.name }}
-                  </ng-option>
-                </ng-select>
+                <input
+              type="text"
+              class="form-control"
+              id="exampleInputUsername1"
+              formControlName="inventory_name"
+              autocomplete="off"
+              [readonly]="true"
+            />
               </div>
             </div>
             <!-- Col -->
-          </div>
-          <div class="mb-3">
-            <form (ngSubmit)="searchProduct()" [formGroup]="inputSerach">
-              <ng-template #rt let-r="result" let-t="term">
-                <!-- <img [src]="'https://upload.wikimedia.org/wikipedia/commons/thumb/' + r['flag']" class="me-1" style="width: 16px"> -->
-                <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
-              </ng-template>
-
-              <label for="typeahead-template" class="form-label"
-                >Tìm kiếm phiên bản sản phẩm:</label
-              >
-              <input
-                id="typeahead-template"
-                type="text"
-                class="form-control"
-                [(ngModel)]="input"
-                formControlName="input"
-                [ngbTypeahead]="search"
-                [resultTemplate]="rt"
-                [inputFormatter]="formatter"
-              />
-              <button type="submit" hidden>Tìm kiếm</button>
-            </form>
           </div>
           <div class="mb-3">
             <div class="card">
@@ -155,60 +145,56 @@
                         <th>Giá nhập</th>
                         <th>Số lượng</th>
                         <th>Thành tiền</th>
-                        <th></th>
+                        <!-- <th></th> -->
                       </tr>
                     </thead>
                     <tbody>
-                      <ng-container *ngIf="products && products.length">
-                        <tr *ngFor="let value of products; let i = index">
-                          <th>{{ value.variation_id }}</th>
-                          <td (click)="Edit(i)">{{ value.name }}</td>
-                          <td *ngIf="i === editRowID">
-                            <input
-                              type="number"
+                      <ng-container *ngIf="listStorage && listStorage.length">
+                        <tr *ngFor="let value of listStorage; let i = index">
+                          <th>{{i + 1}}</th>
+                          <td>{{ value.variation_name }}</td>
+                          <td>
+                            <!-- <input
+                              type="text"
                               formControlName="price"
-                              [(ngModel)]="products[i].price"
+
+                              [readonly]="true"
                               class="form-control"
                               id="exampleInputText1"
-                              placeholder="Nhập giá"
-                            />
+                            /> -->
+                            <p>{{ listStorage[i].price | currency:'VNĐ':'symbol':'1.0-0' }}</p>
                           </td>
-                          <td *ngIf="i !== editRowID" (click)="Edit(i)">
-                            {{ value.price }}
-                          </td>
-                          <td *ngIf="i === editRowID">
-                            <input
+                          <td>
+                            <!-- <input
                               type="number"
                               formControlName="quantity"
-                              [(ngModel)]="products[i].quantity"
+
+                              [readonly]="true"
                               class="form-control"
                               id="exampleInputText1"
-                              placeholder="Nhập số lượng"
-                            />
-                          </td>
-                          <td *ngIf="i !== editRowID" (click)="Edit(i)">
-                            {{ value.quantity }}
+                            /> -->
+                            <p>{{listStorage[i].quantity}}</p>
                           </td>
                           <td>
                             {{
                               calculateTotal(
-                                products[i].price,
-                                products[i].quantity
+                                listStorage[i].price,
+                                listStorage[i].quantity
                               ) | currency: 'VNĐ' :  "symbol" : "1.0-0"
                             }}
                           </td>
                           <th>
-                            <button
+                            <!-- <button
                               (click)="removeProduct(i)"
                               class="btn btn-danger"
                             >
                               Xóa
-                            </button>
+                            </button> -->
                           </th>
                         </tr>
                         <tr>
                           <th style="color: red;">TỔNG TIỀN</th>
-                          <td colspan="5" style="text-align: right;">{{calculateTotalPrice() | currency: 'VNĐ' : "symbol" : "1.0-0"}}</td>
+                          <td colspan="4" style="text-align: right;">{{calculateTotalPrice() | currency: 'VNĐ' : "symbol" : "1.0-0"}}</td>
                         </tr>
                       </ng-container>
                     </tbody>
@@ -217,12 +203,19 @@
               </div>
             </div>
           </div>
-          <button
+          <button *ngIf="status === false"
             type="submit"
-            [disabled]="storageImportForm.invalid"
+            [disabled]="storageConfirmForm.invalid"
             class="btn btn-primary me-2"
           >
-            Tạo mới
+            Xác nhận
+          </button>
+          <button *ngIf="status === true"
+            type="button"
+            [disabled]="storageConfirmForm.invalid"
+            class="btn btn-primary me-2"
+          >
+            In mã vạch
           </button>
           <button class="btn btn-secondary" routerLink="/storage/import/list">
             Trở về
@@ -232,3 +225,4 @@
     </div>
   </div>
 </div>
+

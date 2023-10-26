@@ -20,6 +20,7 @@ import { CommonModule } from '@angular/common';
   declarations: [
     AppComponent,
     ErrorPageComponent,
+
   ],
   imports: [
     BrowserModule,

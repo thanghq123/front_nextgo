@@ -19,7 +19,7 @@ export abstract class CRUDServiceService<T> {
   create(data: T) {
     const headers = new HttpHeaders();
     return this.http.post<T>(
-      `${this.apiUrl}/store`,
+      `${this.apiUrl}/create`,
       this.dataService.handleData(data),
       { headers }
     );

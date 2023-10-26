@@ -15,8 +15,11 @@ import { FormsModule } from '@angular/forms';
 
 import { ImportComponent } from './import.component';
 import { CreateComponent } from './create/create.component';
-// import { ListComponent } from './list/list.component';
+import { ListComponent } from './list/list.component';
 import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
+import { DetailComponent } from './detail/detail.component';
+
+
 
 
 const routes: Routes = [
@@ -26,17 +29,17 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'create',
+        redirectTo: 'list',
         pathMatch: 'full'
       },
-      // {
-      //   path: 'list',
-      //   component:  ListComponent
-      // },
-      // {
-      //   path: 'edit/:id',
-      //   component: EditComponent
-      // },
+      {
+        path: 'list',
+        component:  ListComponent
+      },
+      {
+        path: 'detail/:id',
+        component: DetailComponent
+      },
       {
         path: 'create',
         component: CreateComponent
@@ -49,7 +52,8 @@ const routes: Routes = [
   declarations: [
     CreateComponent,
     ImportComponent,
-    // ListComponent
+    ListComponent,
+    DetailComponent,
   ],
   imports: [
     CommonModule,

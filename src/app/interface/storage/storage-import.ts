@@ -1,15 +1,15 @@
 
 export interface StorageImport {
-  id: number;
-  inventory_id: number;
-  partner_id: number;
-  partner_type: number;
-  trans_type: number;
-  inventory_transaction_id: number;
-  reason: string;
-  note: string;
-  status: number;
-  created_by: number;
+  id?: number | null;
+  inventory_id?: number | null;
+  partner_id?: number | null;
+  partner_type?: number | null;
+  trans_type?: number | null;
+  inventory_transaction_id?: number | null;
+  reason?: string | null;
+  note?: string | null;
+  status?: number | null;
+  created_by?: number | null;
   created_at ?: Date | null;
   update_at ?: Date | null;
 }
