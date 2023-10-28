@@ -43,14 +43,14 @@ export class ItemUnitsListComponent implements OnInit {
     Array.from(deleteButtons).forEach((button) => {
       button.addEventListener('click', (event) => {
         const id = (event.target as Element).getAttribute('id');
-        this.deleteBrand(Number(id));
+        this.deleteItem(Number(id));
       });
     });
   }
 
   // ...
 
-  deleteBrand(id: number) {
+  deleteItem(id: number) {
     Swal.fire({
       title: 'Bạn có chắc chắn muốn xóa?',
       text: 'Bạn sẽ không thể hoàn tác lại hành động này!',
@@ -95,13 +95,12 @@ export class ItemUnitsListComponent implements OnInit {
 
   refreshData(): void{
     this.isLoading = true;
-    this._unitsService.get().subscribe({
+    this._unitsService.GetData().subscribe({
       next: (res: any) => {
         // console.log(res.status);
         if(res.status == true){
           this.listUnits = of(res.payload.data) ;
           this.isLoading = false;
-          // console.log(this.listBrands);
           this.listUnits.subscribe(
             (res)=> {
               setTimeout(() => {

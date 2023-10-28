@@ -21,12 +21,10 @@ export class BrandsCreateComponent implements OnInit {
     if (this.brandForm.valid) {
       // console.log(this.brandForm.value);
       const dataToSend = {
-        ...this.brandForm.value,
-        // created_date: new Date().toISOString(),
-        // update_date: null,
+        name: String(this.brandForm.value.name) || "",
       };
 
-      this._brandService.createBrand(dataToSend).subscribe(
+      this._brandService.create(dataToSend).subscribe(
         (response: any) => {
           if (response.status == true) {
             this.brandForm.reset();

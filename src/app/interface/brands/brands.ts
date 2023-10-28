@@ -1,6 +1,6 @@
 export interface Brands {
-  id: number,
+  id?: number | null,
   name: string,
-  created_at : Date;
-  updated_at : Date;
+  created_at ?: Date | null;
+  updated_at ?: Date | null;
 }
