@@ -15,10 +15,12 @@ import { HttpClientModule } from '@angular/common/http';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 
+
 @NgModule({
   declarations: [
     AppComponent,
     ErrorPageComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -27,7 +29,7 @@ import { CommonModule } from '@angular/common';
     LayoutModule,
     HttpClientModule,
     NgbModule,
-    CommonModule
+    CommonModule,
   ],
   providers: [
     AuthGuard,

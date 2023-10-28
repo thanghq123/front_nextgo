@@ -49,6 +49,10 @@ const routes: Routes = [
         loadChildren: () => import('./views/pages/locations/locations.module').then(m => m.LocationsModule)
       },
       {
+        path: 'storage/import',
+        loadChildren: () => import('./views/pages/storage/import/import.module').then(m => m.ImportModule)
+      },
+      {
         path: 'dashboard',
         loadChildren: () => import('./views/pages/dashboard/dashboard.module').then(m => m.DashboardModule)
       },
