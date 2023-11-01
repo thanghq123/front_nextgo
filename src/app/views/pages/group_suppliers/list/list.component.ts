@@ -87,7 +87,7 @@ export class ListComponent implements OnInit {
    this.GroupSuppliersService.GetData().subscribe(
       (response : any) => {
         if(response.status == true){
-          this.groupCustomers =of(response.payload);
+          this.groupCustomers =of(response.payload.data);
           // console.log(response.payload);
           
           this.groupCustomers.subscribe((groupCustomers) => {

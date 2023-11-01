@@ -75,9 +75,8 @@ export class CategoriesListComponent implements OnInit, AfterViewInit {
    this.categoriesService.GetData().subscribe(
       (response : any) => {
         if(response.status == true){
-          this.ListsCategories =of(response.payload);
-          console.log(this.ListsCategories);
-
+          this.ListsCategories =of(response.payload.data);
+          // console.log(this.ListsCategories);
           this.ListsCategories.subscribe((categories) => {
             setTimeout(() => {
                 const dataTable = new DataTable('#dataTableExample');

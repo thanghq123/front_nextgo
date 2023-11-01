@@ -100,6 +100,7 @@ export class ItemUnitsListComponent implements OnInit {
         // console.log(res.status);
         if(res.status == true){
           this.listUnits = of(res.payload.data) ;
+          // console.log(this.listBrands);
           this.isLoading = false;
           this.listUnits.subscribe(
             (res)=> {

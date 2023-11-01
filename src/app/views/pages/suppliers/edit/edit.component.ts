@@ -58,7 +58,7 @@ export class EditComponent implements OnInit {
       { id: 1, name: 'Không kích hoạt' },
     ];
     this.GroupSuppliersService.GetData().subscribe((data: any) => {
-      this.GroupsCustomers = data.payload;
+      this.GroupsCustomers = data.payload.data;
     });
 
     this.AresService.getProvinces().subscribe((data: any) => {

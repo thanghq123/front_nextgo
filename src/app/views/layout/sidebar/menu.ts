@@ -47,7 +47,19 @@ export const MENU: MenuItem[] = [
     link: '/suppliers/list'
   },
   {
-    label: 'Chi nhánh',
+    label: 'Sản phẩm',
+    icon: 'mail',
+    subItems: [
+      {
+        label: 'Danh sách sản phẩm',
+        link: 'products/list',
+      },
+       {
+        label: 'Bán hàng',
+        link: 'shop/tabshop',
+      },
+    ]},
+{    label: 'Chi nhánh',
     icon: 'target',
     link: '/locations/list'
   },
