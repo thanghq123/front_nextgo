@@ -19,6 +19,7 @@ import { SortablejsModule } from 'ngx-sortablejs';
   declarations: [
     AppComponent,
     ErrorPageComponent,
+
   ],
   imports: [
     BrowserModule,

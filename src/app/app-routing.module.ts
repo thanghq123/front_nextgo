@@ -91,6 +91,10 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'storage/import',
+        loadChildren: () => import('./views/pages/storage/import/import.module').then(m => m.ImportModule)
+      },
+      {
         path: 'dashboard',
         loadChildren: () =>
           import('./views/pages/dashboard/dashboard.module').then(

@@ -66,6 +66,27 @@ export const MENU: MenuItem[] = [
   {
     label: 'Kho & tồn',
     icon: 'target',
-    link: '/item-units/list'
+    subItems: [
+      // {
+      //   label: 'Quản lý kho',
+      //   link: '/suppliers/list'
+      // },
+      // {
+      //   label: 'Tồn kho',
+      //   link: '/suppliers/list'
+      // },
+      {
+        label: 'Nhập kho',
+        link: '/storage/import'
+      },
+      // {
+      //   label: 'Xuất kho',
+      //   link: '/suppliers/list'
+      // },
+      // {
+      //   label: 'Chuyển kho',
+      //   link: '/suppliers/list'
+      // },
+    ]
   }
 ];
