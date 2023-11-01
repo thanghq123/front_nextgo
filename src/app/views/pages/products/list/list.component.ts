@@ -23,7 +23,9 @@ export class ListComponent implements OnInit {
   ngAfterViewInit(): void {
     this.ListsProducts.subscribe(() => {
       setTimeout(() => {
-        const dataTable = new DataTable('#dataTableExample');
+        const dataTable = new DataTable('#dataTableExamples',{
+          "sortable": false // this will disable sorting (assuming "sortable" is the correct option)
+      });
         dataTable.on('datatable.init', () => {
           this.addDeleteEventHandlers();
         });
@@ -80,7 +82,7 @@ export class ListComponent implements OnInit {
           
           this.ListsProducts.subscribe((categories) => {
             setTimeout(() => {
-                const dataTable = new DataTable('#dataTableExample');
+                const dataTable = new DataTable('#dataTableExamples');
                 // Here, use the 'categories' data to populate your DataTable
                 // ...
                 dataTable.on('datatable.init', () => {

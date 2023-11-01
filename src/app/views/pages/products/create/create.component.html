@@ -52,8 +52,8 @@
           </div>
 
           <div class="mb-3">
-            <label for="des" class="form-label">Mô tả</label>
-            <textarea class="form-control" id="des" formControlName="des"  rows="5"></textarea>
+            <label for="description" class="form-label">Mô tả</label>
+            <textarea class="form-control" id="description" formControlName="description"  rows="5"></textarea>
           </div>
          
         </div>
@@ -190,9 +190,13 @@
                     <table class="table table-striped">
                       <thead>
                         <tr>
-                          <th>Hình ảnh</th>
+                          <div *ngIf="statusVersionDefault">
+                            <th>Hình ảnh</th>
+                          </div>
                           <th>Tên phiên bản</th>
-                          <th>Tên hiển thị</th>
+                          <div *ngIf="statusVersionDefault">
+                            <th>Tên hiển thị</th>
+                          </div>
                           <th>Giá nhập</th>
                           <th>Giá bán</th>
                           <th>SKU</th>
@@ -204,10 +208,10 @@
                       
                         <tbody  *ngIf="originalArray && originalArray.length > 0">
                           <tr formArrayName="rows"  *ngFor="let item of rows.controls; let i = index" >
-                            <ng-container [formGroupName]="i">
-                              <td>{{ rows.at(i).get('image')?.value }}</td>
+                            <ng-container   [formGroupName]="i">
+                              <td *ngIf="statusVersionDefault">{{ rows.at(i).get('image')?.value }}</td>
                               <td>{{ rows.at(i).get('variation_name')?.value }}</td>
-                            <td>
+                            <td *ngIf="statusVersionDefault">
                               <input type="text" id="display_name"  formControlName="display_name"  class="form-control"></td>
                             <td> <input type="number" id="price_import"  formControlName="price_import"  class="form-control"></td>
                             <td><input type="number" id="price_export"  formControlName="price_export"  class="form-control"></td>
@@ -245,7 +249,7 @@
 <ng-template #addAttributes let-modal>
   <div class="modal-header">
     <h5 class="modal-title" id="exampleModalLabel">Thuộc tính sản phẩm</h5>
-    <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
+    <button type="button" class="btn-close" (click)="modal.close(false)" aria-label="Close"></button>
   </div>
   <div class="modal-body">
     <div class="row bg-body p-4 mt-4 rounded position-relative " *ngFor="let item of itemBoxTypeQualityArray; let indexItem = index">
@@ -258,7 +262,7 @@
         <label class="form-label" style="width: 20%;">Giá trị</label>
         <div class="w-100">
           <input type="text" class="form-control"  [(ngModel)]="simpleItems[indexItem].newItemText" (keyup.enter)="addItem(indexItem)" placeholder="Nhập giá trị và ấn enter">
-        <ul class="list-group mt-2" [sortablejs]="simpleItems">
+        <ul class="list-group mt-2" [sortablejs]="simpleItems[indexItem].attribute_values">
             <li class="list-group-item d-flex mt-1  align-items-center justify-content-between p-1" *ngFor="let item of simpleItems[indexItem].attribute_values let i = index">
               <div>
                 <i data-feather="move" appFeatherIcon class="icon-sm handle me-2"></i>
@@ -282,8 +286,8 @@
   </button>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="modal.close('by: close button')">Close</button>
-    <button type="button" class="btn btn-primary"  [disabled]="!statusFormType" (click)="modal.close('by: save button')">Save changes</button>
+    <button type="button" class="btn btn-secondary" (click)="modal.close(false)">Close</button>
+    <button type="button" class="btn btn-primary"  [disabled]="!statusFormType" (click)="modal.close(true)">Save changes</button>
   </div>
 </ng-template>
 <!-- Close result -->

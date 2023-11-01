@@ -32,7 +32,7 @@ export class CreateComponent implements OnInit {
   // valuesAtribute: { id: number, text: string }[] = [];
   simpleItems: {
     name: string;
-    attribute_values: { id: number; value: string }[];
+    attribute_values: { id?: number; value: string }[];
     newItemText: string;
   }[] = [];
   nameAttributes: string[] = [];
@@ -45,6 +45,7 @@ export class CreateComponent implements OnInit {
   form: FormGroup;
   rows: FormArray;
 
+  statusVersionDefault : boolean = false;
   originalArray: any[] = [];
 
   dataValueVariable: any[];
@@ -54,17 +55,17 @@ export class CreateComponent implements OnInit {
   itemBoxTypeQualityArray: any[] = Array(this.itemBoxTypeQuality).fill(null);
   productsForm = new FormGroup({
     name: new FormControl('', Validators.required),
-    weight : new FormControl(0),
-    des : new FormControl(''),
-    manage_type : new FormControl(0),
-    brand_id : new FormControl(0),
-    warranty_id : new FormControl(0),
-    item_unit_id :  new FormControl(0),
-    category_id : new FormControl(0),
-    status : new FormControl(1),
-    image : new FormControl(''),
-    attributes : new FormControl(this.simpleItems),
-    variations :new FormControl(this.originalArray),
+    weight: new FormControl(0),
+    description: new FormControl(''),
+    manage_type: new FormControl(0),
+    brand_id: new FormControl(0),
+    warranty_id: new FormControl(0),
+    item_unit_id: new FormControl(0),
+    category_id: new FormControl(0),
+    status: new FormControl(1),
+    image: new FormControl(''),
+    attributes: new FormControl(this.simpleItems),
+    variations: new FormControl(this.originalArray),
   });
   // this.simpleItems
   // this.originalArray
@@ -116,6 +117,9 @@ export class CreateComponent implements OnInit {
     this.WarrantiesService.GetData().subscribe((data: any) => {
       this.warranties = data.payload.data;
     });
+
+    this.renderVersion({ status: false });
+   
     this.isLoading = false;
   }
   createItemFormGroup(item: any): FormGroup {
@@ -138,76 +142,110 @@ export class CreateComponent implements OnInit {
       attribute_values: [],
       newItemText: '',
     });
-    this.CheckStatusform();
   }
 
-  renderVersion() {
-    let combinedArray$ = of(
-      this.simpleItems[0].attribute_values.map((item) => ({
+  renderVersion({
+    dataDefalut = [
+      {
         sku: null,
         barcode: null,
-        variation_name: item.value,
-        display_name: item.value,
+        variation_name: "Mặc định",
+        display_name:  "Mặc định",
         image: null,
         price_import: 0,
         price_export: 0,
         status: 1,
-      }))
-    ).pipe(
-      expand((acc, index) => {
-        if (index >= this.simpleItems.length - 1) {
-          return of([]);
+      },
+    ],
+    status = true,
+  } = {}) {
+    console.log(dataDefalut);
+    
+    if (status) {
+      let combinedArray$ = of(
+        this.simpleItems[0].attribute_values.map((item) => ({
+          sku: null,
+          barcode: null,
+          variation_name: item.value,
+          display_name: item.value,
+          image: null,
+          price_import: 0,
+          price_export: 0,
+          status: 1,
+        }))
+      ).pipe(
+        expand((acc, index) => {
+          if (index >= this.simpleItems.length - 1) {
+            return of([]);
+          }
+          let values = this.simpleItems[index + 1].attribute_values.map(
+            (item) => item.value
+          );
+          return of(
+            acc.flatMap((item) =>
+              values.map((value) => ({
+                sku: null,
+                barcode: null,
+                variation_name: `${item.variation_name}-${value}`,
+                display_name: `${item.variation_name}-${value}`,
+                image: null,
+                price_import: 0,
+                price_export: 0,
+                status: 1,
+              }))
+            )
+          );
+        }),
+        take(this.simpleItems.length)
+      );
+
+      this.form = this.fb.group({
+        rows: this.fb.array([]),
+      });
+      this.rows = this.form.get('rows') as FormArray;
+
+      combinedArray$.subscribe((combinedArray) => {
+        console.log(combinedArray);
+
+        this.originalArray = combinedArray;
+        this.productsForm.get('variations')!.setValue(combinedArray);
+        while (this.rows.length !== 0) {
+          this.rows.removeAt(0);
         }
-        let values = this.simpleItems[index + 1].attribute_values.map(
-          (item) => item.value
-        );
-        return of(
-          acc.flatMap((item) =>
-            values.map((value) => ({
-              sku: null,
-              barcode: null,
-              variation_name: `${item.variation_name}-${value}`,
-              display_name: `${item.variation_name}-${value}`,
-              image: null,
-              price_import: 0,
-              price_export: 0,
-              status: 1,
-            }))
-          )
-        );
-      }),
-      take(this.simpleItems.length)
-    );
 
-    this.form = this.fb.group({
-      rows: this.fb.array([]),
-    });
-    this.rows = this.form.get('rows') as FormArray;
+        combinedArray.forEach((item) => {
+          this.rows.push(this.createItemFormGroup(item));
+        });
 
-    combinedArray$.subscribe((combinedArray) => {
-      // console.log(combinedArray); // Should print 4 arrays
-      console.log(combinedArray);
-      
-      this.originalArray = combinedArray;
-      this.productsForm.get('variations')!.setValue(combinedArray);
-      // Clear the FormArray
-      while (this.rows.length !== 0) {
-        this.rows.removeAt(0);
+        this.rows.valueChanges.subscribe((value) => {
+          this.originalArray = value; // Should now also print 4 arrays
+          this.productsForm.value.variations = value;
+        });
+      });
+    } else {
+      console.log(dataDefalut);
+
+      this.form = this.fb.group({
+        rows: this.fb.array([]),
+      });
+      this.rows = this.form.get('rows') as FormArray;
+      this.originalArray = dataDefalut;
+      this.productsForm.get('variations')!.setValue(dataDefalut);
+      if (this.rows) {
+        while (this.rows.length !== 0) {
+          this.rows.removeAt(0);
+        }
       }
 
-      combinedArray.forEach((item) => {
+      dataDefalut.forEach((item: any) => {
         this.rows.push(this.createItemFormGroup(item));
       });
 
       this.rows.valueChanges.subscribe((value) => {
-        console.log(value);
-        
-         this.originalArray = value // Should now also print 4 arrays
-         this.productsForm.value.variations = value;
+        this.originalArray = value; // Should now also print 4 arrays
+        this.productsForm.value.variations = value;
       });
-
-     
-    });
+    }
   }
   removeAttributesForm(index: number) {
     if (this.itemBoxTypeQuality > 1) {
@@ -220,7 +258,6 @@ export class CreateComponent implements OnInit {
     }
   }
   addItem(index: number) {
-   
     // console.log(index);
     if (
       this.simpleItems[index].newItemText.trim() !== '' &&
@@ -247,11 +284,11 @@ export class CreateComponent implements OnInit {
         });
       } else {
         this.simpleItems[index].attribute_values.push({
-          id: this.nextItemId++,
           value: this.simpleItems[index].newItemText,
         });
         this.simpleItems[index].newItemText = '';
         console.log(this.simpleItems);
+        this.statusVersionDefault = true;
         this.CheckStatusform();
       }
     }
@@ -344,20 +381,49 @@ export class CreateComponent implements OnInit {
         // console.log('Modal closed with:', result);
         // console.log('Weight value:', this.weightValue);
         // console.log('abc:',this.simpleItems);
-        this.renderValue();
-        this.CheckStatusform();
+        if (result) {
+          this.renderValue();
+          this.CheckStatusform();
+        }
       })
       .catch((res) => {});
   }
 
   onSubmit() {
     if (this.productsForm.valid) {
-  
+      // this.originalArray
+      // value.forEach((item: any, index: number) => {
+      //   if (item.sku) {
+      //     console.log(`Item at index ${index} has SKU.`);
+      //   } else {
+      //     console.log(`Item at index ${index} has no SKU.`);
+      //     // Gán giá trị ngẫu nhiên cho sku tại đây
+      //     const skuControl = this.rows.controls[index].get('sku');
+      //     if (skuControl) {
+      //       skuControl.setValue(this.generateRandomString(10), {
+      //         emitEvent: false,
+      //       });
+      //     }
+      //   }
+      // });
+      
       const dataToSend = {
         ...this.productsForm.value,
         name: this.productsForm.value.name || '',
-        status : Number(this.productsForm.value.status),
-        attributes :this.productsForm.value.attributes?.length === 0 ? null : this.productsForm.value.attributes,
+        status: Number(this.productsForm.value.status),
+        attributes: this.checkAtribute(),
+        variations: this.originalArray.map((item) => {
+          const newItem = { ...item };
+          if (newItem.sku === null) {
+            newItem.sku = this.generateRandomString(10);
+          }
+
+          if(newItem.variation_name == "Mặc định" || newItem.display_name == "Mặc định" ){
+            newItem.variation_name = this.productsForm.value.name;
+            newItem.display_name = this.productsForm.value.name;
+          }
+          return newItem;
+        }),
         created_at: new Date(),
         updated_at: null,
       };
@@ -381,7 +447,7 @@ export class CreateComponent implements OnInit {
                 toast.addEventListener('mouseleave', Swal.resumeTimer);
               },
             });
-            this.router.navigate(['../categories/list']);
+            this.router.navigate(['../products/list']);
           } else {
             console.log(response);
             const errorMessages = [];
@@ -414,5 +480,24 @@ export class CreateComponent implements OnInit {
     } else {
       alert('Không để trống');
     }
+  }
+
+  checkAtribute(){
+    if (this.simpleItems.every(item => item.name === '' && item.attribute_values.length === 0 && item.newItemText === '')) {
+      return null;
+  } else {
+      return this.simpleItems;
+  }
+  }
+
+  generateRandomString(length: number): string {
+    let result = '';
+    const characters =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
   }
 }

@@ -20,7 +20,7 @@
             <h6 class="card-title">Thêm mới Danh mục</h6>
             <div class="d-flex justify-content-between my-2">
               <button class="btn btn-secondary" routerLink="/products/list">Trở về</button>
-              <button type="submit" [disabled]="productsForm.invalid" class="btn btn-primary me-2">Tạo mới</button>
+              <button type="submit" [disabled]="productsForm.invalid" class="btn btn-primary me-2">Cập nhật</button>
             </div>
             <div class="mb-3">
               <label for="nameProducts" class="form-label">Tên sản phẩm</label>
@@ -52,8 +52,8 @@
             </div>
   
             <div class="mb-3">
-              <label for="des" class="form-label">Mô tả</label>
-              <textarea class="form-control" id="des" formControlName="des"  rows="5"></textarea>
+              <label for="description" class="form-label">Mô tả</label>
+              <textarea class="form-control" id="description" formControlName="description"  rows="5"></textarea>
             </div>
            
           </div>
@@ -160,7 +160,7 @@
               </div>
             </div>
             
-            <button type="button" (click)="openBasicModal(addAttributes)"
+            <button type="button" [disabled]="!statusRequestvaribles" (click)="openBasicModal(addAttributes)"
               class="btn border text-primary border-primary btn-icon-text">
               <i class="feather icon-plus btn-icon-plus"></i>
               Thêm thuộc tính
@@ -190,8 +190,8 @@
                       <table class="table table-striped">
                         <thead>
                           <tr>
-                            <th>Hình ảnh</th>
-                            <th>Tên phiên bản</th>
+                            <th *ngIf="statusRequestvaribles" >Hình ảnh</th>
+                            <th >Tên phiên bản</th>
                             <th>Tên hiển thị</th>
                             <th>Giá nhập</th>
                             <th>Giá bán</th>
@@ -205,7 +205,7 @@
                           <tbody  *ngIf="originalArray && originalArray.length > 0">
                             <tr formArrayName="rows"  *ngFor="let item of rows.controls; let i = index" >
                               <ng-container [formGroupName]="i">
-                                <td>{{ rows.at(i).get('image')?.value }}</td>
+                                <td *ngIf="statusRequestvaribles">{{ rows.at(i).get('image')?.value }}</td>
                                 <td>{{ rows.at(i).get('variation_name')?.value }}</td>
                               <td>
                                 <input type="text" id="display_name"  formControlName="display_name"  class="form-control"></td>
@@ -245,11 +245,11 @@
   <ng-template #addAttributes let-modal>
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel">Thuộc tính sản phẩm</h5>
-      <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
+      <button type="button" class="btn-close" (click)="modal.close(false)" aria-label="Close"></button>
     </div>
     <div class="modal-body">
       <div class="row bg-body p-4 mt-4 rounded position-relative " *ngFor="let item of itemBoxTypeQualityArray; let indexItem = index">
-          <i class="feather icon-x position-absolute top-0  start-95 fs-4 text-danger" (click)="removeAttributesForm(indexItem)"></i>
+          <i class="feather icon-x position-absolute top-0  start-95 fs-4 text-danger" style="display: none;" (click)="removeAttributesForm(indexItem)"></i>
         <div class="col-12 d-flex align-items-center">
           <label class="form-label" for="weight" style="width: 20%;">Thuộc tính</label>
           <input type="text" id="weight"  (change)="CheckStatusform()" [(ngModel)]="simpleItems[indexItem].name"  class="form-control" placeholder="Nhập thuộc tính">
@@ -258,13 +258,14 @@
           <label class="form-label" style="width: 20%;">Giá trị</label>
           <div class="w-100">
             <input type="text" class="form-control"  [(ngModel)]="simpleItems[indexItem].newItemText" (keyup.enter)="addItem(indexItem)" placeholder="Nhập giá trị và ấn enter">
-          <ul class="list-group mt-2" [sortablejs]="simpleItems">
-              <li class="list-group-item d-flex mt-1  align-items-center justify-content-between p-1" *ngFor="let item of simpleItems[indexItem].attribute_values let i = index">
-                <div>
+          <ul class="list-group mt-2" [sortablejs]="simpleItems[indexItem].attribute_values">
+              <li class="list-group-item d-flex mt-1 p-2  align-items-center justify-content-between p-1" *ngFor="let item of simpleItems[indexItem].attribute_values let i = index">
+                <div class="d-flex align-items-center w-100">
                   <i data-feather="move" appFeatherIcon class="icon-sm handle me-2"></i>
-                {{ item.value }}
+                <!-- {{ item.value }} -->
+                <input [(ngModel)]="item.value" (change)="CheckStatusform()" class="form-control w-100" />
                 </div>
-                <button class="btn btn-danger btn-sm float-end" (click)="removeItem(i,indexItem)"><i class="feather icon-trash-2 btn-icon-trash-2"></i></button>
+                <button style="display: none;" class="btn btn-danger btn-sm float-end" (click)="removeItem(i,indexItem)"><i class="feather icon-trash-2 btn-icon-trash-2"></i></button>
               </li>
           </ul>
           </div>
@@ -275,15 +276,15 @@
         </div>
   
       </div>
-      <button type="button" (click)="addAttributesForm()"
+      <button type="button" disabled (click)="addAttributesForm()"
       class="btn border text-primary border-primary btn-icon-text w-100 mt-4">
       <i class="feather icon-plus btn-icon-plus"></i>
       Thêm thuộc tính
     </button>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" (click)="modal.close('by: close button')">Close</button>
-      <button type="button" class="btn btn-primary"  [disabled]="!statusFormType" (click)="modal.close('by: save button')">Save changes</button>
+      <button type="button" class="btn btn-secondary" (click)="modal.close(false)">Close</button>
+      <button type="button" class="btn btn-primary"  [disabled]="!statusFormType" (click)="modal.close(true)">Save changes</button>
     </div>
   </ng-template>
   <!-- Close result -->
