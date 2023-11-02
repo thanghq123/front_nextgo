@@ -3,7 +3,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { BaseComponent } from './views/layout/base/base.component';
 import { AuthGuard } from './core/guard/auth.guard';
 import { ErrorPageComponent } from './views/pages/error-page/error-page.component';
-
+import { BaseSpecialComponent } from './views/layout/base-special/base-special.component';
+import { EditComponent } from './views/pages/print/edit/edit.component';
 const routes: Routes = [
   {
     path: 'auth',
@@ -91,8 +92,16 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'print',
+        loadChildren: () =>
+          import('./views/pages/print/print.module').then((m) => m.PrintModule),
+      },
+      {
         path: 'storage/import',
-        loadChildren: () => import('./views/pages/storage/import/import.module').then(m => m.ImportModule)
+        loadChildren: () =>
+          import('./views/pages/storage/import/import.module').then(
+            (m) => m.ImportModule
+          ),
       },
       {
         path: 'dashboard',
@@ -164,6 +173,15 @@ const routes: Routes = [
       // { path: '**', redirectTo: 'dashboard', pathMatch: 'full' }
     ],
   },
+  { path: '', 
+  component: BaseSpecialComponent,
+   canActivate: [AuthGuard] ,
+   children: [
+    {
+      path: 'print/edit',
+      component : EditComponent
+    }
+  ]},
   {
     path: 'error',
     component: ErrorPageComponent,
