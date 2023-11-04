@@ -14,7 +14,16 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
-import { CKEditorModule } from 'ng2-ckeditor';
+import { CKEditorModule } from 'ckeditor4-angular';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
+import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
+import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
+import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
+
+const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
+  suppressScrollX: true
+};
 
 
 
@@ -46,7 +55,15 @@ const routes: Routes = [
     ReactiveFormsModule,
     NgSelectModule,
     FormsModule,
-    CKEditorModule
+    NgbModule,
+    CKEditorModule,
+    PerfectScrollbarModule
+  ],
+  providers: [
+    {
+      provide: PERFECT_SCROLLBAR_CONFIG,
+      useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
+    }
   ]
 })
 export class PrintModule { }
