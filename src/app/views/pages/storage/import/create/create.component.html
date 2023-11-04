@@ -93,7 +93,7 @@
                 </label>
                 <ng-select [searchable]="true" placeholder="Chọn chi nhánh">
                   <ng-option
-                    *ngFor="let item of listSupplier"
+                    *ngFor="let item of listLocation"
                     [value]="item.id"
                   >
                     {{ item.name }}
@@ -109,7 +109,7 @@
                 </label>
                 <ng-select [searchable]="true" placeholder="Chọn nhà kho">
                   <ng-option
-                    *ngFor="let item of listSupplier"
+                    *ngFor="let item of listLocation"
                     [value]="item.id"
                   >
                     {{ item.name }}

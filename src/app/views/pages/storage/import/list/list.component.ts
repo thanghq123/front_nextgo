@@ -119,4 +119,16 @@ export class ListComponent implements OnInit, AfterViewInit {
     })
   }
 
+  status(key: number): any{
+    // const result = [];
+    if(key == 0){
+       return ['Hủy đơn', 'bg-danger'];
+    }else if(key == 1){
+      return ['Chờ xác nhận', 'bg-primary'];
+    }else if(key == 2){
+      return ['Hoàn thành', 'bg-success']
+    }
+
+  }
+
 }

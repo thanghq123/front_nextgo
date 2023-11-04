@@ -17,6 +17,7 @@ import { ChangeDetectionStrategy } from '@angular/core';
 import { SuppliersService } from 'src/app/service/suppliers/suppliers.service';
 import { LocationsService } from 'src/app/service/locations/locations.service';
 import { Product } from 'src/app/interface/product/product';
+import { ProductsService } from 'src/app/service/products/products.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,6 +26,7 @@ import { Product } from 'src/app/interface/product/product';
   styleUrls: ['./create.component.scss'],
 })
 export class CreateComponent implements OnInit {
+  listProduct: any = [];
   listSupplier: any = [];
   listLocation: any = [];
   products: any[] = [];
@@ -47,11 +49,14 @@ export class CreateComponent implements OnInit {
     private _supplier: SuppliersService,
     private _location: LocationsService,
     private _storage: StorageImportService,
+    private _product: ProductsService,
     private router: Router,
     private cdr: ChangeDetectorRef
   ) {
     this._supplier.GetData().subscribe((res: any) => {
       this.listSupplier = res.payload.data;
+      // console.log(this.listSupplier);
+
     });
 
     this.tableData = [
@@ -87,9 +92,14 @@ export class CreateComponent implements OnInit {
       },
     ];
 
-    // this._location.GetData().subscribe((res: any) => {
-    //   this.listLocation = res.payload.data;
-    // })
+    this._location.GetData().subscribe((res: any) => {
+      this.listLocation = res.payload;
+      // console.log(this.listLocation);
+    })
+    this._product.GetData().subscribe((res: any) => {
+      this.listProduct = res.payload.data;
+      console.log(this.listProduct);
+    })
   }
   Edit(val: any) {
     this.editRowID = val;
