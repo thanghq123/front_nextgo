@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PrintComponent } from './print.component';
 import { PrintfComponent } from './printf/printf.component';
+import { EditComponent } from './edit/edit.component';
 
 import { Routes, RouterModule } from '@angular/router';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
@@ -13,6 +14,9 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
+import { CKEditorModule } from 'ng2-ckeditor';
+
+
 
 const routes: Routes = [
   {
@@ -24,7 +28,8 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     PrintComponent,
-    PrintfComponent
+    PrintfComponent,
+    EditComponent
   ],
   imports: [
     CommonModule,
@@ -40,7 +45,8 @@ const routes: Routes = [
     SweetAlert2Module.forRoot(),
     ReactiveFormsModule,
     NgSelectModule,
-    FormsModule
+    FormsModule,
+    CKEditorModule
   ]
 })
 export class PrintModule { }

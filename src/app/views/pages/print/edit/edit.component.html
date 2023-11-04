@@ -1,1 +1,76 @@
-<p>edit works!</p>
+<div class="row">
+  <div class="col-md-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label class="form-label">Mẫu in</label>
+            <!-- <input type="text" class="form-control" id="exampleInputUsername1" formControlName="name" autocomplete="off"
+              placeholder="Nhập tên chi nhánh" /> -->
+            <!-- <ng-select [searchable]="true" (change)="onProvinceChange()" formControlName="province_code"
+              placeholder="Chọn Tỉnh">
+              <ng-option *ngFor="let item of provinces" [value]="item.id">
+                {{item.name}}
+              </ng-option>
+            </ng-select> -->
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Khổ in</label>
+            <!-- <input type="text" class="form-control" id="exampleInputUsername1" formControlName="name" autocomplete="off"
+              placeholder="Nhập tên chi nhánh" /> -->
+            <!-- <ng-select [searchable]="true" (change)="onProvinceChange()" formControlName="province_code"
+              placeholder="Chọn Tỉnh">
+              <ng-option *ngFor="let item of provinces" [value]="item.id">
+                {{item.name}}
+              </ng-option>
+            </ng-select> -->
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="exampleInputUsername1" class="form-label">
+            Chi nhánh áp dụng
+            <span class="text-danger">(*)</span>
+          </label>
+          <!-- <input type="text" class="form-control" id="exampleInputUsername1" formControlName="name" autocomplete="off"
+            placeholder="Nhập tên chi nhánh" /> -->
+          <!-- <div *ngIf="locationsForm.controls.name.invalid && locationsForm.controls.name.touched"
+            class="alert alert-danger mt-2">
+            Không để trống tên chi nhánh
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6 grid-margin stretch-card">
+    <div class="card">
+      <!-- <div class="card-body d-flex flex-column align-items-center"> -->
+
+      <!-- <form  >
+    <ckeditor
+
+      [(ngModel)]="model.description"
+
+    >
+    </ckeditor>
+    <ckeditor data="<p>Hello, world!</p>"></ckeditor>
+    <button type="submit">Chỉnh sửa</button>
+  </form> -->
+
+
+      <!-- </div> -->
+      <!-- <form> -->
+      <ckeditor data="<p>Hello, world!</p>"></ckeditor>
+      <!-- <button type="submit">Chỉnh sửa</button>
+    </form> -->
+    </div>
+  </div>
+  <div class="col-md-6 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body d-flex flex-column align-items-center">
+        <!-- <div [innerHTML]="model.description"></div> -->
+      </div>
+    </div>
+  </div>
+</div>
