@@ -1,4 +1,11 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { Router, ParamMap } from '@angular/router';
@@ -11,29 +18,25 @@ import {
 import { Observable, Subject, of } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LocationsService } from 'src/app/service/locations/locations.service';
-
-
-
+import { PrintService } from 'src/app/service/print/print.service';
 
 @Component({
   selector: 'app-edit',
   templateUrl: './edit.component.html',
-  styleUrls: ['./edit.component.scss']
+  styleUrls: ['./edit.component.scss'],
 })
 export class EditComponent implements OnInit {
   listLocation: any;
   salesUnit: any[] = [];
   printSize: any[] = [];
-  myContent: string;
+  public myContent: string = '';
   isLoading = true;
-  printForm = new FormGroup({
-
-  });
-
 
   constructor(
     private _locationService: LocationsService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private _printService: PrintService,
+    private _router: Router
   ) {
     this.myContent = `<div class="bfs-font bfs-m bta-default bill-print-body bill-body" id="bill-body-id">
 
@@ -234,55 +237,125 @@ export class EditComponent implements OnInit {
         checkAndHideClass("bill_item_tax_container", "0", "bill_item_tax");
       </script></div>
     `;
-    this._locationService.GetData().subscribe((res: any) => {
-      this.isLoading = true;
-      if(res.status == true){
-        this.listLocation = res.payload;
-        this.isLoading = false;
-        // console.log(this.listLocation);
+    this._locationService.GetData().subscribe(
+      (res: any) => {
+        this.isLoading = true;
+        if (res.status == true) {
+          this.listLocation = res.payload;
+          this.isLoading = false;
+          // console.log(this.listLocation);
+        }
+      },
+      (error) => {
+        Swal.fire('Lỗi!', 'Có lỗi xảy ra khi load chi nhánh.', 'error');
       }
-    },(error) => {
-      Swal.fire('Lỗi!', 'Có lỗi xảy ra khi load chi nhánh.', 'error');
-    })
+    );
   }
 
   ngOnInit(): void {
     this.salesUnit = [
       {
-        id : 0,
-        name : 'Đơn bán hàng'
-      }
+        id: 0,
+        name: 'Đơn bán hàng',
+      },
     ];
 
     this.printSize = [
       {
         id: 0,
-        name: "Khổ in A4"
+        name: 'Khổ in A4',
       },
       {
         id: 1,
-        name: "Khổ in A5"
+        name: 'Khổ in A5',
       },
       {
         id: 2,
-        name: "Khổ in K57"
+        name: 'Khổ in K57',
       },
       {
         id: 3,
-        name: "Khổ in K80"
-      }
+        name: 'Khổ in K80',
+      },
     ];
-
-
   }
   openXlModal(content: TemplateRef<any>) {
-    this.modalService.open(content, {size: 'xl'}).result.then((result) => {
-      console.log("Modal closed" + result);
-    }).catch((res) => {});
+    this.modalService
+      .open(content, { size: 'xl' })
+      .result.then((result) => {
+        console.log('Modal closed' + result);
+      })
+      .catch((res) => {});
   }
 
-  onSubmit(){
+  onSubmit() {
+    // this.submitEvent.emit();
+    const dataSend = {
+      name: 'Đơn bán hàng',
+      form: this.myContent,
+      default: 1,
+    };
+    this._printService.create(dataSend).subscribe(
+      (response: any) => {
+        if (response.status == true) {
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            title: 'Thành công!',
+            text: 'Thêm thành công',
+            icon: 'success',
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer);
+              toast.addEventListener('mouseleave', Swal.resumeTimer);
+            },
+          });
+          this._router.navigate(['../item-units/list']);
+        } else {
+          console.log(response);
+          const errorMessages = [];
+          for (const key in response.meta.errors) {
+            errorMessages.push(...response.meta.errors[key]);
+          }
+          const message = errorMessages.join(' ');
 
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            title: 'Thất bại!',
+            text: message,
+            icon: 'error',
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer);
+              toast.addEventListener('mouseleave', Swal.resumeTimer);
+            },
+          });
+        }
+      },
+      (error) => {
+        // console.log(error);
+        if (error.error.status == false) {
+          Swal.fire({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            title: "Lỗi!",
+            text: `${error.error.meta.errors.name[0]}`,
+            icon: "error",
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.addEventListener("mouseenter", Swal.stopTimer);
+              toast.addEventListener("mouseleave", Swal.resumeTimer);
+            },
+          });
+        }
+      }
+    );
   }
-
 }

@@ -11,5 +11,4 @@ export class NavbarSpecialComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
 }

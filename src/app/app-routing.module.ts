@@ -173,8 +173,8 @@ const routes: Routes = [
       // { path: '**', redirectTo: 'dashboard', pathMatch: 'full' }
     ],
   },
-  { path: '', 
-  component: BaseSpecialComponent,
+  { path: '',
+  // component: BaseSpecialComponent,
    canActivate: [AuthGuard] ,
    children: [
     {
