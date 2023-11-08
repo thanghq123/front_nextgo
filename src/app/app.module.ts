@@ -15,6 +15,7 @@ import { HttpClientModule } from '@angular/common/http';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { SortablejsModule } from 'ngx-sortablejs';
+import { NgSelectModule } from '@ng-select/ng-select';
 @NgModule({
   declarations: [
     AppComponent,
@@ -30,6 +31,7 @@ import { SortablejsModule } from 'ngx-sortablejs';
     NgbModule,
     CommonModule,
     SortablejsModule.forRoot({ animation: 150 }),
+    NgSelectModule
   ],
   providers: [
     AuthGuard,

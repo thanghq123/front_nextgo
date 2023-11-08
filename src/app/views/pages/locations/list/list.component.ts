@@ -15,7 +15,7 @@ import { LocationsService } from 'src/app/service/locations/locations.service';
 export class ListComponent implements OnInit, AfterViewInit {
   listLocations: Observable<Locations[]>;
   isLoading = false;
-  
+
 
   constructor(private _locaService: LocationsService) {
     this.listLocations = new Observable();

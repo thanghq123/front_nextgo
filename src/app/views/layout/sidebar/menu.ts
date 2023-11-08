@@ -88,5 +88,9 @@ export const MENU: MenuItem[] = [
       //   link: '/suppliers/list'
       // },
     ]
+  },{
+    label: 'Mẫu In',
+    icon: 'printer',
+    link: '/print'
   }
 ];

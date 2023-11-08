@@ -7,6 +7,7 @@ import { BaseComponent } from './base/base.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { FooterComponent } from './footer/footer.component';
+import { BaseSpecialComponent } from './base-special/base-special.component';
 
 import { ContentAnimateDirective } from '../../core/content-animate/content-animate.directive';
 
@@ -17,6 +18,8 @@ import { FeatherIconModule } from '../../core/feather-icon/feather-icon.module';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
+import { NavbarSpecialComponent } from './base-special/navbar-special/navbar-special.component';
+
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -24,7 +27,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 
 
 @NgModule({
-  declarations: [BaseComponent, NavbarComponent, SidebarComponent, FooterComponent, ContentAnimateDirective],
+  declarations: [BaseComponent, NavbarComponent, SidebarComponent, FooterComponent, ContentAnimateDirective, BaseSpecialComponent, NavbarSpecialComponent],
   imports: [
     CommonModule,
     RouterModule,
