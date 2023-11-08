@@ -1,6 +1,8 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
+import { DatalayoutService } from 'src/app/service/handleDataComponent/datalayout.service';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-tabshop',
@@ -10,27 +12,296 @@ import Swal from 'sweetalert2';
 export class TabshopComponent implements OnInit {
   quantity: number = 0;
   basicModalCloseResult: string = '';
-  modelRadio = '%';
+  modelRadio = 1;
   modelTypePay = '';
   defaultAccordionCode: any;
+  listProductCart: any;
+  tabDefault: number = 0 ;
+  currentPrice: number;
+  priceFormModal: number;
+  discount: number = 0;
+  tax: number = 0;
+  dataCurrent: any;
+  totalMoney :  number;
+  productValues : any = {};
+  modalData :  any;
+  singleTax : number = 0;
+  DiscountBill : number = 0;
+  taxBill : number = 0;
+  modelRadioBill : number = 1;
+  priceBill : number = 0;
+  dataBill :  any;
+  cashPrice : number = 0;
+  paymentPrice : number = 0;
+  changeBill : number = 0;
+  noteBill : string ;
   constructor(
     private modalService: NgbModal,
+    private DatalayoutService: DatalayoutService
   ) {}
 
-
   ngOnInit(): void {
+   
+    
+    
+    this.DatalayoutService.currentData.subscribe((data) => {
+      if (data.hasOwnProperty('tabOrder')) {
+        this.dataCurrent = data.tabOrder;
+        this.listProductCart = data.tabOrder.map((value: any, index: number) => {
+            return value.ListProductCart;
+        });
+    } else {
+      this.dataCurrent = this.dataCurrent;
+        this.listProductCart = this.dataCurrent.map((value: any, index: number) => {
+            return value.ListProductCart;
+        });
+    }
+      // this.dataCurrent = data.tabOrder;
+      // this.listProductCart = data.tabOrder.map((value: any, index: number) => {
+      //   return value.ListProductCart;
+      // });
+
+      this.totalMoney = this.listProductCart[this.tabDefault].reduce((total : number,current : any)=>{
+        return total + current.result;
+      },0)
+     
+      this.tabDefault = data.tabCurrent;
+      this.modalData =  data.tabModal;
+      console.log(this.dataBill);
+      if(!this.dataBill){
+        this.dataBill = data.dataBill;
+        this.priceBill = data.dataBill[this.tabDefault].totalPrice;
+        this.singleTax = data.dataBill[this.tabDefault].discount;
+        this.DiscountBill = data.dataBill[this.tabDefault].tax;
+        this.taxBill = data.dataBill[this.tabDefault].service;
+        this.modelRadioBill = data.dataBill[this.tabDefault].radio;
+        this.cashPrice = data.dataBill[this.tabDefault].cash;
+        this.changeTotalBill();
+        if(data.dataBill[this.tabDefault].note){
+          this.noteBill = data.dataBill[this.tabDefault].note;
+          this.noteBillEvent()
+        }
+      }
+      
+    });
+
+    this.DatalayoutService.eventCurrent.subscribe(event => {
+      let dataOrder = null;
+      let dataBill  = null;
+      switch (event.name) {
+        case 'addTabOder':
+        
+          if(this.dataCurrent.length < 4){
+            this.totalMoney = 0;
+            this.dataCurrent.push( {
+              ListProductCart: [],
+              infoOrder: {}
+            } )
+            this.dataBill.push(  {
+              discount : 0,
+              tax : 0,
+              totalPrice : 0,
+              service : 0,
+              radio : 1,
+              cash : 0
+            })
+            this.tabDefault = this.dataCurrent.length -1;
+            dataOrder = this.dataCurrent;
+            dataBill = this.dataBill;
+            this.listProductCart = this.dataCurrent.map((value: any, index: number) => {
+              return value.ListProductCart;
+            });
+            this.singleTax = this.dataBill[this.tabDefault].discount;
+            this.DiscountBill = this.dataBill[this.tabDefault].tax;
+            this.taxBill = this.dataBill[this.tabDefault].service;
+            this.modelRadioBill = this.dataBill[this.tabDefault].radio;
+            this.priceBill = this.dataBill[this.tabDefault].totalPrice;
+            this.cashPrice = this.dataBill[this.tabDefault].cash;
+            this.changeTotalBill();
+            if(this.dataBill[this.tabDefault].note){
+              this.noteBill = this.dataBill[this.tabDefault].note;
+              this.noteBillEvent()
+            }
+            localStorage.setItem('tabOrder', JSON.stringify(this.dataCurrent));
+            localStorage.setItem('dataBill', JSON.stringify(this.dataBill));
+            this.DatalayoutService.changeData({tabCurrent : this.tabDefault});
+            localStorage.setItem('TabCurrentIndex', JSON.stringify(this.tabDefault));
+            // window.location.reload();
+    
+            
+          }else {
+            dataOrder = this.dataCurrent;
+            dataBill = this.dataBill;
+            Swal.fire({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 3000,
+              title: 'Thất bại!',
+              text: 'Đơn hàng đã đạt giới hạn vui lòng thanh toán 4 đơn hàng trước đó',
+              icon: 'error',
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer);
+                toast.addEventListener('mouseleave', Swal.resumeTimer);
+              },
+            });
+          }
+          
+          this.dataCurrent = dataOrder;
+          this.dataBill = dataBill;
+          console.log(this.dataBill);
+          break;
+        case 'changeTab':
+          const {id} = event.data;
+          this.tabDefault = id;
+          this.totalMoney = this.listProductCart[this.tabDefault].reduce((total : number,current : any)=>{
+            return total + current.result;
+          },0)
+          this.singleTax = this.dataBill[this.tabDefault].discount;
+          this.DiscountBill = this.dataBill[this.tabDefault].tax;
+          this.taxBill = this.dataBill[this.tabDefault].service;
+          this.modelRadioBill = this.dataBill[this.tabDefault].radio;
+          this.priceBill = this.dataBill[this.tabDefault].totalPrice
+          this.cashPrice = this.dataBill[this.tabDefault].cash;
+          this.changeTotalBill();
+          if(this.dataBill[this.tabDefault].note){
+            this.noteBill = this.dataBill[this.tabDefault].note;
+            this.noteBillEvent()
+          }else {
+            this.noteBill = '';
+          }
+          localStorage.setItem('TabCurrentIndex', JSON.stringify(this.tabDefault));
+          break;
+          case 'removeTab' :
+            const {idRemove} = event.data;
+            if (idRemove > 0) {
+              
+              this.dataCurrent.splice(idRemove, 1);
+              this.dataBill.splice(idRemove, 1);
+              this.tabDefault = idRemove == 0 ? 0 : idRemove-1;
+              this.singleTax = this.dataBill[this.tabDefault].discount;
+              this.DiscountBill = this.dataBill[this.tabDefault].tax;
+              this.taxBill = this.dataBill[this.tabDefault].service;
+              this.modelRadioBill = this.dataBill[this.tabDefault].radio;
+              this.priceBill = this.dataBill[this.tabDefault].totalPrice
+              dataOrder = this.dataCurrent;
+              dataBill = this.dataBill;
+              console.log( this.tabDefault);
+              localStorage.setItem('tabOrder', JSON.stringify(this.dataCurrent));
+              localStorage.setItem('dataBill', JSON.stringify(this.dataBill));
+              this.DatalayoutService.changeData({tabCurrent : this.tabDefault});
+              localStorage.setItem('TabCurrentIndex', JSON.stringify(this.tabDefault));
+            }
+            this.dataCurrent = dataOrder;
+            this.dataBill = dataBill;
+            break;
+        default:
+            throw new Error('Error Event component');
+      }
+    });
   }
 
   scrollTo(element: any) {
-    element.scrollIntoView({behavior: 'smooth'});
+    element.scrollIntoView({ behavior: 'smooth' });
   }
 
+  noteBillEvent() : void{
+      this.updateBill(this.dataBill,this.tabDefault,{
+        note : this.noteBill
+      })
+      localStorage.setItem('dataBill', JSON.stringify(this.dataBill));
+  }
+  changeTotalBill(){
+    if(this.cashPrice > this.priceBill){
+      this.changeBill = this.cashPrice - this.priceBill;
+      this.paymentPrice = 0;
+    }else {
+      this.changeBill = 0;
+      this.paymentPrice = this.priceBill - this.cashPrice;
+    }
+  }
+  resultBill(idTab : number) {
+    console.log(idTab);
+    
+    let priceCurrent = null;
+
+    if (this.modelRadioBill === 1) {
+      const total = this.totalMoney * Number(this.DiscountBill)
+       priceCurrent =
+        this.totalMoney -
+        total / 100 +
+        ((this.totalMoney -
+          total / 100) *
+          this.singleTax) /
+          100 + Number(this.taxBill);
+    } else {
+      const total = this.totalMoney - Number(this.DiscountBill);
+       priceCurrent =
+       total +
+        (total *
+          this.singleTax) /
+          100 + Number(this.taxBill);
+    }
+    this.priceBill = priceCurrent;
+    // console.log(this.dataBill[idTab]);
+    // console.log(this.dataBill[this.tabDefault]);
+    
+    this.updateBill(this.dataBill,idTab,{
+      discount :  this.singleTax,
+      tax : this.DiscountBill,
+      totalPrice : this.priceBill,
+      service : this.taxBill,
+      radio : this.modelRadioBill
+    });
+    localStorage.setItem('dataBill', JSON.stringify(this.dataBill));
+  }
+
+  changeCash(event  : any) : void {
+    if (!(event.target.value)) { 
+      this.cashPrice = 0;
+      event.target.value = 0;
+  }
+
+  if(this.cashPrice > this.priceBill){
+    this.changeBill = this.cashPrice - this.priceBill;
+    this.paymentPrice = 0;
+  }else {
+    this.changeBill = 0;
+    this.paymentPrice = this.priceBill - this.cashPrice;
+  }
+    console.log(event.target.value);
+     this.updateBill(this.dataBill,this.tabDefault,{
+      cash : this.cashPrice
+    });
+    localStorage.setItem('dataBill', JSON.stringify(this.dataBill));
+  }
+
+
+
+
+
+
+  resultTotal(e: any) {
+
+    
+    this.updateQuantity(
+      this.listProductCart[this.tabDefault],
+      +e.target.id,
+      +e.target.value,
+      e.target.name
+    );
+    this.totalMoney = this.listProductCart[this.tabDefault].reduce((total : number,current : any)=>{
+      return total + current.result;
+    },0)
+    localStorage.setItem('tabOrder', JSON.stringify(this.dataCurrent));
+  }
   openBasicModal(content: TemplateRef<any>) {
     this.modalService
       .open(content, {})
       .result.then((result) => {
         console.log(result);
-        if(result){
+        if (result) {
           Swal.fire({
             toast: true,
             position: 'top-end',
@@ -46,27 +317,215 @@ export class TabshopComponent implements OnInit {
             },
           });
         }
-        
+      })
+      .catch((res) => {});
+  }
+
+  removeItemCart(id: number) {
+    if (id > -1) {
+      this.listProductCart[this.tabDefault].splice(id, 1);
+      this.totalMoney = this.listProductCart[this.tabDefault].reduce((total : number,current : any)=>{
+        return total + current.result;
+      },0)
+      this.modalData[this.tabDefault].splice(id, 1);
+      this.resultBill(this.tabDefault);
+      localStorage.setItem('tabOrder', JSON.stringify(this.dataCurrent));
+      localStorage.setItem('TabModal', JSON.stringify(this.modalData));
+    }
+  }
+
+  statusTotal(){
+    if(this.modelRadio == 1){
+      this.discount = 100;
+    }
+  }
+  limitInput(event : any) {
+    if(this.modelRadio == 1 && event.target.value > 100) {
+        event.target.value = 100;
+        this.discount = 100;
+    }else {
+      this.discount = this.discount > this.priceFormModal ? this.priceFormModal : this.discount;
+      event.target.value = this.discount;
+    }
+    this.totalMoney = this.listProductCart[this.tabDefault].reduce((total : number,current : any)=>{
+      return total + current.result;
+    },0)
+}
+
+  openBasicModalPrice(content: TemplateRef<any>, id: number,index : number) {
+    // this.currentPrice = this.modalData[this.tabDefault][index].result;
+    console.log(this.modalData[this.tabDefault][index]);
+    this.priceFormModal = this.modalData[this.tabDefault][index].priceCurrent;
+    this.discount = this.modalData[this.tabDefault][index].discount;
+    this.tax = this.modalData[this.tabDefault][index].tax;
+    this.modelRadio = this.modalData[this.tabDefault][index].radioDiscount;
+    this.modalService
+      .open(content, {})
+      .result.then((result) => {
+        // console.log(result);
+        // console.log(this.priceFormModal,this.discount,this.tax);
+        console.log(this.modelRadio);
+
+        if (result) {
+         
+          
+          let priceCurrent = null;
+          if (this.modelRadio === 1) {
+            const total = this.priceFormModal * Number(this.discount)
+             priceCurrent =
+              this.priceFormModal -
+              total / 100 +
+              ((this.priceFormModal -
+                total / 100) *
+                this.tax) /
+                100;
+           
+          } else {
+          
+            const total = this.priceFormModal - Number(this.discount);
+             priceCurrent =
+             total +
+              (total *
+                this.tax) /
+                100;
+          }
+          const objData = {
+            priceCurrent : +this.priceFormModal,
+            discount : this.discount,
+            tax : +this.tax,
+            radioDiscount :this.modelRadio,
+            result : priceCurrent
+          }
+          console.log(objData);
+          console.log(this.modalData);
+          this.updateQuantity(this.listProductCart[this.tabDefault],+id,priceCurrent,'price');
+          this.updateModal(this.modalData[this.tabDefault],+id,objData)
+          this.totalMoney = this.listProductCart[this.tabDefault].reduce((total : number,current : any)=>{
+            return total + current.result;
+          },0)
+          this.resultBill(this.tabDefault);
+          localStorage.setItem('tabOrder', JSON.stringify(this.dataCurrent));
+          localStorage.setItem('TabModal', JSON.stringify(this.modalData));
+          // console.log(this.modalData[this.tabDefault]);
+          // console.log(this.modalData);
+          
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            title: 'Thành công!',
+            text: 'Áp dụng thành công',
+            icon: 'success',
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer);
+              toast.addEventListener('mouseleave', Swal.resumeTimer);
+            },
+          });
+        }
       })
       .catch((res) => {});
   }
 
   
+
   openLgModal(content: TemplateRef<any>) {
-    this.modalService.open(content, {size: 'lg'}).result.then((result) => {
-      console.log("Modal closed" + result);
-    }).catch((res) => {});
+    this.modalService
+      .open(content, { size: 'lg' })
+      .result.then((result) => {
+        console.log('Modal closed' + result);
+      })
+      .catch((res) => {});
   }
 
-
-
-  increaseQuantity() {
-    this.quantity++;
+  increaseQuantity(id : number) {
+    let inputValue = (<HTMLInputElement>document.getElementById(`${id}`));
+    const count = 1 + Number(inputValue.value);
+    this.updateQuantity(this.listProductCart[this.tabDefault],+id,count,'quanity');
+    this.totalMoney = this.listProductCart[this.tabDefault].reduce((total : number,current : any)=>{
+      return total + current.result;
+    },0)
+    this.resultBill(this.tabDefault);
+    localStorage.setItem('tabOrder', JSON.stringify(this.dataCurrent));
   }
 
-  decreaseQuantity() {
-    if (this.quantity > 0) {
-      this.quantity--;
+  decreaseQuantity(id : number) {
+    let inputValue = (<HTMLInputElement>document.getElementById( `${id}`));
+    if(+inputValue.value > 0){
+      this.updateQuantity(this.listProductCart[this.tabDefault],+id,Number(inputValue.value)-1,'quanity');
+      this.totalMoney = this.listProductCart[this.tabDefault].reduce((total : number,current : any)=>{
+        return total + current.result;
+      },0)
+      this.resultBill(this.tabDefault);
+      localStorage.setItem('tabOrder', JSON.stringify(this.dataCurrent));
+    }
+  }
+  
+  updateQuantity(array: any, id: number, newQuantity: any, name: string) {
+    
+    const typeUpdate = name === 'quanity' ? 'quanity' : 'price';
+    const resultType = name === 'quanity' ? 'price' : 'quanity';
+    for (let i = 0; i < array.length; i++) {
+      if (array[i].id === id) {
+        array[i][typeUpdate] = newQuantity;
+        array[i].result = newQuantity * array[i][resultType];
+        break;
+      }
+    }
+  }
+
+  updateModal(array: any, id: number, newQuantity: any) {
+    console.log(array);
+    
+    // const typeUpdate = name === 'discount' ? 'discount' : 'tax';
+    // const resultType = name === 'discount' ? 'tax' : 'discount';
+    // const test =   {
+    //   priceCurrent : 100000,
+    //   discount : 10,
+    //   tax : 0,
+    //   radioDiscount : 1,
+    //   result : 90000
+    // };
+
+
+
+    for (let i = 0; i < array.length; i++) {
+      if (array[i].id === id) {
+        for (const [key, value] of Object.entries(newQuantity)) {
+          array[i][key] = value;
+        }
+        // array[i][typeUpdate] = newQuantity;
+        // array[i].result = newQuantity * array[i][resultType];
+        break;
+      }
+    }
+  }
+
+  updateBill(array: any, id: number, newQuantity: any) {
+    console.log(array);
+    
+    // const typeUpdate = name === 'discount' ? 'discount' : 'tax';
+    // const resultType = name === 'discount' ? 'tax' : 'discount';
+    // const test =   {
+    //   priceCurrent : 100000,
+    //   discount : 10,
+    //   tax : 0,
+    //   radioDiscount : 1,
+    //   result : 90000
+    // };
+
+
+
+    for (let i = 0; i < array.length; i++) {
+      if (i === id) {
+        for (const [key, value] of Object.entries(newQuantity)) {
+          array[i][key] = value;
+        }
+        // array[i][typeUpdate] = newQuantity;
+        // array[i].result = newQuantity * array[i][resultType];
+        break;
+      }
     }
   }
 }

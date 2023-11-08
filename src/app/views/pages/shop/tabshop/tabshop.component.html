@@ -16,128 +16,35 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
+                            <tr *ngFor="let item of listProductCart[tabDefault]; index as i">
                                 <td class="d-flex">
                                     <div class="py-1">
-                                        <img src="http://via.placeholder.com/36x36" alt="image">
+                                        <img  src="http://via.placeholder.com/36x36" alt="image">
                                     </div>
                                     <div class="ms-2">
-                                        <h6>Sản phẩm 1</h6>
-                                        <p>C653153A449SSJ</p>
+                                        <h6>{{ item.name }}</h6>
+                                        <p>{{ item.sku }}</p>
                                     </div>
                                 </td>
-                                <td class="align-middle">Chai</td>
+                                <td class="align-middle">{{ item.unit }}</td>
                                 <td>
                                     <div class="d-flex">
-                                        <button type="button" (click)="decreaseQuantity()"
+                                        <button type="button" (click)="decreaseQuantity(item.id)"
                                             class="btn btn-lg text-black-50">-</button>
-                                        <input type="text" [(ngModel)]="quantity" readonly class="form-control">
-                                        <button type="button" (click)="increaseQuantity()"
+                                        <input type="number" name="quanity" id="{{ 'quantity-' + item.id }}" data-id="{{ item.id }}" value="{{ item.quanity }}" (input)="resultTotal($event)" class="form-control">
+                                        <button type="button" (click)="increaseQuantity(item.id)"
                                             class="btn btn-lg text-black-50">+</button>
                                     </div>
                                 </td>
                                 <td class="align-middle">
                                     <div class="d-flex">
-                                        <input type="text" class="form-control" value="0"
-                                            (click)="openBasicModal(basicModal)">
+                                        <input type="text" class="form-control" data-id="{{ item.id }}" name="price" value="{{ item.price }}" (input)="resultTotal($event)"
+                                            (click)="openBasicModalPrice(basicModal,item.id,i)">
                                     </div>
                                 </td>
-                                <td class="text-primary align-middle">499.800 ₫</td>
-                                <td class="align-middle">
-                                    <i class="feather text-danger icon-x icon-md "></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="d-flex">
-                                    <div class="py-1">
-                                        <img src="http://via.placeholder.com/36x36" alt="image">
-                                    </div>
-                                    <div class="ms-2">
-                                        <h6>Sản phẩm 1</h6>
-                                        <p>C653153A449SSJ</p>
-                                    </div>
-                                </td>
-                                <td class="align-middle">Chai</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <button type="button" (click)="decreaseQuantity()"
-                                            class="btn btn-lg text-black-50">-</button>
-                                        <input type="text" [(ngModel)]="quantity" readonly class="form-control">
-                                        <button type="button" (click)="increaseQuantity()"
-                                            class="btn btn-lg text-black-50">+</button>
-                                    </div>
-                                </td>
-                                <td class="align-middle">
-                                    <div class="d-flex">
-                                        <input type="text" class="form-control" value="0"
-                                            (click)="openBasicModal(basicModal)">
-                                    </div>
-                                </td>
-                                <td class="text-primary align-middle">499.800 ₫</td>
-                                <td class="align-middle">
-                                    <i class="feather text-danger icon-x icon-md "></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="d-flex">
-                                    <div class="py-1">
-                                        <img src="http://via.placeholder.com/36x36" alt="image">
-                                    </div>
-                                    <div class="ms-2">
-                                        <h6>Sản phẩm 1</h6>
-                                        <p>C653153A449SSJ</p>
-                                    </div>
-                                </td>
-                                <td class="align-middle">Chai</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <button type="button" (click)="decreaseQuantity()"
-                                            class="btn btn-lg text-black-50">-</button>
-                                        <input type="text" [(ngModel)]="quantity" readonly class="form-control">
-                                        <button type="button" (click)="increaseQuantity()"
-                                            class="btn btn-lg text-black-50">+</button>
-                                    </div>
-                                </td>
-                                <td class="align-middle">
-                                    <div class="d-flex">
-                                        <input type="text" class="form-control" value="0"
-                                            (click)="openBasicModal(basicModal)">
-                                    </div>
-                                </td>
-                                <td class="text-primary align-middle">499.800 ₫</td>
-                                <td class="align-middle">
-                                    <i class="feather text-danger icon-x icon-md "></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="d-flex">
-                                    <div class="py-1">
-                                        <img src="http://via.placeholder.com/36x36" alt="image">
-                                    </div>
-                                    <div class="ms-2">
-                                        <h6>Sản phẩm 1</h6>
-                                        <p>C653153A449SSJ</p>
-                                    </div>
-                                </td>
-                                <td class="align-middle">Chai</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <button type="button" (click)="decreaseQuantity()"
-                                            class="btn btn-lg text-black-50">-</button>
-                                        <input type="text" [(ngModel)]="quantity" readonly class="form-control">
-                                        <button type="button" (click)="increaseQuantity()"
-                                            class="btn btn-lg text-black-50">+</button>
-                                    </div>
-                                </td>
-                                <td class="align-middle">
-                                    <div class="d-flex">
-                                        <input type="text" class="form-control" value="0"
-                                            (click)="openBasicModal(basicModal)">
-                                    </div>
-                                </td>
-                                <td class="text-primary align-middle">499.800 ₫</td>
-                                <td class="align-middle">
-                                    <i class="feather text-danger icon-x icon-md "></i>
+                                <td class="text-primary align-middle">{{ item.result | currency:'VND' }}</td>
+                                <td class="align-middle" style="cursor: pointer;">
+                                    <i class="feather text-danger icon-x icon-md " (click)="removeItemCart(i)"></i>
                                 </td>
                             </tr>
                         </tbody>
@@ -226,28 +133,28 @@
                     <table class="table">
                         <tbody>
                             <tr>
-                                <td>Tổng tiền (2 sản phầm)</td>
-                                <td class="text-end">299.880</td>
+                                <td>Tổng tiền ({{ listProductCart[tabDefault].length  }} sản phầm)</td>
+                                <td class="text-end">{{ totalMoney |  currency:'VND' }}</td>
                             </tr>
                             <tr>
                                 <td class="align-middle">Thuế tổng đơn (%)</td>
-                                <td class="text-end"><input type="text" value="0"
-                                        class="form-control  text-end border-0 border-bottom "></td>
+                                <td class="text-end"><input type="number" 
+                                        class="form-control  text-end border-0 border-bottom " value="{{ singleTax }}" [(ngModel)]="singleTax" (input)="resultBill(tabDefault)"></td>
                             </tr>
                             <tr>
-                                <td class="text-bold-800 align-middle">Chiết khấu (%)</td>
-                                <td class="text-bold-800 text-end"><input type="text"
-                                        (click)="openBasicModal(basicModaldiscount)" value="0"
-                                        class="form-control  text-end   border-0 border-bottom"></td>
+                                <td class="text-bold-800 align-middle">Chiết khấu ({{ modelRadioBill == 1 ? '%' : 'đ' }})</td>
+                                <td class="text-bold-800 text-end"><input type="number"
+                                        (click)="openBasicModal(basicModaldiscount)" value="{{ DiscountBill }}"
+                                        class="form-control  text-end   border-0 border-bottom" ></td>
                             </tr>
                             <tr>
                                 <td class="text-bold-800 align-middle">Phí dịch vụ</td>
-                                <td class="text-bold-800 text-end"><input type="text" value="0"
-                                        class="form-control  text-end  border-0 border-bottom"></td>
+                                <td class="text-bold-800 text-end"><input type="number" value="{{ taxBill }}"
+                                        class="form-control  text-end  border-0 border-bottom" [(ngModel)]="taxBill" (input)="resultBill(tabDefault)"></td>
                             </tr>
                             <tr class="bg-light">
                                 <td class="text-bold-800 fw-bold align-middle">Khách phải trả</td>
-                                <td class="text-bold-800 text-end text-primary fw-bold">180.000</td>
+                                <td class="text-bold-800 text-end text-primary fw-bold">{{ priceBill |  currency:'VND' }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -259,17 +166,17 @@
                         <tbody>
                             <tr>
                                 <td class="text-primary fw-bold align-middle">Tiền mặt</td>
-                                <td class="text-end"><input type="text" value="0"
-                                        class="form-control  text-end border-0 border-bottom "></td>
+                                <td class="text-end"><input type="number" value="{{ cashPrice  }}"  
+                                        class="form-control  text-end border-0 border-bottom " [(ngModel)]="cashPrice" (input)="changeCash($event)"></td>
                             </tr>
                             <tr>
                                 <td class="text-bold-800 align-middle">Còn lại cần thanh toán</td>
-                                <td class="text-end"><input type="text" value="0"
+                                <td class="text-end"><input type="text" value="{{ paymentPrice  }}"
                                         class="form-control bg-white border-0 text-end" disabled></td>
                             </tr>
                             <tr>
                                 <td class="text-bold-800 fw-bold fs-5 align-middle">Tiền thừa</td>
-                                <td class="text-end"><input type="text" value="0"
+                                <td class="text-end"><input type="text" value="{{ changeBill  }}"
                                         class="form-control bg-white border-0 fs-3 text-end fw-bold" disabled></td>
                             </tr>
                         </tbody>
@@ -279,7 +186,7 @@
             <div class="card-footer">
                 <div class="d-flex align-items-center form-control border-0 border-bottom  mb-2 ">
                     <i class="feather icon-edit-3 title-bill icon-md "></i>
-                    <input type="text" class="border-0 ms-2 btn-icon-edit w-100 fw-bold"
+                    <input type="text" class="border-0 ms-2 btn-icon-edit w-100 fw-bold" value="{{ noteBill }}" [(ngModel)]="noteBill" (input)="noteBillEvent()"
                         placeholder="Thêm ghi chú cho đơn hàng">
                 </div>
                 <button type="button" class="btn btn-primary w-100 p-4 fs-4 fw-bold"
@@ -295,30 +202,30 @@
         <button type="button" class="btn-close" (click)="modal.close(false)" aria-label="Close"></button>
     </div>
     <div class="modal-body">
-        <div class="mb-3">
-            <label for="unit_price" class="form-label">Đơn giá</label>
-            <input type="text" class="form-control" id="unit_price" autocomplete="off" value="0">
-        </div>
-        <div class="mb-3 ">
-            <label for="Discount" class="form-label">Chiết khấu</label>
-            <div class="position-relative">
-                <input type="text" class="form-control p-3" id="Discount" placeholder="Email" value="0">
-                <div class="btn-group position-absolute top-50 end-0 translate-middle-y" role="group"
-                    aria-label="Basic radio toggle button group">
-                    <input type="radio" class="btn-check" [(ngModel)]="modelRadio" [value]="'đ'" name="btnradio"
-                        id="btnradio2" autocomplete="off">
-                    <label class="btn btn-outline-primary" for="btnradio2">đ</label>
-
-                    <input type="radio" class="btn-check" checked [(ngModel)]="modelRadio" [value]="'%'" name="btnradio"
-                        id="btnradio3" autocomplete="off">
-                    <label class="btn btn-outline-primary" for="btnradio3">%</label>
+            <div class="mb-3">
+                <label for="unit_price" class="form-label">Đơn giá</label>
+                <input type="number" class="form-control" [(ngModel)]="priceFormModal"  id="unit_price" autocomplete="off" value="{{ currentPrice }}" name="price" >
+            </div>
+            <div class="mb-3 ">
+                <label for="Discount" class="form-label">Chiết khấu</label>
+                <div class="position-relative">
+                    <input type="number" class="form-control p-3" id="Discount" (input)="limitInput($event)" [(ngModel)]="discount"  placeholder="Email" value="0">
+                    <div class="btn-group position-absolute top-50 end-0 translate-middle-y" role="group"
+                        aria-label="Basic radio toggle button group">
+                        <input type="radio" class="btn-check" [(ngModel)]="modelRadio" (change)="statusTotal()" [value]="0" name="btnradio"
+                            id="btnradio2" autocomplete="off">
+                        <label class="btn btn-outline-primary" for="btnradio2">đ</label>
+    
+                        <input type="radio" class="btn-check" checked [(ngModel)]="modelRadio" (change)="statusTotal()" [value]="1" name="btnradio"
+                            id="btnradio3" autocomplete="off">
+                        <label class="btn btn-outline-primary" for="btnradio3">%</label>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="mb-3">
-            <label for="Tax" class="form-label">Thuế</label>
-            <input type="text" class="form-control" id="Tax" autocomplete="off" value="0">
-        </div>
+            <div class="mb-3">
+                <label for="Tax" class="form-label">Thuế</label>
+                <input type="number" class="form-control" [(ngModel)]="tax"  id="Tax" autocomplete="off" value="0">
+            </div>
 
 
     </div>
@@ -425,14 +332,14 @@
         <div class="mb-3 ">
             <label for="Discount" class="form-label">Chiết khấu</label>
             <div class="position-relative">
-                <input type="text" class="form-control p-3" id="Discount" placeholder="Email" value="0">
+                <input type="number" class="form-control p-3" id="Discount" [(ngModel)]="DiscountBill" (change)="resultBill(tabDefault)" placeholder="Email" value="0">
                 <div class="btn-group position-absolute top-50 end-0 translate-middle-y" role="group"
                     aria-label="Basic radio toggle button group">
-                    <input type="radio" class="btn-check" [(ngModel)]="modelRadio" [value]="'đ'" name="btnradio"
+                    <input type="radio" class="btn-check" [(ngModel)]="modelRadioBill" [value]="0" name="btnradio"
                         id="btnradio2" autocomplete="off">
                     <label class="btn btn-outline-primary" for="btnradio2">đ</label>
 
-                    <input type="radio" class="btn-check" checked [(ngModel)]="modelRadio" [value]="'%'" name="btnradio"
+                    <input type="radio" class="btn-check" checked [(ngModel)]="modelRadioBill" [value]="1" name="btnradio"
                         id="btnradio3" autocomplete="off">
                     <label class="btn btn-outline-primary" for="btnradio3">%</label>
                 </div>
