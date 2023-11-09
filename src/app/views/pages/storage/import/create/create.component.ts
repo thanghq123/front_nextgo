@@ -17,6 +17,7 @@ import { ChangeDetectionStrategy } from '@angular/core';
 import { SuppliersService } from 'src/app/service/suppliers/suppliers.service';
 import { LocationsService } from 'src/app/service/locations/locations.service';
 import { Product } from 'src/app/interface/product/product';
+import { SearchProductService } from 'src/app/service/searchProduct/search-product.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,8 +28,10 @@ import { Product } from 'src/app/interface/product/product';
 export class CreateComponent implements OnInit {
   listSupplier: any = [];
   listLocation: any = [];
+  listProduct: any[] = [];
   products: any[] = [];
   tableData: any[] = [];
+
   input: any = {};
   editRowID: any = '';
   price: any;
@@ -39,6 +42,7 @@ export class CreateComponent implements OnInit {
     partner_id: new FormControl(''),
     price: new FormControl(''),
     quantity: new FormControl(''),
+    inventory_id: new FormControl('')
   });
   inputSerach = new FormGroup({
     input: new FormControl(''),
@@ -48,48 +52,22 @@ export class CreateComponent implements OnInit {
     private _location: LocationsService,
     private _storage: StorageImportService,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private _product: SearchProductService
   ) {
     this._supplier.GetData().subscribe((res: any) => {
       this.listSupplier = res.payload.data;
     });
 
-    this.tableData = [
-      {
-        id: 13,
-        name: 'San pham 1',
-        inventory_transaction_id: 22102023,
-        variation_id: 2,
-        batch_id: 1,
-        price: 11000,
-        price_type: 0,
-        quantity: 10,
-        created_at: '2023-10-21T05:34:20.000000Z',
-        updated_at: '2023-10-21T05:34:20.000000Z',
-      },
-      {
-        id: 14,
-        name: 'San pham 2',
-        variation_id: 3,
-        batch_id: 3,
-        price: 13000,
-        price_type: 0,
-        quantity: 10,
-      },
-      {
-        id: 15,
-        name: 'San pham 3',
-        variation_id: 4,
-        batch_id: 4,
-        price: 15000,
-        price_type: 0,
-        quantity: 10,
-      },
-    ];
+    this._location.GetData().subscribe((res: any) => {
+      this.listLocation = res.payload;
+      console.log(this.listLocation);
+    })
+    this._product.GetData().subscribe((res: any) => {
+      this.listProduct = res.payload;
+      console.log(this.listProduct);
+    })
 
-    // this._location.GetData().subscribe((res: any) => {
-    //   this.listLocation = res.payload.data;
-    // })
   }
   Edit(val: any) {
     this.editRowID = val;
@@ -100,21 +78,21 @@ export class CreateComponent implements OnInit {
       map((term) =>
         term === ''
           ? []
-          : this.tableData
+          : this.listProduct
               .filter(
-                (v) => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1
+                (v) => v.variation_name.toLowerCase().indexOf(term.toLowerCase()) > -1
               )
               .slice(0, 10)
       )
     );
-  formatter = (x: { name: string }) => x.name;
+  formatter = (x: { variation_name: string }) => x.variation_name;
 
   ngOnInit(): void {}
   searchProduct() {
-    if (this.input) {
+    if (this.input != '') {
       // Kiểm tra xem sản phẩm vừa nhập có trùng với sản phẩm nào trong this.products không
       const existingProduct = this.products.find(
-        (product) => product.variation_id === this.input.variation_id
+        (product) => product.variation_id === this.input.id
       );
 
       if (existingProduct) {
@@ -125,11 +103,11 @@ export class CreateComponent implements OnInit {
 
       // Thêm sản phẩm mới vào mảng this.products
       const data = {
-        name: this.input.name,
-        variation_id: this.input.variation_id,
-        batch_id: this.input.batch_id,
-        price: this.input.price,
-        price_type: this.input.price_type,
+        name: this.input.variation_name,
+        variation_id: this.input.id,
+        batch_id: this.input.variation_quantities != '' ? this.input.variation_quantities[0].batch_id : 1,
+        price: this.input.price_import,
+        price_type: 0,
         quantity: 0,
       };
       let updatedProducts = [...this.products]; // Create a new array with existing products
@@ -162,12 +140,12 @@ export class CreateComponent implements OnInit {
     if (this.storageImportForm.valid) {
       const datasend = {
         reason: this.storageImportForm.value.reason,
-        inventory_id: 1,
-        partner_id: this.storageImportForm.value.partner_id,
-        partner_type: 1,
+        inventory_id: this.storageImportForm.value.inventory_id,
+        partner_id: 1,
+        partner_type: 0,
         trans_type: 0,
         note: this.storageImportForm.value.note,
-        status: 0,
+        status: 1,
         created_by: 1,
         inventory_transaction_details: JSON.stringify(this.products),
       };
@@ -196,8 +174,8 @@ export class CreateComponent implements OnInit {
           } else {
             console.log(response);
             const errorMessages = [];
-            for (const key in response.meta.errors) {
-              const messages = response.meta.errors[key];
+            for (const key in response.meta) {
+              const messages = response.meta[key];
               for (const message of messages) {
                 errorMessages.push(`${message}`);
               }
