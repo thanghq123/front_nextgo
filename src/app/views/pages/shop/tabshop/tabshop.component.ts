@@ -3,7 +3,9 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import { DatalayoutService } from 'src/app/service/handleDataComponent/datalayout.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-
+import { CustomersService } from 'src/app/service/customers/customers.service';
+import { ListProducts } from 'src/app/interface/listProduct/list-products';
+import { ListProductsService } from 'src/app/service/listProduct/list-products.service';
 @Component({
   selector: 'app-tabshop',
   templateUrl: './tabshop.component.html',
@@ -35,26 +37,68 @@ export class TabshopComponent implements OnInit {
   paymentPrice : number = 0;
   changeBill : number = 0;
   noteBill : string ;
+  people : any = [];
+  selectedSearchPersonId: string = '';
+  dataAdd: {
+    name : string,
+    tel : string
+  } = {
+    name : '',
+    tel : ''
+  }
+  dataPerson : any;
+  dataInfoUser : any;
+  ListProducts: ListProducts;
   constructor(
     private modalService: NgbModal,
-    private DatalayoutService: DatalayoutService
+    private DatalayoutService: DatalayoutService,
+    private CustomersService : CustomersService,
+    private ListProductsService : ListProductsService
   ) {}
 
   ngOnInit(): void {
    
     
+    this.ListProductsService.getProducts().subscribe((data) => {
+      console.log(data);
+      
+    })
     
+    this.CustomersService.GetData().subscribe((response : any) => {
+      // console.log(response.payload.data);
+      this.people = response.payload;
+      if(response.payload.length > 0) {
+        this.people.forEach((person : any) => {
+          person.displayName = `${person.name} - ${person.tel}`;
+        });
+      }
+    
+      
+    })
     this.DatalayoutService.currentData.subscribe((data) => {
       if (data.hasOwnProperty('tabOrder')) {
         this.dataCurrent = data.tabOrder;
         this.listProductCart = data.tabOrder.map((value: any, index: number) => {
             return value.ListProductCart;
         });
+
+        this.dataInfoUser = data.tabOrder.map((value: any, index: number) => {
+          return value.infoOrder;
+      });
+      if(Object.keys(data.tabOrder[this.tabDefault].infoOrder).length > 0){
+        this.selectedSearchPersonId = data.tabOrder[this.tabDefault].infoOrder.id;
+      }
     } else {
       this.dataCurrent = this.dataCurrent;
         this.listProductCart = this.dataCurrent.map((value: any, index: number) => {
             return value.ListProductCart;
         });
+        this.dataInfoUser = this.dataCurrent.map((value: any, index: number) => {
+          return value.infoOrder;
+      });
+      if(Object.keys(this.dataCurrent[this.tabDefault].infoOrder).length > 0){
+        this.selectedSearchPersonId = this.dataCurrent[this.tabDefault].infoOrder.id;
+      }
     }
       // this.dataCurrent = data.tabOrder;
       // this.listProductCart = data.tabOrder.map((value: any, index: number) => {
@@ -82,8 +126,13 @@ export class TabshopComponent implements OnInit {
           this.noteBillEvent()
         }
       }
+      console.log(data);
+    
+     
       
     });
+
+
 
     this.DatalayoutService.eventCurrent.subscribe(event => {
       let dataOrder = null;
@@ -121,6 +170,12 @@ export class TabshopComponent implements OnInit {
             if(this.dataBill[this.tabDefault].note){
               this.noteBill = this.dataBill[this.tabDefault].note;
               this.noteBillEvent()
+            }
+
+            if(Object.keys(this.dataCurrent[this.tabDefault].infoOrder).length > 0){
+              this.selectedSearchPersonId = this.dataCurrent[this.tabDefault].infoOrder.id;
+            }else {
+              this.selectedSearchPersonId = '';
             }
             localStorage.setItem('tabOrder', JSON.stringify(this.dataCurrent));
             localStorage.setItem('dataBill', JSON.stringify(this.dataBill));
@@ -171,6 +226,14 @@ export class TabshopComponent implements OnInit {
           }else {
             this.noteBill = '';
           }
+
+          console.log(this.dataCurrent[this.tabDefault]);
+          
+          if(Object.keys(this.dataCurrent[this.tabDefault].infoOrder).length > 0){
+            this.selectedSearchPersonId = this.dataCurrent[this.tabDefault].infoOrder.id;
+          }else {
+            this.selectedSearchPersonId = '';
+          }
           localStorage.setItem('TabCurrentIndex', JSON.stringify(this.tabDefault));
           break;
           case 'removeTab' :
@@ -187,7 +250,11 @@ export class TabshopComponent implements OnInit {
               this.priceBill = this.dataBill[this.tabDefault].totalPrice
               dataOrder = this.dataCurrent;
               dataBill = this.dataBill;
-              console.log( this.tabDefault);
+              if(Object.keys(this.dataCurrent[this.tabDefault].infoOrder).length > 0){
+                this.selectedSearchPersonId = this.dataCurrent[this.tabDefault].infoOrder.id;
+              }else {
+                this.selectedSearchPersonId = '';
+              }
               localStorage.setItem('tabOrder', JSON.stringify(this.dataCurrent));
               localStorage.setItem('dataBill', JSON.stringify(this.dataBill));
               this.DatalayoutService.changeData({tabCurrent : this.tabDefault});
@@ -200,6 +267,14 @@ export class TabshopComponent implements OnInit {
             throw new Error('Error Event component');
       }
     });
+  }
+
+  peopleEvent() : void{
+    const selectedPerson = this.people.find((person : any) => person.id === this.selectedSearchPersonId);
+    this.dataPerson = selectedPerson;
+    this.updateBill(this.dataInfoUser,this.tabDefault,selectedPerson)
+    localStorage.setItem('tabOrder', JSON.stringify(this.dataCurrent));
+    
   }
 
   scrollTo(element: any) {
@@ -302,6 +377,38 @@ export class TabshopComponent implements OnInit {
       .result.then((result) => {
         console.log(result);
         if (result) {
+          console.log(this.dataCurrent);
+          console.log(this.dataInfoUser);
+          
+          console.log(this.dataAdd);
+          this.updateBill(this.dataInfoUser,this.tabDefault,this.dataAdd)
+          console.log(this.dataCurrent);
+          this.CustomersService.createQuickly(this.dataAdd).subscribe((data : any) => {
+            console.log(data);
+            if(data.status){
+              this.people = data.payload;
+              if(data.payload.length > 0) {
+                this.people.forEach((person : any) => {
+                  person.displayName = `${person.name} - ${person.tel}`;
+                });
+              }
+              const dataFind = data.payload.find((person : any) => person.name === this.dataAdd.name)
+              this.selectedSearchPersonId = dataFind.id;
+              this.updateBill(this.dataInfoUser,this.tabDefault,dataFind)
+              localStorage.setItem('tabOrder', JSON.stringify(this.dataCurrent));
+          }else {
+            console.log(data);
+            
+            const errorMessages = [];
+            for (const key in data.meta.errors) {
+              const messages = data.meta.errors[key];
+              for (const message of messages) {
+                errorMessages.push(`${key}: ${message}`);
+              }
+            }
+            this.showNextMessage(errorMessages);
+          }
+          })
           Swal.fire({
             toast: true,
             position: 'top-end',
@@ -478,17 +585,6 @@ export class TabshopComponent implements OnInit {
   updateModal(array: any, id: number, newQuantity: any) {
     console.log(array);
     
-    // const typeUpdate = name === 'discount' ? 'discount' : 'tax';
-    // const resultType = name === 'discount' ? 'tax' : 'discount';
-    // const test =   {
-    //   priceCurrent : 100000,
-    //   discount : 10,
-    //   tax : 0,
-    //   radioDiscount : 1,
-    //   result : 90000
-    // };
-
-
 
     for (let i = 0; i < array.length; i++) {
       if (array[i].id === id) {
@@ -504,19 +600,6 @@ export class TabshopComponent implements OnInit {
 
   updateBill(array: any, id: number, newQuantity: any) {
     console.log(array);
-    
-    // const typeUpdate = name === 'discount' ? 'discount' : 'tax';
-    // const resultType = name === 'discount' ? 'tax' : 'discount';
-    // const test =   {
-    //   priceCurrent : 100000,
-    //   discount : 10,
-    //   tax : 0,
-    //   radioDiscount : 1,
-    //   result : 90000
-    // };
-
-
-
     for (let i = 0; i < array.length; i++) {
       if (i === id) {
         for (const [key, value] of Object.entries(newQuantity)) {
@@ -526,6 +609,29 @@ export class TabshopComponent implements OnInit {
         // array[i].result = newQuantity * array[i][resultType];
         break;
       }
+    }
+  }
+
+  showNextMessage(errorMessages : any) {
+    if (errorMessages.length > 0) {
+      const message = errorMessages.shift();
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        title: 'Thất bại!',
+        text: message,
+        icon: 'error',
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.addEventListener('mouseenter', Swal.stopTimer);
+          toast.addEventListener('mouseleave', Swal.resumeTimer);
+        },
+        didClose: () => {
+          this.showNextMessage(errorMessages);
+        }
+      });
     }
   }
 }

@@ -122,11 +122,24 @@
         <div class="card">
             <div class="card-body">
                 <div class="mb-3 position-relative">
-                    <input type="text" class="form-control" id="exampleInputUsername1" autocomplete="off"
-                        placeholder="Thêm khách hàng vào đơn">
-                    <i style="cursor: pointer;"
-                        class="feather text-primary icon-plus-circle icon-md position-absolute top-50 end-10 translate-middle-y "
-                        (click)="openBasicModal(basicModalAddUser)"></i>
+                            <div class="d-flex justify-content-between">
+                                <h6 class="card-title">Thêm khách hàng vào đơn</h6>
+                            <i style="cursor: pointer;"
+                            class="feather text-primary icon-plus-circle icon-md"
+                            (click)="openBasicModal(basicModalAddUser)"></i>
+                            </div>
+                            <ng-select [items]="people"
+                              bindLabel="displayName"
+                              bindValue="id"
+                              placeholder="TÌM KIẾM KHÁCH HÀNG"
+                              [(ngModel)]="selectedSearchPersonId"
+                              (change)="peopleEvent()"
+                              >
+                            </ng-select>
+                          
+                    <!-- <input type="text" class="form-control" id="exampleInputUsername1" autocomplete="off"
+                        placeholder="Thêm khách hàng vào đơn"> -->
+                 
                 </div>
                 <b class="title-bill">THÔNG TIN ĐƠN HÀNG</b>
                 <div class="table-responsive">
@@ -245,11 +258,11 @@
     <div class="modal-body">
         <div class="mb-3">
             <label for="fulName" class="form-label">Họ và tên <span class="text-danger">*</span></label>
-            <input type="text" class="form-control" id="fulName">
+            <input type="text" class="form-control" id="fulName" [(ngModel)]="dataAdd.name">
         </div>
         <div class="mb-3">
             <label for="phoneNumber" class="form-label">Số điện thoại <span class="text-danger">*</span></label>
-            <input type="text" class="form-control" id="phoneNumber">
+            <input type="text" class="form-control" id="phoneNumber" [(ngModel)]="dataAdd.tel">
         </div>
 
 

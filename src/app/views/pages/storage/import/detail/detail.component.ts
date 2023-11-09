@@ -31,7 +31,7 @@ export class DetailComponent implements OnInit {
   });
   listStorage: any;
   id: string;
-  status: boolean;
+  status: number;
   isLoading = false;
 
   constructor(

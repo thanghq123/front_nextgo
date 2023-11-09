@@ -128,7 +128,7 @@ export class CreateComponent implements OnInit {
     if (this.customersForm.valid) {
       const dataToSend = {
         name: String(this.customersForm.value.name),
-        type: Number(this.customersForm.value.type) || null,
+        type: Number(this.customersForm.value.type) || 0,
         dob: String(this.customersForm.value.dob) || null,
         group_customer_id: Number(this.customersForm.value.group_customer_id) || null,
         province_code: Number(this.customersForm.value.province_code) || null,
@@ -144,7 +144,7 @@ export class CreateComponent implements OnInit {
         updated_at: null,
       };
 
-      console.log(dataToSend);
+      // console.log(dataToSend);
 
       this.CustomersService.create(dataToSend).subscribe(
         (response: any) => {

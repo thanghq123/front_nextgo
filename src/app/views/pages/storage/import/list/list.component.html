@@ -40,15 +40,15 @@
                 <td style="text-align: center">{{ value.created_by }}</td>
                 <td style="text-align: center">
                   <span class="badge {{
-                      value.status === true ? 'bg-success' : 'bg-primary'
+                      status(value.status)[1]
                     }}">{{
-                    value.status === false ? "Chờ xác nhận" : "Hoàn thành"
+                      status(value.status)[0]
                     }}</span>
                 </td>
                 <td>{{ value.created_at }}</td>
                 <td>{{ value.updated_at }}</td>
                 <td>
-                  <a *ngIf="value.status === false" [routerLink]="['../detail', value.inventory_transaction_id]" class="btn btn-success mx-2">Chi tiết</a>
+                  <a *ngIf="value.status === 1" [routerLink]="['../detail', value.inventory_transaction_id]" class="btn btn-success mx-2">Chi tiết</a>
                   <!-- <button data-id="{{ value.id }}" class="btn btn-danger">
                     Chi tiết
                   </button> -->

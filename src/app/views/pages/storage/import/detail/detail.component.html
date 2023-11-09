@@ -11,7 +11,8 @@
   <div class="col-md-12 grid-margin stretch-card">
     <div class="card">
       <div class="card-body">
-        <h2 style="text-align: center">Xác nhận nhập kho</h2>
+        <h2 *ngIf="status == 1" style="text-align: center">Xác nhận nhập kho</h2>
+        <h2 *ngIf="status != 1" style="text-align: center">Chi tiết đơn nhập kho</h2>
         <h6 class="card-title">Thông tin cơ bản</h6>
         <div *ngIf="isLoading" class="loadingcustomcss">
           <button class="btn btn-primary" type="button" disabled>
@@ -203,14 +204,14 @@
               </div>
             </div>
           </div>
-          <button *ngIf="status === false"
+          <button *ngIf="status === 1"
             type="submit"
             [disabled]="storageConfirmForm.invalid"
             class="btn btn-primary me-2"
           >
             Xác nhận
           </button>
-          <button *ngIf="status === true"
+          <button *ngIf="status === 2"
             type="button"
             [disabled]="storageConfirmForm.invalid"
             class="btn btn-primary me-2"
