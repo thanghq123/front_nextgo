@@ -13,9 +13,20 @@
       <div class="card-body">
         <h2 style="text-align: center">Tạo đơn nhập kho</h2>
         <h6 class="card-title">Thông tin cơ bản</h6>
+        <div *ngIf="isLoading" class="loadingcustomcss">
+          <button class="btn btn-primary" type="button" disabled>
+            <span
+              class="spinner-grow spinner-grow-sm"
+              role="status"
+              aria-hidden="true"
+            ></span>
+            Loading...
+          </button>
+        </div>
         <form
           class="forms-sample"
           [formGroup]="storageImportForm"
+          *ngIf="!isLoading"
           (ngSubmit)="onSubmit()"
         >
           <!-- <div class="mb-3">
@@ -78,7 +89,7 @@
               placeholder="Chọn nhà cung cấp"
             >
               <ng-option *ngFor="let item of listSupplier" [value]="item.id">
-                {{ item.name }}
+                {{ item.name}}
               </ng-option>
             </ng-select>
           </div>

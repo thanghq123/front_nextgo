@@ -27,17 +27,15 @@ import { SearchProductService } from 'src/app/service/searchProduct/search-produ
   styleUrls: ['./create.component.scss'],
 })
 export class CreateComponent implements OnInit {
-  listProduct: any = [];
   listSupplier: any = [];
   listLocation: any = [];
   listProduct: any[] = [];
   products: any[] = [];
-  tableData: any[] = [];
-
   input: any = {};
   editRowID: any = '';
   price: any;
   quantity: any;
+  isLoading = false;
   storageImportForm = new FormGroup({
     reason: new FormControl('', Validators.required),
     note: new FormControl(''),
@@ -53,14 +51,14 @@ export class CreateComponent implements OnInit {
     private _supplier: SuppliersService,
     private _location: LocationsService,
     private _storage: StorageImportService,
-    private _product: ProductsService,
     private router: Router,
     private cdr: ChangeDetectorRef,
     private _product: SearchProductService
   ) {
+
     this._supplier.GetData().subscribe((res: any) => {
       this.listSupplier = res.payload.data;
-      // console.log(this.listSupplier);
+      console.log(this.listSupplier);
 
     });
     this._product.GetData().subscribe((res: any) => {
@@ -70,12 +68,18 @@ export class CreateComponent implements OnInit {
 
     this._location.GetData().subscribe((res: any) => {
       this.listLocation = res.payload;
+     
       // console.log(this.listLocation);
     })
 
   }
   Edit(val: any) {
     this.editRowID = val;
+  }
+  ngOnInit(): void {
+    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
+    //Add 'implements OnInit' to the class.
+
   }
   search = (text$: Observable<string>) =>
     text$.pipe(
@@ -92,7 +96,6 @@ export class CreateComponent implements OnInit {
     );
   formatter = (x: { variation_name: string }) => x.variation_name;
 
-  ngOnInit(): void {}
   searchProduct() {
     if (this.input != '') {
       // Kiểm tra xem sản phẩm vừa nhập có trùng với sản phẩm nào trong this.products không
