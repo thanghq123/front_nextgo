@@ -91,7 +91,7 @@
                 <label for="exampleInputUsername1" class="form-label">
                   Chi nhánh
                 </label>
-                <ng-select [searchable]="true" placeholder="Chọn chi nhánh">
+                <ng-select [searchable]="true"   placeholder="Chọn chi nhánh">
                   <ng-option
                     *ngFor="let item of listLocation"
                     [value]="item.id"
@@ -107,7 +107,7 @@
                 <label for="exampleInputUsername1" class="form-label">
                   Kho
                 </label>
-                <ng-select [searchable]="true" placeholder="Chọn nhà kho">
+                <ng-select [searchable]="true"  formControlName="inventory_id" placeholder="Chọn nhà kho">
                   <ng-option
                     *ngFor="let item of listLocation"
                     [value]="item.id"
@@ -123,7 +123,7 @@
             <form (ngSubmit)="searchProduct()" [formGroup]="inputSerach">
               <ng-template #rt let-r="result" let-t="term">
                 <!-- <img [src]="'https://upload.wikimedia.org/wikipedia/commons/thumb/' + r['flag']" class="me-1" style="width: 16px"> -->
-                <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                <ngb-highlight [result]="r.variation_name" [term]="t"></ngb-highlight>
               </ng-template>
 
               <label for="typeahead-template" class="form-label"
@@ -161,7 +161,7 @@
                     <tbody>
                       <ng-container *ngIf="products && products.length">
                         <tr *ngFor="let value of products; let i = index">
-                          <th>{{ value.variation_id }}</th>
+                          <th>{{ i+1 }}</th>
                           <td (click)="Edit(i)">{{ value.name }}</td>
                           <td *ngIf="i === editRowID">
                             <input
