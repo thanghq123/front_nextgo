@@ -7,7 +7,7 @@ import { Products } from 'src/app/interface/products/products';
   providedIn: 'root'
 })
 export class ProductsService extends CRUDServiceService<Products>  {
- 
+
   constructor(
     http: HttpClient,
     dataService: HandleDataService
@@ -15,5 +15,4 @@ export class ProductsService extends CRUDServiceService<Products>  {
    super(http, dataService);
    this.apiUrl = this.dataService.getUrl('products');
  }
- 
 }

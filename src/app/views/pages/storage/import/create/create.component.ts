@@ -19,6 +19,7 @@ import { LocationsService } from 'src/app/service/locations/locations.service';
 import { Product } from 'src/app/interface/product/product';
 import { SearchProductService } from 'src/app/service/searchProduct/search-product.service';
 
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-create',
@@ -26,6 +27,7 @@ import { SearchProductService } from 'src/app/service/searchProduct/search-produ
   styleUrls: ['./create.component.scss'],
 })
 export class CreateComponent implements OnInit {
+  listProduct: any = [];
   listSupplier: any = [];
   listLocation: any = [];
   listProduct: any[] = [];
@@ -51,21 +53,24 @@ export class CreateComponent implements OnInit {
     private _supplier: SuppliersService,
     private _location: LocationsService,
     private _storage: StorageImportService,
+    private _product: ProductsService,
     private router: Router,
     private cdr: ChangeDetectorRef,
     private _product: SearchProductService
   ) {
     this._supplier.GetData().subscribe((res: any) => {
       this.listSupplier = res.payload.data;
-    });
+      // console.log(this.listSupplier);
 
-    this._location.GetData().subscribe((res: any) => {
-      this.listLocation = res.payload;
-      console.log(this.listLocation);
-    })
+    });
     this._product.GetData().subscribe((res: any) => {
       this.listProduct = res.payload;
       console.log(this.listProduct);
+    })
+
+    this._location.GetData().subscribe((res: any) => {
+      this.listLocation = res.payload;
+      // console.log(this.listLocation);
     })
 
   }

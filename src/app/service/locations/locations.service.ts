@@ -14,7 +14,7 @@ export class LocationsService extends CRUDServiceService<any> {
     dataService: HandleDataService
  ) {
    super(http, dataService);
-   this.apiUrl = this.dataService.getUrl('locations');
+   this.apiUrl = this.dataService.getUrl('location');
  }
 
 
