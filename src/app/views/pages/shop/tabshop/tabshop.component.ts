@@ -48,97 +48,7 @@ export class TabshopComponent implements OnInit {
   }
   dataPerson : any;
   dataInfoUser : any;
-  ListProducts: ListProducts[][] = [
-    [{
-        "id": 2,
-        "product_id": 2,
-        "sku": "BHFxhfenX4",
-        "barcode": null,
-        "variation_name": "sản phẩm 1",
-        "display_name": "sản phẩm 1",
-        "image": null,
-        "price_import": 0,
-        "price_export": 0,
-        quantity : 0,
-        "status": true,
-        "variation_quantities": [{
-            "id": 1,
-            "variation_id": 1,
-            "inventory_id": 1,
-            "batch_id": 1,
-            "price_import": 10000,
-            "quantity": 20042,
-            "created_at": null,
-            "updated_at": "2023-11-09T10:20:24.000000Z",
-            "batch": null
-          },
-          {
-            "id": 3,
-            "variation_id": 1,
-            "inventory_id": 2,
-            "batch_id": 2,
-            "price_import": 20000,
-            "quantity": 20042,
-            "created_at": null,
-            "updated_at": "2023-11-09T10:20:24.000000Z",
-            "batch": null
-          }
-        ]
-      },
-      {
-        "id": 2,
-        "product_id": 2,
-        "sku": "BHFxhfenX4",
-        "barcode": null,
-        "variation_name": "sản phẩm 1",
-        "display_name": "sản phẩm 1",
-        "image": null,
-        quantity : 0,
-        "price_import": 0,
-        "price_export": 0,
-        "status": true,
-        "variation_quantities": []
-      }
-    ],
-    [
-      {
-        "id": 2,
-        "product_id": 3,
-        "sku": "BHFxhfenX4",
-        "barcode": null,
-        "variation_name": "sản phẩm 2",
-        "display_name": "sản phẩm 2",
-        "image": null,
-        "price_import": 0,
-        "price_export": 0,
-        "status": true,
-        quantity : 30000,
-        "variation_quantities": [{
-            "id": 1,
-            "variation_id": 1,
-            "inventory_id": 1,
-            "batch_id": 1,
-            "price_import": 10000,
-            "quantity": 20042,
-            "created_at": null,
-            "updated_at": "2023-11-09T10:20:24.000000Z",
-            "batch": null
-          },
-          {
-            "id": 3,
-            "variation_id": 1,
-            "inventory_id": 2,
-            "batch_id": 2,
-            "price_import": 20000,
-            "quantity": 20042,
-            "created_at": null,
-            "updated_at": "2023-11-09T10:20:24.000000Z",
-            "batch": null
-          }
-        ]
-      }
-    ]
-  ];
+  ListProducts: any[];
   constructor(
     private modalService: NgbModal,
     private DatalayoutService: DatalayoutService,
@@ -149,16 +59,26 @@ export class TabshopComponent implements OnInit {
   ngOnInit(): void {
    
     console.log( this.ListProducts);
-    // this.ListProductsService.getProducts().subscribe((data : any) => {
-    //   this.ListProducts = data.payload[0].variations;
+    this.ListProductsService.getProducts().subscribe((data : any) => {
+      this.ListProducts = Object.values(data.payload);
+      console.log(data.payload);
+      
+      if(data.payload){
+        for (const iterator in data.payload) {
+          console.log(data.payload[iterator]);
+          for (const item of data.payload[iterator]) {
+            item.quantity = item.variation_quantities.reduce((sum : number,valueCurrent : any) => sum + valueCurrent.quantity,0)
+            
+          }
+          
+        }
+      }
   
-    //   if(data.payload[0].variations){
-    //     for (const iterator of data.payload[0].variations) {
-    //       iterator.quantity = iterator.variation_quantities.reduce((sum : number,valueCurrent : any) => sum + valueCurrent.quantity,0)
-    //     }
-    //   }
-    //   // variation_quantities
-    // })
+   
+ 
+      
+      // variation_quantities
+    })
     
     this.CustomersService.GetData().subscribe((response : any) => {
       // console.log(response.payload.data);
@@ -640,7 +560,7 @@ export class TabshopComponent implements OnInit {
 
   addProduct(item : any){
     console.log(item);
-    this.listProductCart[this.tabDefault].push({...item,quanity : 0,result : 0})
+    this.listProductCart[this.tabDefault].push({...item,quanity : 1,result : 1 * item.price_export})
     console.log(this.listProductCart);
     
   }

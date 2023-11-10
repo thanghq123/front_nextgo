@@ -56,8 +56,9 @@
                 <ngb-accordion [closeOthers]="true" activeIds="static-1">
                     <ngb-panel id="static-1" title="Danh sách sản phẩm">
                         <ng-template ngbPanelContent>
-                            <div class="row" *ngFor="let items of ListProducts">
-                                <div class="col-4">
+                            <div class="row">
+                                <div class="col-4" *ngFor="let items of ListProducts">
+                               
                                   <div class="card d-block" *ngIf="items.length > 1; else showFirstItem">
                                     <div class="card-body p-2 d-flex align-items-center justify-content-evenly">
                                       <div class="d-flex align-items-center">
@@ -65,7 +66,7 @@
                                           <img width="100%" src="https://prod-core-images.s3.ap-southeast-1.amazonaws.com/nextshop/1697731423873.jpg" alt="">
                                         </div>
                                         <div>
-                                          <h1 class="item-name">{{ items[0].display_name }}</h1>
+                                          <h1 class="item-name">{{ items[0].product.name }}</h1>
                                           <div>
                                             <span class="price-name">{{ items[0].price_export }}₫</span>
                                             <span class="price-name ms-2">
@@ -80,10 +81,11 @@
                                         </div>
                                       </div>
                                       <div style="cursor: pointer;">
-                                        <i (click)=" openBasicModal(typeProducts) " class="feather text-primary icon-plus icon-md "></i>
+                                        <i (click)="openBasicModal(typeProducts)" class="feather text-primary icon-plus icon-md "></i>
                                       </div>
                                     </div>
                                   </div>
+                                  <!-- Không biến thể -->
                                   <ng-template #showFirstItem>
                                     <div class="card d-block mt-2">
                                       <div class="card-body p-2 d-flex align-items-center justify-content-evenly">
@@ -92,7 +94,7 @@
                                             <img width="100%" src="https://prod-core-images.s3.ap-southeast-1.amazonaws.com/nextshop/1697731423873.jpg" alt="">
                                           </div>
                                           <div>
-                                            <h1 class="item-name">{{ items[0].display_name }}</h1>
+                                            <h1 class="item-name">{{ items[0].product.name }}</h1>
                                             <div>
                                               <span class="price-name">{{ items[0].price_export }}₫</span>
                                               <span class="price-name ms-2">
@@ -107,7 +109,7 @@
                                           </div>
                                         </div>
                                         <div style="cursor: pointer;">
-                                          <i (click)="items[0].quantity > 0 ? addProduct(items[0]) : addProductQuality(items[0]) " class="feather text-primary icon-plus icon-md "></i>
+                                          <i (click)="items[0].quantity > 0 ? addProduct(items[0]) : addProductQuality(items[0])" class="feather text-primary icon-plus icon-md "></i>
                                         </div>
                                       </div>
                                     </div>
