@@ -25,138 +25,75 @@ export class NavbarsellComponent implements OnInit {
     if (!tabOrder || !tabCurrentJson || !tabModalJson || !OutPutResult) {
         this.tabOder =[
           {
-            ListProductCart: [{
-              id: 1,
-              image: '123',
-              display_name: 'làm đẹp',
-              sku : 'C653153A449SSJ',
-              unit: 'chai',
-              quanity: 2,
-              price_export: 100000,
-              result: 200000
-            },{
-              id: 2,
-              image: '123',
-              display_name: 'làm đẹp 2',
-              sku : 'C653153A449SSJ',
-              unit: 'chai',
-              quanity: 2,
-              price_export: 100000,
-              result: 200000
-            },{
-              id: 3,
-              image: '123',
-              display_name: 'làm đẹp 3',
-              sku : 'C653153A449SSJ',
-              unit: 'chai',
-              quanity: 2,
-              price_export: 100000,
-              result: 200000
-            }],
+            ListProductCart: [
+            //   {
+            //   id: 1,
+            //   image: '123',
+            //   display_name: 'làm đẹp',
+            //   sku : 'C653153A449SSJ',
+            //   unit: 'chai',
+            //   quanity: 2,
+            //   price_export: 100000,
+            //   result: 200000
+            // },{
+            //   id: 2,
+            //   image: '123',
+            //   display_name: 'làm đẹp 2',
+            //   sku : 'C653153A449SSJ',
+            //   unit: 'chai',
+            //   quanity: 2,
+            //   price_export: 100000,
+            //   result: 200000
+            // },{
+            //   id: 3,
+            //   image: '123',
+            //   display_name: 'làm đẹp 3',
+            //   sku : 'C653153A449SSJ',
+            //   unit: 'chai',
+            //   quanity: 2,
+            //   price_export: 100000,
+            //   result: 200000
+            // }
+          ],
             infoOrder: {}
-          } ,
-          {
-            ListProductCart: [{
-              id: 1,
-              image: '123',
-              display_name: 'làm đẹp tab2',
-              sku : 'C653153A449SSJ',
-              unit: 'chai',
-              quanity: 2,
-              price_export: 300000,
-              result: 200000
-            },{
-              id: 2,
-              image: '1234',
-              display_name: 'làm đẹp 2 tab2',
-              sku : 'C653153A449SSJ',
-              unit: 'cm',
-              quanity: 3,
-              price_export: 150000,
-              result: 300000
-            },{
-              id: 3,
-              image: '1234',
-              display_name: 'làm đẹp 2 tab2',
-              sku : 'C653153A449SSJ',
-              unit: 'cm',
-              quanity: 3,
-              price_export: 200000,
-              result: 300000
-            }],
-            infoOrder: {}
-          } 
+          }
         ];
 
         this.tabCurrent = 0;
         this.modalPrice = [
           [
-            {
-              id : 1 ,
-              priceCurrent : 100000,
-              discount : 10,
-              tax : 0,
-              radioDiscount : 1,
-              result : 90000
-            },
-            {
-              id : 2 ,
-              priceCurrent : 100000,
-              discount : 0,
-              tax : 0,
-              radioDiscount : 1,
-              result : 100000
-            },
-            {
-              id : 3 ,
-              priceCurrent : 100000,
-              discount : 0,
-              tax : 0,
-              radioDiscount : 1,
-              result : 100000
-            }
-          ],
-          [
-            {
-              id : 1 ,
-              priceCurrent : 300000,
-              discount : 0,
-              tax : 0,
-              radioDiscount : 1,
-              result : 300000
-            },
-            {
-              id : 2 ,
-              priceCurrent : 150000,
-              discount : 0,
-              tax : 0,
-              radioDiscount : 1,
-              result : 150000
-            },
-            {
-              id : 3 ,
-              priceCurrent : 200000,
-              discount : 0,
-              tax : 0,
-              radioDiscount : 1,
-              result : 200000
-            }
+            // {
+            //   id : 1 ,
+            //   priceCurrent : 100000,
+            //   discount : 10,
+            //   tax : 0,
+            //   radioDiscount : 1,
+            //   result : 90000
+            // },
+            // {
+            //   id : 2 ,
+            //   priceCurrent : 100000,
+            //   discount : 0,
+            //   tax : 0,
+            //   radioDiscount : 1,
+            //   result : 100000
+            // },
+            // {
+            //   id : 3 ,
+            //   priceCurrent : 100000,
+            //   discount : 0,
+            //   tax : 0,
+            //   radioDiscount : 1,
+            //   result : 100000
+            // }
           ]
         ]
 
         this.dataBill = [
           {
-            discount : 12,
-            tax : 10,
-            totalPrice : 891000,
-            service : 0,
-            radio : 1,
-            cash : 0,
-          },
-          {
-            discount : 10,
-            tax : 10,
-            totalPrice : 900000,
+            discount : 0,
+            tax : 0,
+            totalPrice : 0,
             service : 0,
             radio : 1,
             cash : 0,
