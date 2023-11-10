@@ -27,61 +27,61 @@ export class NavbarsellComponent implements OnInit {
           {
             ListProductCart: [{
               id: 1,
-              img: '123',
-              name: 'làm đẹp',
+              image: '123',
+              display_name: 'làm đẹp',
               sku : 'C653153A449SSJ',
               unit: 'chai',
               quanity: 2,
-              price: 100000,
+              price_export: 100000,
               result: 200000
             },{
               id: 2,
-              img: '1234',
-              name: 'làm đẹp 2',
+              image: '123',
+              display_name: 'làm đẹp 2',
               sku : 'C653153A449SSJ',
-              unit: 'cm',
-              quanity: 3,
-              price: 100000,
-              result: 300000
+              unit: 'chai',
+              quanity: 2,
+              price_export: 100000,
+              result: 200000
             },{
               id: 3,
-              img: '1234',
-              name: 'làm đẹp 2',
+              image: '123',
+              display_name: 'làm đẹp 3',
               sku : 'C653153A449SSJ',
-              unit: 'cm',
-              quanity: 3,
-              price: 100000,
-              result: 300000
+              unit: 'chai',
+              quanity: 2,
+              price_export: 100000,
+              result: 200000
             }],
             infoOrder: {}
           } ,
           {
             ListProductCart: [{
               id: 1,
-              img: '123',
-              name: 'làm đẹp tab2',
+              image: '123',
+              display_name: 'làm đẹp tab2',
               sku : 'C653153A449SSJ',
               unit: 'chai',
               quanity: 2,
-              price: 300000,
+              price_export: 300000,
               result: 200000
             },{
               id: 2,
-              img: '1234',
-              name: 'làm đẹp 2 tab2',
+              image: '1234',
+              display_name: 'làm đẹp 2 tab2',
               sku : 'C653153A449SSJ',
               unit: 'cm',
               quanity: 3,
-              price: 150000,
+              price_export: 150000,
               result: 300000
             },{
               id: 3,
-              img: '1234',
-              name: 'làm đẹp 2 tab2',
+              image: '1234',
+              display_name: 'làm đẹp 2 tab2',
               sku : 'C653153A449SSJ',
               unit: 'cm',
               quanity: 3,
-              price: 200000,
+              price_export: 200000,
               result: 300000
             }],
             infoOrder: {}
@@ -198,7 +198,7 @@ export class NavbarsellComponent implements OnInit {
 
   removeTab(index : number){
     if(index > 0){
-      this.DatalayoutService.triggerEvent('removeTab',{idRemove : index});
+      this.DatalayoutService.triggerEvent('removeTab',{idRemove : index,modalData : this.modalPrice});
     }else {
       console.log(this.tabOder[0].ListProductCart.length);
       

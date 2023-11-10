@@ -22,7 +22,7 @@
                                         <img  src="http://via.placeholder.com/36x36" alt="image">
                                     </div>
                                     <div class="ms-2">
-                                        <h6>{{ item.name }}</h6>
+                                        <h6>{{ item.display_name }}</h6>
                                         <p>{{ item.sku }}</p>
                                     </div>
                                 </td>
@@ -38,7 +38,7 @@
                                 </td>
                                 <td class="align-middle">
                                     <div class="d-flex">
-                                        <input type="text" class="form-control" data-id="{{ item.id }}" name="price" value="{{ item.price }}" (input)="resultTotal($event)"
+                                        <input type="text" class="form-control" data-id="{{ item.id }}" name="price" value="{{ item.price_export }}" (input)="resultTotal($event)"
                                             (click)="openBasicModalPrice(basicModal,item.id,i)">
                                     </div>
                                 </td>
@@ -56,62 +56,65 @@
                 <ngb-accordion [closeOthers]="true" activeIds="static-1">
                     <ngb-panel id="static-1" title="Danh sách sản phẩm">
                         <ng-template ngbPanelContent>
-                            <div class="row">
+                            <div class="row" *ngFor="let items of ListProducts">
                                 <div class="col-4">
-                                    <div class="card d-block ">
-                                        <div class="card-body p-2 d-flex align-items-center justify-content-evenly">
-                                            <div class="d-flex align-items-center">
-                                                <div class="img-products"><img width="100%"
-                                                        src="https://prod-core-images.s3.ap-southeast-1.amazonaws.com/nextshop/1697731423873.jpg"
-                                                        alt=""></div>
-                                                <div>
-                                                    <h1 class="item-name">Sản phẩm 1</h1>
-                                                    <span class="price-name">0 ₫</span>
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <i   (click)="openBasicModal(typeProducts)" class="feather text-primary icon-plus icon-md "></i>
-                                            </div>
+                                  <div class="card d-block" *ngIf="items.length > 1; else showFirstItem">
+                                    <div class="card-body p-2 d-flex align-items-center justify-content-evenly">
+                                      <div class="d-flex align-items-center">
+                                        <div class="img-products">
+                                          <img width="100%" src="https://prod-core-images.s3.ap-southeast-1.amazonaws.com/nextshop/1697731423873.jpg" alt="">
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="card d-block ">
-                                        <div class="card-body p-2 d-flex align-items-center justify-content-evenly">
-                                            <div class="d-flex align-items-center">
-                                                <div class="img-products"><img width="100%"
-                                                        src="https://prod-core-images.s3.ap-southeast-1.amazonaws.com/nextshop/1697731423873.jpg"
-                                                        alt=""></div>
-                                                <div>
-                                                    <h1 class="item-name">Sản phẩm 1</h1>
-                                                    <span class="price-name">0 ₫</span>
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <i   (click)="openBasicModal(typeProducts)" class="feather text-primary icon-plus icon-md "></i>
-                                            </div>
+                                        <div>
+                                          <h1 class="item-name">{{ items[0].display_name }}</h1>
+                                          <div>
+                                            <span class="price-name">{{ items[0].price_export }}₫</span>
+                                            <span class="price-name ms-2">
+                                              <ng-container *ngIf="items[0].quantity === 0; else quantityAvailable">
+                                                <span style="color: red;">Hết hàng</span>
+                                              </ng-container>
+                                              <ng-template #quantityAvailable>
+                                                SL: {{ items[0].quantity }}
+                                              </ng-template>
+                                            </span>
+                                          </div>
                                         </div>
+                                      </div>
+                                      <div style="cursor: pointer;">
+                                        <i (click)=" openBasicModal(typeProducts) " class="feather text-primary icon-plus icon-md "></i>
+                                      </div>
                                     </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="card d-block ">
-                                        <div class="card-body p-2 d-flex align-items-center justify-content-evenly">
-                                            <div class="d-flex align-items-center">
-                                                <div class="img-products"><img width="100%"
-                                                        src="https://prod-core-images.s3.ap-southeast-1.amazonaws.com/nextshop/1697731423873.jpg"
-                                                        alt=""></div>
-                                                <div>
-                                                    <h1 class="item-name">Sản phẩm 1</h1>
-                                                    <span class="price-name">0 ₫</span>
-                                                </div>
-                                            </div>
+                                  </div>
+                                  <ng-template #showFirstItem>
+                                    <div class="card d-block mt-2">
+                                      <div class="card-body p-2 d-flex align-items-center justify-content-evenly">
+                                        <div class="d-flex align-items-center">
+                                          <div class="img-products">
+                                            <img width="100%" src="https://prod-core-images.s3.ap-southeast-1.amazonaws.com/nextshop/1697731423873.jpg" alt="">
+                                          </div>
+                                          <div>
+                                            <h1 class="item-name">{{ items[0].display_name }}</h1>
                                             <div>
-                                                <i   (click)="openBasicModal(typeProducts)" class="feather text-primary icon-plus icon-md "></i>
+                                              <span class="price-name">{{ items[0].price_export }}₫</span>
+                                              <span class="price-name ms-2">
+                                                <ng-container *ngIf="items[0].quantity === 0; else quantityAvailable">
+                                                  <span style="color: red;">Hết hàng</span>
+                                                </ng-container>
+                                                <ng-template #quantityAvailable>
+                                                  SL: {{ items[0].quantity }}
+                                                </ng-template>
+                                              </span>
                                             </div>
+                                          </div>
                                         </div>
+                                        <div style="cursor: pointer;">
+                                          <i (click)="items[0].quantity > 0 ? addProduct(items[0]) : addProductQuality(items[0]) " class="feather text-primary icon-plus icon-md "></i>
+                                        </div>
+                                      </div>
                                     </div>
+                                  </ng-template>
                                 </div>
-                            </div>
+                              </div>
+                             
                         </ng-template>
                     </ngb-panel>
                 </ngb-accordion>

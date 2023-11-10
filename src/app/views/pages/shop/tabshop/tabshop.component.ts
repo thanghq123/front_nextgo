@@ -48,7 +48,97 @@ export class TabshopComponent implements OnInit {
   }
   dataPerson : any;
   dataInfoUser : any;
-  ListProducts: ListProducts;
+  ListProducts: ListProducts[][] = [
+    [{
+        "id": 2,
+        "product_id": 2,
+        "sku": "BHFxhfenX4",
+        "barcode": null,
+        "variation_name": "sản phẩm 1",
+        "display_name": "sản phẩm 1",
+        "image": null,
+        "price_import": 0,
+        "price_export": 0,
+        quantity : 0,
+        "status": true,
+        "variation_quantities": [{
+            "id": 1,
+            "variation_id": 1,
+            "inventory_id": 1,
+            "batch_id": 1,
+            "price_import": 10000,
+            "quantity": 20042,
+            "created_at": null,
+            "updated_at": "2023-11-09T10:20:24.000000Z",
+            "batch": null
+          },
+          {
+            "id": 3,
+            "variation_id": 1,
+            "inventory_id": 2,
+            "batch_id": 2,
+            "price_import": 20000,
+            "quantity": 20042,
+            "created_at": null,
+            "updated_at": "2023-11-09T10:20:24.000000Z",
+            "batch": null
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "product_id": 2,
+        "sku": "BHFxhfenX4",
+        "barcode": null,
+        "variation_name": "sản phẩm 1",
+        "display_name": "sản phẩm 1",
+        "image": null,
+        quantity : 0,
+        "price_import": 0,
+        "price_export": 0,
+        "status": true,
+        "variation_quantities": []
+      }
+    ],
+    [
+      {
+        "id": 2,
+        "product_id": 3,
+        "sku": "BHFxhfenX4",
+        "barcode": null,
+        "variation_name": "sản phẩm 2",
+        "display_name": "sản phẩm 2",
+        "image": null,
+        "price_import": 0,
+        "price_export": 0,
+        "status": true,
+        quantity : 30000,
+        "variation_quantities": [{
+            "id": 1,
+            "variation_id": 1,
+            "inventory_id": 1,
+            "batch_id": 1,
+            "price_import": 10000,
+            "quantity": 20042,
+            "created_at": null,
+            "updated_at": "2023-11-09T10:20:24.000000Z",
+            "batch": null
+          },
+          {
+            "id": 3,
+            "variation_id": 1,
+            "inventory_id": 2,
+            "batch_id": 2,
+            "price_import": 20000,
+            "quantity": 20042,
+            "created_at": null,
+            "updated_at": "2023-11-09T10:20:24.000000Z",
+            "batch": null
+          }
+        ]
+      }
+    ]
+  ];
   constructor(
     private modalService: NgbModal,
     private DatalayoutService: DatalayoutService,
@@ -58,11 +148,17 @@ export class TabshopComponent implements OnInit {
 
   ngOnInit(): void {
    
-    
-    this.ListProductsService.getProducts().subscribe((data) => {
-      console.log(data);
-      
-    })
+    console.log( this.ListProducts);
+    // this.ListProductsService.getProducts().subscribe((data : any) => {
+    //   this.ListProducts = data.payload[0].variations;
+  
+    //   if(data.payload[0].variations){
+    //     for (const iterator of data.payload[0].variations) {
+    //       iterator.quantity = iterator.variation_quantities.reduce((sum : number,valueCurrent : any) => sum + valueCurrent.quantity,0)
+    //     }
+    //   }
+    //   // variation_quantities
+    // })
     
     this.CustomersService.GetData().subscribe((response : any) => {
       // console.log(response.payload.data);
@@ -126,8 +222,7 @@ export class TabshopComponent implements OnInit {
           this.noteBillEvent()
         }
       }
-      console.log(data);
-    
+
      
       
     });
@@ -237,11 +332,16 @@ export class TabshopComponent implements OnInit {
           localStorage.setItem('TabCurrentIndex', JSON.stringify(this.tabDefault));
           break;
           case 'removeTab' :
-            const {idRemove} = event.data;
+            const {idRemove,modalData} = event.data;
+            
             if (idRemove > 0) {
+              console.log(modalData);
+               this.modalData = modalData.splice(this.tabDefault, 1);
+              console.log(this.modalData);
               
               this.dataCurrent.splice(idRemove, 1);
               this.dataBill.splice(idRemove, 1);
+              // this.modalData = modalData.splice(this.tabDefault, 1);
               this.tabDefault = idRemove == 0 ? 0 : idRemove-1;
               this.singleTax = this.dataBill[this.tabDefault].discount;
               this.DiscountBill = this.dataBill[this.tabDefault].tax;
@@ -255,8 +355,10 @@ export class TabshopComponent implements OnInit {
               }else {
                 this.selectedSearchPersonId = '';
               }
+        
               localStorage.setItem('tabOrder', JSON.stringify(this.dataCurrent));
               localStorage.setItem('dataBill', JSON.stringify(this.dataBill));
+              // localStorage.setItem('TabModal', JSON.stringify(this.modalData));
               this.DatalayoutService.changeData({tabCurrent : this.tabDefault});
               localStorage.setItem('TabCurrentIndex', JSON.stringify(this.tabDefault));
             }
@@ -535,6 +637,31 @@ export class TabshopComponent implements OnInit {
       .catch((res) => {});
   }
 
+
+  addProduct(item : any){
+    console.log(item);
+    this.listProductCart[this.tabDefault].push({...item,quanity : 0,result : 0})
+    console.log(this.listProductCart);
+    
+  }
+
+  addProductQuality(item : any){
+    Swal.fire({
+      title: 'Bán vượt quá số tồn kho',
+      text: 'Sản phẩm này hiện không đủ số lượng trong kho. Bạn vẫn muốn bán chứ ?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      cancelButtonText : 'Quay lại',
+      confirmButtonText: 'Tiếp tục bán',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        console.log(item);
+        
+    }
+    });
+  }
   
 
   openLgModal(content: TemplateRef<any>) {
@@ -571,8 +698,8 @@ export class TabshopComponent implements OnInit {
   
   updateQuantity(array: any, id: number, newQuantity: any, name: string) {
     
-    const typeUpdate = name === 'quanity' ? 'quanity' : 'price';
-    const resultType = name === 'quanity' ? 'price' : 'quanity';
+    const typeUpdate = name === 'quanity' ? 'quanity' : 'price_export';
+    const resultType = name === 'quanity' ? 'price_export' : 'quanity';
     for (let i = 0; i < array.length; i++) {
       if (array[i].id === id) {
         array[i][typeUpdate] = newQuantity;
