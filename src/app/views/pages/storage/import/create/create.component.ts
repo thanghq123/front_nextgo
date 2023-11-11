@@ -39,10 +39,11 @@ export class CreateComponent implements OnInit {
   storageImportForm = new FormGroup({
     reason: new FormControl('', Validators.required),
     note: new FormControl(''),
-    partner_id: new FormControl(''),
+    partner_id: new FormControl('', Validators.required),
+    inventory_id: new FormControl('', Validators.required),
     price: new FormControl(''),
     quantity: new FormControl(''),
-    inventory_id: new FormControl('')
+
   });
   inputSerach = new FormGroup({
     input: new FormControl(''),
@@ -68,7 +69,7 @@ export class CreateComponent implements OnInit {
 
     this._location.GetData().subscribe((res: any) => {
       this.listLocation = res.payload;
-     
+
       // console.log(this.listLocation);
     })
 
@@ -145,7 +146,7 @@ export class CreateComponent implements OnInit {
 
   onSubmit() {
     // If confirmed, delete the category
-    if (this.storageImportForm.valid) {
+    if (this.storageImportForm.valid && this.products.length > 0) {
       const datasend = {
         reason: this.storageImportForm.value.reason,
         inventory_id: this.storageImportForm.value.inventory_id,
@@ -182,10 +183,10 @@ export class CreateComponent implements OnInit {
           } else {
             console.log(response);
             const errorMessages = [];
-            for (const key in response.meta) {
-              const messages = response.meta[key];
+            for (const key in response.meta.errors) {
+              const messages = response.meta.errors[key];
               for (const message of messages) {
-                errorMessages.push(`${message}`);
+                errorMessages.push(`${key}: ${message}`);
               }
             }
             this.showNextMessage(errorMessages);
@@ -197,7 +198,7 @@ export class CreateComponent implements OnInit {
         }
       );
     } else {
-      alert('Không để trống');
+      alert('Sản phẩm không được để trống');
     }
   }
   showNextMessage(errorMessages: any) {
