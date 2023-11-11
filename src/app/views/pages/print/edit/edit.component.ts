@@ -38,159 +38,152 @@ export class EditComponent implements OnInit {
     private _printService: PrintService,
     private _router: Router
   ) {
-    this.myContent = `<div class="bfs-font bfs-m bta-default bill-print-body bill-body" id="bill-body-id">
+    this.myContent = `<div class="bfs-font bfs-m bill-body bill-print-body bta-default" id="bill-body-id">
+<div class="bfs-bold bfs-l bta-left"><strong>{Ten_Cua_hang}</strong></div>
 
-    <div class="bfs-l bfs-bold bta-left">{Ten_Cua_hang}</div>
+<div class="bfs-s bta-left" id="mc_address">{Ten_Chi_Nhanh} - {Dia_Chi_Chi_Nhanh}</div>
 
-    <div class="bfs-s bta-left" id="mc_address">{Ten_Chi_Nhanh} - {Dia_Chi_Chi_Nhanh}</div>
+<div class="bfs-s bta-left" id="mc_phone">{Dien_Thoai_Chi_Nhanh}
+<hr />
+<p style="text-align:center">&nbsp;</p>
 
-    <div class="bfs-s bta-left" id="mc_phone">{Dien_Thoai_Chi_Nhanh}</div>
+<h2 style="text-align:center"><strong>H</strong><strong>&Oacute;A&nbsp;ĐƠN B&Aacute;N H&Agrave;NG</strong></h2>
+</div>
 
-    <div class="bill-dash-line">&nbsp;</div>
+<div class="bill-row">
+<div class="bfs-s bill-col-left-4 bill-row">
+<table border="0" cellpadding="1" cellspacing="1" style="width:100%">
+\t<tbody>
+\t\t<tr>
+\t\t\t<td><strong>Ng&agrave;y:</strong>&nbsp;&nbsp;{Ngay_Tao}</td>
+\t\t\t<td><strong>HĐ: {Ma_Don_Hang}</strong></td>
+\t\t</tr>
+\t\t<tr>
+\t\t\t<td><strong>Nh&acirc;n vi&ecirc;n:</strong>&nbsp;{Nguoi_Phu_Trach}</td>
+\t\t\t<td>&nbsp;</td>
+\t\t</tr>
+\t</tbody>
+</table>
 
-    <div class="bfs-space-l">&nbsp;</div>
+<p>&nbsp;</p>
 
-    <div class="bfs-bold bfs-x bfs-space-l">HÓA ĐƠN BÁN HÀNG</div>
+<p>&nbsp;</p>
+</div>
+</div>
 
-    <div class="bfs-space-x">&nbsp;</div>
+<div class="bill-col-left-5 bill-text-bold">
+<table align="center" border="0" cellpadding="1" cellspacing="1" style="width:100%">
+\t<tbody>
+\t\t<tr>
+\t\t\t<td style="text-align:justify; width:40%"><strong>Sản phẩm</strong></td>
+\t\t\t<td style="text-align:justify"><strong>Đơn gi&aacute;</strong></td>
+\t\t\t<td style="text-align:justify"><strong>Số lượng</strong></td>
+\t\t\t<td style="text-align:justify"><strong>Th&agrave;nh tiền</strong></td>
+\t\t</tr>
+\t\t<tr>
+\t\t\t<td>{Ten_Phien_Ban}</td>
+\t\t\t<td>{Don_Gia}</td>
+\t\t\t<td>{So_Luong_Ban}</td>
+\t\t\t<td>{Thanh_Tien}</td>
+\t\t</tr>
+\t\t<tr>
+\t\t\t<td>KM</td>
+\t\t\t<td>&nbsp;</td>
+\t\t\t<td>&nbsp;</td>
+\t\t\t<td>{Chiet_khau_Phien_Ban}</td>
+\t\t</tr>
+\t\t<tr>
+\t\t\t<td>Thuế SP</td>
+\t\t\t<td>&nbsp;</td>
+\t\t\t<td>&nbsp;</td>
+\t\t\t<td>{Thue_Phien_Ban}</td>
+\t\t</tr>
+\t\t<tr>
+\t\t\t<td>Cộng tiền h&agrave;ng</td>
+\t\t\t<td>&nbsp;</td>
+\t\t\t<td>&nbsp;</td>
+\t\t\t<td>{Tong_Tien_Hang}</td>
+\t\t</tr>
+\t\t<tr>
+\t\t\t<td>Chiết khấu SP</td>
+\t\t\t<td>&nbsp;</td>
+\t\t\t<td>&nbsp;</td>
+\t\t\t<td>{Tong_Chiet_Khau_San_Pham}</td>
+\t\t</tr>
+\t\t<tr>
+\t\t\t<td>Chiết khấu đơn</td>
+\t\t\t<td>&nbsp;</td>
+\t\t\t<td>&nbsp;</td>
+\t\t\t<td>{Chiet_Khau_Don_Hang}</td>
+\t\t</tr>
+\t\t<tr>
+\t\t\t<td>Tổng tiền thuế</td>
+\t\t\t<td>&nbsp;</td>
+\t\t\t<td>&nbsp;</td>
+\t\t\t<td>{Tong_Thue}</td>
+\t\t</tr>
+\t\t<tr>
+\t\t\t<td>Ph&iacute; kh&aacute;c</td>
+\t\t\t<td>&nbsp;</td>
+\t\t\t<td>&nbsp;</td>
+\t\t\t<td>{Phi_Khac}</td>
+\t\t</tr>
+\t\t<tr>
+\t\t\t<td>
+\t\t\t<h3><strong>TỔNG TIỀN</strong></h3>
+\t\t\t</td>
+\t\t\t<td>&nbsp;</td>
+\t\t\t<td>&nbsp;</td>
+\t\t\t<td>{Tong_Can_Thanh_Toan}</td>
+\t\t</tr>
+\t\t<tr>
+\t\t\t<td>Tiền kh&aacute;ch đưa</td>
+\t\t\t<td>&nbsp;</td>
+\t\t\t<td>&nbsp;</td>
+\t\t\t<td>{Khach_Thanh_Toan}</td>
+\t\t</tr>
+\t\t<tr>
+\t\t\t<td>Ghi nợ</td>
+\t\t\t<td>&nbsp;</td>
+\t\t\t<td>&nbsp;</td>
+\t\t\t<td>{Tien_No}</td>
+\t\t</tr>
+\t\t<tr>
+\t\t\t<td>Tiền trả lại</td>
+\t\t\t<td>&nbsp;</td>
+\t\t\t<td>&nbsp;</td>
+\t\t\t<td>{Tien_Tra}</td>
+\t\t</tr>
+\t\t<tr>
+\t\t\t<td>
+\t\t\t<h4><strong>Kh&aacute;ch h&agrave;ng:</strong></h4>
+\t\t\t</td>
+\t\t\t<td>&nbsp;</td>
+\t\t\t<td>&nbsp;</td>
+\t\t\t<td>{Ten_Khach_Hang</td>
+\t\t</tr>
+\t\t<tr>
+\t\t\t<td>
+\t\t\t<h4><strong>SĐT:&nbsp;&nbsp;</strong></h4>
+\t\t\t</td>
+\t\t\t<td>&nbsp;</td>
+\t\t\t<td>&nbsp;</td>
+\t\t\t<td>{Dien_Thoai_Khach}</td>
+\t\t</tr>
+\t</tbody>
+</table>
 
-    <div class="bill-row">
-    <div class="bill-row bill-col-left-4 bfs-s">
-    <div class="bfs-bold">Ngày:&nbsp;&nbsp;</div>
+<p>&nbsp;</p>
 
-    <div>{Ngay_Tao}</div>
-    </div>
+<hr />
+<p>&nbsp;</p>
+</div>
 
-    <div class="bill-row bill-col-left-4 bfs-s">
-    <div class="bfs-bold">HĐ:&nbsp;&nbsp;</div>
+<h3 class="bfs-bold" style="text-align:center"><strong>CẢM ƠN QU&Yacute; KH&Aacute;CH V&Agrave; HẸN GẶP LẠI</strong></h3>
 
-    <div>{Ma_Don_Hang}</div>
-    </div>
-    </div>
+<h3 class="bfs-bold" style="text-align:center"><strong>Powered by NextShop</strong></h3>
+</div>
 
-    <div class="bill-row bfs-s">
-    <div class="bfs-bold">Nhân viên:&nbsp;&nbsp;</div>
-
-    <div id="phone">{Nguoi_Phu_Trach}</div>
-    </div>
-
-    <div class="bfs-space-s">&nbsp;</div>
-
-    <div class="bill-row bfs-bold">
-    <div class="bill-text-bold bill-col-left-5">Sản phẩm</div>
-
-    <div class="bill-text-bold bill-col-right-2">Đơn giá</div>
-
-    <div class="bill-text-bold bill-col-right-2">Số lượng</div>
-
-    <div class="bill-text-bold bill-col-right-2">Thành tiền</div>
-    </div>
-
-    <div class="bill-solid-line">&nbsp;</div>
-    <!--START line item-->
-
-    <div class="bill-row">
-    <div class="bill-col-left-5">{Ten_Phien_Ban}</div>
-
-    <div class="bill-col-right-2">{Don_Gia}</div>
-
-    <div class="bill-col-right-2">{So_Luong_Ban}</div>
-
-    <div class="bill-col-right-2">{Thanh_Tien}</div>
-    </div>
-
-    <div class="bill-row bill_item_promotion_container" style="font-style: italic">
-    <div class="bill-col-left-4">KM</div>
-
-    <div class="bill-col-right-4 bill_item_promotion">{Chiet_khau_Phien_Ban}</div>
-    </div>
-
-    <div class="bill-row bill_item_tax_container" style="font-style: italic">
-    <div class="bill-col-left-4">Thuế SP</div>
-
-    <div class="bill-col-right-4 bill_item_tax">{Thue_Phien_Ban}</div>
-    </div>
-
-    <div class="bill-dash-line">&nbsp;</div>
-    <!--END line item-->
-
-    <div class="bill-row">
-    <div class="bill-col-left-4">Cộng tiền hàng</div>
-
-    <div class="bill-col-right-4">{Tong_Tien_Hang}</div>
-    </div>
-
-    <div class="bill-row">
-    <div class="bill-col-left-4">Chiết khấu SP</div>
-
-    <div class="bill-col-right-4">{Tong_Chiet_Khau_San_Pham}</div>
-    </div>
-
-    <div class="bill-row">
-    <div class="bill-col-left-4">Chiết khấu đơn</div>
-
-    <div class="bill-col-right-4">{Chiet_Khau_Don_Hang}</div>
-    </div>
-
-    <div class="bill-row">
-    <div class="bill-col-left-4">Tổng tiền thuế</div>
-
-    <div class="bill-col-right-4">{Tong_Thue}</div>
-    </div>
-
-    <div class="bill-row" style="margin-bottom: 5px">
-    <div class="bill-col-left-4">Phí khác</div>
-
-    <div class="bill-col-right-4">{Phi_Khac}</div>
-    </div>
-
-    <div class="bill-row">
-    <div class="bill-col-left-4 bfs-bold">TỔNG TIỀN</div>
-
-    <div class="bill-col-right-4 bfs-bold">{Tong_Can_Thanh_Toan}</div>
-    </div>
-
-    <div class="bill-dash-line">&nbsp;</div>
-
-    <div class="bill-row">
-    <div class="bill-col-left-4">Tiền khách đưa</div>
-
-    <div class="bill-col-right-4">{Khach_Thanh_Toan}</div>
-    </div>
-
-    <div class="bill-row" id="bill_debt_container" style="font-style: italic">
-    <div class="bill-col-left-4">Ghi nợ</div>
-
-    <div class="bill-col-right-4" id="bill_debt">{Tien_No}</div>
-    </div>
-
-    <div class="bill-row">
-    <div class="bill-col-left-4">Tiền trả lại</div>
-
-    <div class="bill-col-right-4">{Tien_Tra}</div>
-    </div>
-
-    <div class="bill-solid-line">&nbsp;</div>
-
-    <div class="bill-row" id="customer_name_container">
-    <div class="bill-col-left-3 bfs-bold">Khách hàng:&nbsp;&nbsp;</div>
-
-    <div class="bill-col-right-5" id="customer_name">{Ten_Khach_Hang}</div>
-    </div>
-
-    <div class="bill-row" id="customer_phone_container">
-    <div class="bill-col-left-3 bfs-bold">SĐT:&nbsp;&nbsp;</div>
-
-    <div class="bill-col-right-5" id="customer_phone">{Dien_Thoai_Khach}</div>
-    </div>
-
-    <div class="bill-dash-line" id="bill-bottom-dash-line">&nbsp;</div>
-
-    <div class="bfs-space-x">&nbsp;</div>
-
-    <div class="bfs-bold">CẢM ƠN QUÝ KHÁCH VÀ HẸN GẶP LẠI</div>
-
-    <div class="bfs-bold">Powered by NextShop</div>
     <script type="text/javascript">
         function checkAndHideId(targetId, condition, containerIds) {
           var target = document.getElementById(targetId);
@@ -312,7 +305,7 @@ export class EditComponent implements OnInit {
               toast.addEventListener('mouseleave', Swal.resumeTimer);
             },
           });
-          this._router.navigate(['../item-units/list']);
+          // this._router.navigate(['../item-units/list']);
         } else {
           console.log(response);
           const errorMessages = [];
