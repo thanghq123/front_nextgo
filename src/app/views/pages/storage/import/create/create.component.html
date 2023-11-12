@@ -29,24 +29,6 @@
           *ngIf="!isLoading"
           (ngSubmit)="onSubmit()"
         >
-          <!-- <div class="mb-3">
-            <label for="exampleInputUsername1" class="form-label">
-              Mã đơn
-              <span class="text-danger">(*)</span>
-            </label>
-            <input
-              type="text"
-              class="form-control"
-              id="exampleInputUsername1"
-              formControlName="inventory_transaction_id"
-              autocomplete="off"
-              placeholder="Nhập mã đơn"
-            />
-            <div *ngIf="storageImport.controls.name.invalid && storageImport.controls.name.touched"
-              class="alert alert-danger mt-2">
-              Không để trống tên chi nhánh
-            </div>
-          </div> -->
           <div class="mb-3">
             <label for="exampleInputUsername1" class="form-label">
               Lý do nhập
@@ -60,10 +42,6 @@
               autocomplete="off"
               placeholder="Nhập lý do nhập"
             />
-            <!-- <div *ngIf="storageImport.controls.name.invalid && storageImport.controls.name.touched"
-              class="alert alert-danger mt-2">
-              Không để trống tên chi nhánh
-            </div> -->
           </div>
           <div class="mb-3">
             <label for="exampleFormControlTextarea1" class="form-label">
@@ -180,39 +158,42 @@
                       <ng-container *ngIf="products && products.length">
                         <tr *ngFor="let value of products; let i = index">
                           <th>{{ i + 1 }}</th>
-                          <td (click)="Edit(i)">{{ value.name }}</td>
-                          <td *ngIf="i === editRowID">
+                          <td>{{ value.name }}</td>
+                          <td >
                             <input
                               type="number"
                               formControlName="price"
-                              [(ngModel)]="products[i].price"
+                              value="{{value.price}}"
+                              data-id="{{value.id}}"
+                              (input)="resultTotal($event)"
+                              name="price"
                               class="form-control"
                               id="exampleInputText1"
                               placeholder="Nhập giá"
                             />
                           </td>
-                          <td *ngIf="i !== editRowID" (click)="Edit(i)">
-                            {{ value.price }}
-                          </td>
-                          <td *ngIf="i === editRowID">
+                          <!-- <td *ngIf="i !== editRowID" (click)="Edit(i)">
+                            {{ products[i].price }}
+                          </td> -->
+                          <td >
                             <input
                               type="number"
                               formControlName="quantity"
-                              [(ngModel)]="products[i].quantity"
+                              value="{{value.quantity}}"
+                              data-id="{{value.id}}"
+                              (input)="resultTotal($event)"
+                              name="quantity"
                               class="form-control"
                               id="exampleInputText1"
                               placeholder="Nhập số lượng"
                             />
                           </td>
-                          <td *ngIf="i !== editRowID" (click)="Edit(i)">
+                          <!-- <td *ngIf="i !== editRowID" (click)="Edit(i)">
                             {{ value.quantity }}
-                          </td>
+                          </td> -->
                           <td>
                             {{
-                              calculateTotal(
-                                products[i].price,
-                                products[i].quantity
-                              ) | currency : "VNĐ" : "symbol" : "1.0-0"
+                              value.result | currency : "VNĐ" : "symbol" : "1.0-0"
                             }}
                           </td>
                           <th>

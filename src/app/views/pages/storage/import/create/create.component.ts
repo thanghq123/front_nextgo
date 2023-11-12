@@ -18,6 +18,7 @@ import { SuppliersService } from 'src/app/service/suppliers/suppliers.service';
 import { LocationsService } from 'src/app/service/locations/locations.service';
 import { Product } from 'src/app/interface/product/product';
 import { SearchProductService } from 'src/app/service/searchProduct/search-product.service';
+import { log } from 'console';
 
 
 @Component({
@@ -36,6 +37,7 @@ export class CreateComponent implements OnInit {
   price: any;
   quantity: any;
   isLoading = false;
+  totalMoney: number;
   storageImportForm = new FormGroup({
     reason: new FormControl('', Validators.required),
     note: new FormControl(''),
@@ -112,12 +114,14 @@ export class CreateComponent implements OnInit {
 
       // Thêm sản phẩm mới vào mảng this.products
       const data = {
+        id: this.input.id,
         name: this.input.variation_name,
         variation_id: this.input.id,
         batch_id: this.input.variation_quantities != '' ? this.input.variation_quantities[0].batch_id : 1,
         price: this.input.price_import,
         price_type: 0,
-        quantity: 0,
+        quantity: 1,
+        result: 0
       };
       let updatedProducts = [...this.products]; // Create a new array with existing products
       // Modify updatedProducts as needed (add, update, or remove items)
@@ -125,11 +129,10 @@ export class CreateComponent implements OnInit {
 
       this.products = updatedProducts; // Assign the updated array back to this.products
       this.inputSerach.reset();
-
-      this.cdr.detectChanges();
       console.log(this.products);
     }
   }
+
   calculateTotal(index1: number, index2: number): number {
     return index1 * index2;
   }
@@ -142,6 +145,30 @@ export class CreateComponent implements OnInit {
   }
   removeProduct(index: number): void {
     this.products.splice(index, 1);
+  }
+  resultTotal(e: any){
+    this.updateQuantity(this.products, +e.target.id, +e.target.value, e.target.name)
+    this.totalMoney = this.products.reduce(
+      (total: number, current: any) => {
+        return total + current.result;
+      },0
+    )
+  }
+  updateQuantity(array: any, id: number, newQuantity: any, name: string){
+    console.log(name);
+
+    const typeUpdate = name === 'quantity' ? 'quantity' : 'price';
+    const resultType = name === 'quantity' ? 'price' :  'quantity';
+    for (let i = 0; i < array.length; i++) {
+      if(array[i].id === id){
+        array[i][typeUpdate] = newQuantity;
+        array[i].result = newQuantity * array[i][resultType];
+        console.log(array[i]);
+
+        break;
+      }
+
+    }
   }
 
   onSubmit() {
