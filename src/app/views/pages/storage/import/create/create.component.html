@@ -13,9 +13,20 @@
       <div class="card-body">
         <h2 style="text-align: center">Tạo đơn nhập kho</h2>
         <h6 class="card-title">Thông tin cơ bản</h6>
+        <div *ngIf="isLoading" class="loadingcustomcss">
+          <button class="btn btn-primary" type="button" disabled>
+            <span
+              class="spinner-grow spinner-grow-sm"
+              role="status"
+              aria-hidden="true"
+            ></span>
+            Loading...
+          </button>
+        </div>
         <form
           class="forms-sample"
           [formGroup]="storageImportForm"
+          *ngIf="!isLoading"
           (ngSubmit)="onSubmit()"
         >
           <!-- <div class="mb-3">
@@ -107,7 +118,11 @@
                 <label for="exampleInputUsername1" class="form-label">
                   Kho
                 </label>
-                <ng-select [searchable]="true" placeholder="Chọn nhà kho">
+                <ng-select
+                  [searchable]="true"
+                  formControlName="inventory_id"
+                  placeholder="Chọn nhà kho"
+                >
                   <ng-option
                     *ngFor="let item of listLocation"
                     [value]="item.id"
@@ -123,7 +138,10 @@
             <form (ngSubmit)="searchProduct()" [formGroup]="inputSerach">
               <ng-template #rt let-r="result" let-t="term">
                 <!-- <img [src]="'https://upload.wikimedia.org/wikipedia/commons/thumb/' + r['flag']" class="me-1" style="width: 16px"> -->
-                <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                <ngb-highlight
+                  [result]="r.variation_name"
+                  [term]="t"
+                ></ngb-highlight>
               </ng-template>
 
               <label for="typeahead-template" class="form-label"
@@ -161,7 +179,7 @@
                     <tbody>
                       <ng-container *ngIf="products && products.length">
                         <tr *ngFor="let value of products; let i = index">
-                          <th>{{ value.variation_id }}</th>
+                          <th>{{ i + 1 }}</th>
                           <td (click)="Edit(i)">{{ value.name }}</td>
                           <td *ngIf="i === editRowID">
                             <input
@@ -194,7 +212,7 @@
                               calculateTotal(
                                 products[i].price,
                                 products[i].quantity
-                              ) | currency: 'VNĐ' :  "symbol" : "1.0-0"
+                              ) | currency : "VNĐ" : "symbol" : "1.0-0"
                             }}
                           </td>
                           <th>
@@ -207,8 +225,13 @@
                           </th>
                         </tr>
                         <tr>
-                          <th style="color: red;">TỔNG TIỀN</th>
-                          <td colspan="5" style="text-align: right;">{{calculateTotalPrice() | currency: 'VNĐ' : "symbol" : "1.0-0"}}</td>
+                          <th style="color: red">TỔNG TIỀN</th>
+                          <td colspan="5" style="text-align: right">
+                            {{
+                              calculateTotalPrice()
+                                | currency : "VNĐ" : "symbol" : "1.0-0"
+                            }}
+                          </td>
                         </tr>
                       </ng-container>
                     </tbody>
