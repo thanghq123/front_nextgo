@@ -77,7 +77,7 @@
           <div class="row">
             <div class="col-md-6 grid-margin stretch-card">
               <div class="card">
-                <div class="card-body align-items-center">
+                <div class="card-header align-items-center">
                   <div class="row align-items-center">
                     <div class="col-md-6">
                       <button class="btn btn-secondary">Về mặc định</button>
@@ -112,14 +112,15 @@
                     </div>
                   </ng-template>
                 </div>
-                <ckeditor data="{{myContent}}" [(ngModel)]="myContent" #myckeditor="ngModel" name="myckeditor" required
+                <ckeditor data="{{myContent}}" [(ngModel)]="myContent" [config]="config" (change)="onChange($event)" #myckeditor="ngModel" name="myckeditor" required
                   debounce="500"></ckeditor>
               </div>
             </div>
             <div class="col-md-6 grid-margin stretch-card">
               <div class="card">
-                <div class="card-body d-flex flex-column" style="max-height: 500px;" [perfectScrollbar]>
-                  <p  [innerHTML]="myContent"></p>
+                <div class="card-header"></div>
+                <div class="card-body d-flex flex-column" [perfectScrollbar]>
+                  <div [innerHTML]="myContentPreview"></div>
                 </div>
               </div>
             </div>
