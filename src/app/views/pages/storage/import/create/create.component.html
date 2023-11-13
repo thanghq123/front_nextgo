@@ -60,6 +60,7 @@
           <div class="mb-3">
             <label for="exampleInputUsername1" class="form-label">
               Chọn nhà cung cấp
+              <span class="text-danger">(*)</span>
             </label>
             <ng-select
               [searchable]="true"
@@ -79,6 +80,7 @@
               <div class="mb-3">
                 <label for="exampleInputUsername1" class="form-label">
                   Chi nhánh
+                  <span class="text-danger">(*)</span>
                 </label>
                 <ng-select [searchable]="true" placeholder="Chọn chi nhánh">
                   <ng-option
@@ -95,6 +97,7 @@
               <div class="mb-3">
                 <label for="exampleInputUsername1" class="form-label">
                   Kho
+                  <span class="text-danger">(*)</span>
                 </label>
                 <ng-select
                   [searchable]="true"
@@ -117,7 +120,7 @@
               <ng-template #rt let-r="result" let-t="term">
                 <!-- <img [src]="'https://upload.wikimedia.org/wikipedia/commons/thumb/' + r['flag']" class="me-1" style="width: 16px"> -->
                 <ngb-highlight
-                  [result]="r.variation_name"
+                  [result]="r.product_name_variation"
                   [term]="t"
                 ></ngb-highlight>
               </ng-template>
@@ -158,12 +161,12 @@
                       <ng-container *ngIf="products && products.length">
                         <tr *ngFor="let value of products; let i = index">
                           <th>{{ i + 1 }}</th>
-                          <td>{{ value.name }}</td>
-                          <td >
+                          <td (click)="Edit(i)">{{ value.name }}</td>
+                          <td *ngIf="i === editRowID">
                             <input
                               type="number"
                               formControlName="price"
-                              value="{{value.price}}"
+                              [ngModel]="products[i].price"
                               data-id="{{value.id}}"
                               (input)="resultTotal($event)"
                               name="price"
@@ -172,14 +175,14 @@
                               placeholder="Nhập giá"
                             />
                           </td>
-                          <!-- <td *ngIf="i !== editRowID" (click)="Edit(i)">
-                            {{ products[i].price }}
-                          </td> -->
-                          <td >
+                          <td *ngIf="i !== editRowID" (click)="Edit(i)">
+                            {{ value.price }}
+                          </td>
+                          <td *ngIf="i === editRowID">
                             <input
                               type="number"
                               formControlName="quantity"
-                              value="10"
+                              [ngModel]="products[i].quantity"
                               data-id="{{value.id}}"
                               (input)="resultTotal($event)"
                               name="quantity"
@@ -188,9 +191,9 @@
                               placeholder="Nhập số lượng"
                             />
                           </td>
-                          <!-- <td *ngIf="i !== editRowID" (click)="Edit(i)">
+                          <td *ngIf="i !== editRowID" (click)="Edit(i)">
                             {{ value.quantity }}
-                          </td> -->
+                          </td>
                           <td>
                             {{
                               value.result | currency : "VNĐ" : "symbol" : "1.0-0"

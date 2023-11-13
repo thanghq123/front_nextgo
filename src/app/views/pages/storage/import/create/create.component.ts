@@ -11,14 +11,12 @@ import {
   map,
 } from 'rxjs/operators';
 import { Observable, Subject, of } from 'rxjs';
-import { ChangeDetectorRef } from '@angular/core';
 import { ChangeDetectionStrategy } from '@angular/core';
 
 import { SuppliersService } from 'src/app/service/suppliers/suppliers.service';
 import { LocationsService } from 'src/app/service/locations/locations.service';
 import { Product } from 'src/app/interface/product/product';
 import { SearchProductService } from 'src/app/service/searchProduct/search-product.service';
-import { log } from 'console';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -53,7 +51,6 @@ export class CreateComponent implements OnInit {
     private _location: LocationsService,
     private _storage: StorageImportService,
     private router: Router,
-    private cdr: ChangeDetectorRef,
     private _product: SearchProductService
   ) {
     this._supplier.GetData().subscribe((res: any) => {
@@ -87,44 +84,38 @@ export class CreateComponent implements OnInit {
           : this.listProduct
               .filter(
                 (v) =>
-                  v.variation_name.toLowerCase().indexOf(term.toLowerCase()) >
+                  v.product_name_variation.toLowerCase().indexOf(term.toLowerCase()) >
                   -1
               )
               .slice(0, 10)
       )
     );
-  formatter = (x: { variation_name: string }) => x.variation_name;
+  formatter = (x: { product_name_variation: string }) => x.product_name_variation;
 
   searchProduct() {
-    if (this.input != '') {
+    if (this.input != '' && this.input.id != undefined) {
       // Kiểm tra xem sản phẩm vừa nhập có trùng với sản phẩm nào trong this.products không
       const existingProduct = this.products.find(
         (product) => product.variation_id === this.input.id
       );
 
-      if (existingProduct) {
-        // Nếu trùng, xóa sản phẩm đó khỏi mảng this.products
-        const index = this.products.indexOf(existingProduct);
-        this.products.splice(index, 1);
+      if (!existingProduct) {
+        const data = {
+          id: this.input.id,
+          name: this.input.product_name_variation,
+          variation_id: this.input.id,
+          batch_id: 1,
+          price: this.input.price_import,
+          price_type: 0,
+          quantity: 0,
+          result: 0,
+        };
+        this.products.push(data);
+        this.inputSerach.reset();
+      } else {
+        this.inputSerach.reset();
       }
 
-      // Thêm sản phẩm mới vào mảng this.products
-      const data = {
-        id: this.input.id,
-        name: this.input.variation_name,
-        variation_id: this.input.id,
-        batch_id: 1,
-        price: this.input.price_import,
-        price_type: 0,
-        quantity: 1,
-        result: 0,
-      };
-      let updatedProducts = [...this.products]; // Create a new array with existing products
-      // Modify updatedProducts as needed (add, update, or remove items)
-      updatedProducts.push(data); // Example: Adding a new product
-
-      this.products = updatedProducts; // Assign the updated array back to this.products
-      this.inputSerach.reset();
       console.log(this.products);
     }
   }
