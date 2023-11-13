@@ -7,16 +7,15 @@ import Swal from 'sweetalert2';
 
 import { StorageImportService } from 'src/app/service/storage/storage-import.service';
 
-
 interface data {
-  inventory_transaction_id: string,
-  note: string
+  inventory_transaction_id: string;
+  note: string;
 }
 
 @Component({
   selector: 'app-detail',
   templateUrl: './detail.component.html',
-  styleUrls: ['./detail.component.scss']
+  styleUrls: ['./detail.component.scss'],
 })
 export class DetailComponent implements OnInit {
   storageConfirmForm = new FormGroup({
@@ -27,7 +26,7 @@ export class DetailComponent implements OnInit {
     inventory_name: new FormControl(''),
     price: new FormControl(''),
     quantity: new FormControl(''),
-    status: new FormControl('')
+    status: new FormControl(''),
   });
   listStorage: any;
   id: string;
@@ -37,11 +36,10 @@ export class DetailComponent implements OnInit {
   constructor(
     private _storage: StorageImportService,
     private route: ActivatedRoute,
-    private router: Router,
-
+    private router: Router
   ) {
     // this._storage.GetOneRecord()
-   }
+  }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((queryParams) => {
@@ -86,7 +84,7 @@ export class DetailComponent implements OnInit {
     return total;
   }
 
-  onSubmit(){
+  onSubmit() {
     Swal.fire({
       title: 'Bạn có chắc chắn muốn nhập kho?',
       text: 'Bạn sẽ không thể hoàn tác lại hành động này!',
@@ -97,36 +95,74 @@ export class DetailComponent implements OnInit {
       confirmButtonText: 'Có, tiến hành!',
     }).then((result) => {
       if (result.isConfirmed) {
-    if (this.storageConfirmForm.valid) {
-      // const dataSend = {
-      //   inventory_transaction_id: String(this.id),
-      // }
-      // console.log(dataSend);
-
-      this._storage.updateData(this.id).subscribe((response: any) => {
-        if (response.status == true) {
-          this.storageConfirmForm.reset();
-          this.showSuccessMessage('storage/import');
-        } else {
-          console.log(response);
-          const errorMessages = [];
-          for (const key in response.meta.errors) {
-            const messages = response.meta.errors[key];
-            for (const message of messages) {
-              errorMessages.push(`${message}`);
-            }
+        if (this.storageConfirmForm.valid) {
+          // const dataSend = {
+          //   inventory_transaction_id: String(this.id),
+          // }
+          // console.log(dataSend);
+          const dataSend = {
+            id: this.id,
+            tranType: 0
           }
-          this.showNextMessage(errorMessages);
+          console.log(dataSend);
+
+          this._storage.update(dataSend).subscribe(
+            (response: any) => {
+              if (response.status == true) {
+                this.storageConfirmForm.reset();
+                this.showSuccessMessage('storage/import');
+              } else {
+                console.log(response);
+                const errorMessages = [];
+                for (const key in response.meta.errors) {
+                  const messages = response.meta.errors[key];
+                  for (const message of messages) {
+                    errorMessages.push(`${message}`);
+                  }
+                }
+                this.showNextMessage(errorMessages);
+              }
+            },
+            (error) => {
+              console.log(error);
+              Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
+            }
+          );
+        } else {
+          alert('Không để trống');
         }
-      },
-      (error) => {
-        console.log(error);
-        Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
-      })
-    }else {
-      alert('Không để trống');
-    }
-    }
+      }
+    });
+  }
+  cancel() {
+    console.log('Đã nhấn nút');
+    Swal.fire({
+      title: 'Bạn có chắc chắn muốn hủy đơn nhập kho?',
+      text: 'Bạn sẽ không thể hoàn tác lại hành động này!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Có, tiến hành!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this._storage.cancel(this.id).subscribe((res) => {
+          if (res.status == true) {
+            this.storageConfirmForm.reset();
+            this.showSuccessMessage('storage/import');
+          } else {
+            console.log(res);
+            const errorMessages = [];
+            for (const key in res.meta.errors) {
+              const messages = res.meta.errors[key];
+              for (const message of messages) {
+                errorMessages.push(`${message}`);
+              }
+            }
+            this.showNextMessage(errorMessages);
+          }
+        });
+      }
     });
   }
   showNextMessage(errorMessages: any) {
@@ -152,7 +188,7 @@ export class DetailComponent implements OnInit {
     }
   }
 
-  showSuccessMessage(router: string){
+  showSuccessMessage(router: string) {
     Swal.fire({
       toast: true,
       position: 'top-end',
@@ -169,5 +205,4 @@ export class DetailComponent implements OnInit {
     });
     this.router.navigate([`../${router}/list`]);
   }
-
 }
