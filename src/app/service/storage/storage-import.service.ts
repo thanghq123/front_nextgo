@@ -13,22 +13,31 @@ export class StorageImportService extends CRUDServiceService<any> {
   private readonly domain_name: String;
   constructor(http: HttpClient, dataService: HandleDataService) {
     super(http, dataService);
-    this.apiUrl = this.dataService.getUrl('storage/import');
+    this.apiUrl = this.dataService.getUrl('storage');
     this.domain_name = environment.domain_name;
   }
 
   getAll() {
-    return this.http.post(`${this.apiUrl}`, this.handleData());
+    return this.http.post(`${this.apiUrl}` + '/import', this.handleData());
   }
+
   getOne(id: string): Observable<any> {
     return this.http.post(
-      `${this.apiUrl}/${id}`,
+      `${this.apiUrl}/import/${id}`,
       this.dataService.handleData(id)
     );
   }
-  updateData(id: string): Observable<any> {
+
+  createData(data: any): Observable<any> {
     return this.http.post(
-      `${this.apiUrl}/update/${id}`,
+      `${this.apiUrl}/import/create`,
+      this.dataService.handleData(data)
+    );
+  }
+
+  cancel(id: string): Observable<any> {
+    return this.http.post(
+      `${this.apiUrl}/import/cancel/${id}`,
       this.dataService.handleData()
     );
   }

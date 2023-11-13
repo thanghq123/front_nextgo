@@ -20,7 +20,6 @@ import { Product } from 'src/app/interface/product/product';
 import { SearchProductService } from 'src/app/service/searchProduct/search-product.service';
 import { log } from 'console';
 
-
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-create',
@@ -45,7 +44,6 @@ export class CreateComponent implements OnInit {
     inventory_id: new FormControl('', Validators.required),
     price: new FormControl(''),
     quantity: new FormControl(''),
-
   });
   inputSerach = new FormGroup({
     input: new FormControl(''),
@@ -58,23 +56,20 @@ export class CreateComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private _product: SearchProductService
   ) {
-
     this._supplier.GetData().subscribe((res: any) => {
       this.listSupplier = res.payload.data;
       console.log(this.listSupplier);
-
     });
     this._product.GetData().subscribe((res: any) => {
       this.listProduct = res.payload;
       console.log(this.listProduct);
-    })
+    });
 
     this._location.GetData().subscribe((res: any) => {
       this.listLocation = res.payload;
 
       // console.log(this.listLocation);
-    })
-
+    });
   }
   Edit(val: any) {
     this.editRowID = val;
@@ -82,7 +77,6 @@ export class CreateComponent implements OnInit {
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
-
   }
   search = (text$: Observable<string>) =>
     text$.pipe(
@@ -92,7 +86,9 @@ export class CreateComponent implements OnInit {
           ? []
           : this.listProduct
               .filter(
-                (v) => v.variation_name.toLowerCase().indexOf(term.toLowerCase()) > -1
+                (v) =>
+                  v.variation_name.toLowerCase().indexOf(term.toLowerCase()) >
+                  -1
               )
               .slice(0, 10)
       )
@@ -117,11 +113,11 @@ export class CreateComponent implements OnInit {
         id: this.input.id,
         name: this.input.variation_name,
         variation_id: this.input.id,
-        batch_id: this.input.variation_quantities != '' ? this.input.variation_quantities[0].batch_id : 1,
+        batch_id: 1,
         price: this.input.price_import,
         price_type: 0,
         quantity: 1,
-        result: 0
+        result: 0,
       };
       let updatedProducts = [...this.products]; // Create a new array with existing products
       // Modify updatedProducts as needed (add, update, or remove items)
@@ -146,28 +142,30 @@ export class CreateComponent implements OnInit {
   removeProduct(index: number): void {
     this.products.splice(index, 1);
   }
-  resultTotal(e: any){
-    this.updateQuantity(this.products, +e.target.id, +e.target.value, e.target.name)
-    this.totalMoney = this.products.reduce(
-      (total: number, current: any) => {
-        return total + current.result;
-      },0
-    )
+  resultTotal(e: any) {
+    this.updateQuantity(
+      this.products,
+      +e.target.id,
+      +e.target.value,
+      e.target.name
+    );
+    this.totalMoney = this.products.reduce((total: number, current: any) => {
+      return total + current.result;
+    }, 0);
   }
-  updateQuantity(array: any, id: number, newQuantity: any, name: string){
+  updateQuantity(array: any, id: number, newQuantity: any, name: string) {
     console.log(name);
 
     const typeUpdate = name === 'quantity' ? 'quantity' : 'price';
-    const resultType = name === 'quantity' ? 'price' :  'quantity';
+    const resultType = name === 'quantity' ? 'price' : 'quantity';
     for (let i = 0; i < array.length; i++) {
-      if(array[i].id === id){
+      if (array[i].id === id) {
         array[i][typeUpdate] = newQuantity;
         array[i].result = newQuantity * array[i][resultType];
         console.log(array[i]);
 
         break;
       }
-
     }
   }
 
@@ -183,10 +181,12 @@ export class CreateComponent implements OnInit {
         note: this.storageImportForm.value.note,
         status: 1,
         created_by: 1,
-        inventory_transaction_details: JSON.stringify(this.products),
+        inventory_transaction_details: JSON.parse(
+          JSON.stringify(this.products)
+        ),
       };
       console.log(datasend);
-      this._storage.create(datasend).subscribe(
+      this._storage.createData(datasend).subscribe(
         (response: any) => {
           if (response.status == true) {
             this.storageImportForm.reset();
