@@ -9,18 +9,14 @@ import {
   map,
 } from 'rxjs/operators';
 import { Observable, Subject, of } from 'rxjs';
-import { ChangeDetectorRef } from '@angular/core';
 import { ChangeDetectionStrategy } from '@angular/core';
 
 import { SuppliersService } from 'src/app/service/suppliers/suppliers.service';
 import { LocationsService } from 'src/app/service/locations/locations.service';
 import { Product } from 'src/app/interface/product/product';
 import { SearchProductService } from 'src/app/service/searchProduct/search-product.service';
-
-
 import { StorageImportService } from 'src/app/service/storage/storage-import.service';
 import { StorageImport } from 'src/app/interface/storage/storage-import';
-
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-create',
@@ -37,6 +33,7 @@ export class CreateComponent implements OnInit {
   price: any;
   quantity: any;
   isLoading = false;
+  totalMoney: number;
   storageImportForm = new FormGroup({
     reason: new FormControl('', Validators.required),
     note: new FormControl(''),
@@ -44,7 +41,6 @@ export class CreateComponent implements OnInit {
     inventory_id: new FormControl('', Validators.required),
     price: new FormControl(''),
     quantity: new FormControl(''),
-
   });
   inputSerach = new FormGroup({
     input: new FormControl(''),
@@ -54,26 +50,22 @@ export class CreateComponent implements OnInit {
     private _location: LocationsService,
     private _storage: StorageImportService,
     private router: Router,
-    private cdr: ChangeDetectorRef,
     private _product: SearchProductService
   ) {
-
     this._supplier.GetData().subscribe((res: any) => {
       this.listSupplier = res.payload.data;
       console.log(this.listSupplier);
-
     });
     this._product.GetData().subscribe((res: any) => {
       this.listProduct = res.payload;
       console.log(this.listProduct);
-    })
+    });
 
     this._location.GetData().subscribe((res: any) => {
       this.listLocation = res.payload;
 
       // console.log(this.listLocation);
-    })
-
+    });
   }
   Edit(val: any) {
     this.editRowID = val;
@@ -81,7 +73,6 @@ export class CreateComponent implements OnInit {
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
-
   }
   search = (text$: Observable<string>) =>
     text$.pipe(
@@ -91,46 +82,43 @@ export class CreateComponent implements OnInit {
           ? []
           : this.listProduct
               .filter(
-                (v) => v.variation_name.toLowerCase().indexOf(term.toLowerCase()) > -1
+                (v) =>
+                  v.product_name_variation.toLowerCase().indexOf(term.toLowerCase()) >
+                  -1
               )
               .slice(0, 10)
       )
     );
-  formatter = (x: { variation_name: string }) => x.variation_name;
+  formatter = (x: { product_name_variation: string }) => x.product_name_variation;
 
   searchProduct() {
-    if (this.input != '') {
+    if (this.input != '' && this.input.id != undefined) {
       // Kiểm tra xem sản phẩm vừa nhập có trùng với sản phẩm nào trong this.products không
       const existingProduct = this.products.find(
         (product) => product.variation_id === this.input.id
       );
 
-      if (existingProduct) {
-        // Nếu trùng, xóa sản phẩm đó khỏi mảng this.products
-        const index = this.products.indexOf(existingProduct);
-        this.products.splice(index, 1);
+      if (!existingProduct) {
+        const data = {
+          id: this.input.id,
+          name: this.input.product_name_variation,
+          variation_id: this.input.id,
+          batch_id: 1,
+          price: this.input.price_import,
+          price_type: 0,
+          quantity: 0,
+          result: 0,
+        };
+        this.products.push(data);
+        this.inputSerach.reset();
+      } else {
+        this.inputSerach.reset();
       }
 
-      // Thêm sản phẩm mới vào mảng this.products
-      const data = {
-        name: this.input.variation_name,
-        variation_id: this.input.id,
-        batch_id: this.input.variation_quantities != '' ? this.input.variation_quantities[0].batch_id : 1,
-        price: this.input.price_import,
-        price_type: 0,
-        quantity: 0,
-      };
-      let updatedProducts = [...this.products]; // Create a new array with existing products
-      // Modify updatedProducts as needed (add, update, or remove items)
-      updatedProducts.push(data); // Example: Adding a new product
-
-      this.products = updatedProducts; // Assign the updated array back to this.products
-      this.inputSerach.reset();
-
-      this.cdr.detectChanges();
       console.log(this.products);
     }
   }
+
   calculateTotal(index1: number, index2: number): number {
     return index1 * index2;
   }
@@ -143,6 +131,32 @@ export class CreateComponent implements OnInit {
   }
   removeProduct(index: number): void {
     this.products.splice(index, 1);
+  }
+  resultTotal(e: any) {
+    this.updateQuantity(
+      this.products,
+      +e.target.id,
+      +e.target.value,
+      e.target.name
+    );
+    this.totalMoney = this.products.reduce((total: number, current: any) => {
+      return total + current.result;
+    }, 0);
+  }
+  updateQuantity(array: any, id: number, newQuantity: any, name: string) {
+    console.log(name);
+
+    const typeUpdate = name === 'quantity' ? 'quantity' : 'price';
+    const resultType = name === 'quantity' ? 'price' : 'quantity';
+    for (let i = 0; i < array.length; i++) {
+      if (array[i].id === id) {
+        array[i][typeUpdate] = newQuantity;
+        array[i].result = newQuantity * array[i][resultType];
+        console.log(array[i]);
+
+        break;
+      }
+    }
   }
 
   onSubmit() {
@@ -157,10 +171,12 @@ export class CreateComponent implements OnInit {
         note: this.storageImportForm.value.note,
         status: 1,
         created_by: 1,
-        inventory_transaction_details: JSON.stringify(this.products),
+        inventory_transaction_details: JSON.parse(
+          JSON.stringify(this.products)
+        ),
       };
       console.log(datasend);
-      this._storage.create(datasend).subscribe(
+      this._storage.createData(datasend).subscribe(
         (response: any) => {
           if (response.status == true) {
             this.storageImportForm.reset();
