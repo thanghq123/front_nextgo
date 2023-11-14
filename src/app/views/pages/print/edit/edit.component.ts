@@ -28,6 +28,7 @@ import { PrintService } from 'src/app/service/print/print.service';
   styleUrls: ['./edit.component.scss'],
 })
 export class EditComponent implements OnInit {
+  oldForm: any;
   listLocation: any;
   salesUnit: any[] = [];
   printSize: any[] = [];
@@ -341,10 +342,12 @@ export class EditComponent implements OnInit {
     // this.submitEvent.emit();
     const dataSend = {
       name: 'Đơn bán hàng',
-      form: this.myContent,
+      form: JSON.parse(JSON.stringify(this.myContent)),
       default: 1,
     };
-    this._printService.create(dataSend).subscribe(
+    console.log(dataSend);
+
+    this._printService.createFormData(dataSend).subscribe(
       (response: any) => {
         if (response.status == true) {
           Swal.fire({
@@ -361,7 +364,7 @@ export class EditComponent implements OnInit {
               toast.addEventListener('mouseleave', Swal.resumeTimer);
             },
           });
-          // this._router.navigate(['../item-units/list']);
+          this._router.navigate(['../print']);
         } else {
           console.log(response);
           const errorMessages = [];

@@ -104,6 +104,10 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'debts',
+        loadChildren: () => import('./views/pages/debts/debts.module').then(m => m.DebtsModule)
+      },
+      {
         path: 'dashboard',
         loadChildren: () =>
           import('./views/pages/dashboard/dashboard.module').then(
