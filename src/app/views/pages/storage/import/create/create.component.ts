@@ -1,5 +1,3 @@
-import { StorageImportService } from 'src/app/service/storage/storage-import.service';
-import { StorageImport } from 'src/app/interface/storage/storage-import';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
@@ -17,7 +15,8 @@ import { SuppliersService } from 'src/app/service/suppliers/suppliers.service';
 import { LocationsService } from 'src/app/service/locations/locations.service';
 import { Product } from 'src/app/interface/product/product';
 import { SearchProductService } from 'src/app/service/searchProduct/search-product.service';
-
+import { StorageImportService } from 'src/app/service/storage/storage-import.service';
+import { StorageImport } from 'src/app/interface/storage/storage-import';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-create',
