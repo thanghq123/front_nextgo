@@ -50,11 +50,7 @@
     <div class="card">
       <div class="card-body">
         <h6 class="card-title">Quản lí công nợ (Phải thu)</h6>
-        <button
-          routerLink="/debts/recovery/create"
-          type="button"
-          class="btn btn-primary"
-        >
+        <button routerLink="/debts/recovery/create" type="button" class="btn btn-primary">
           Thêm khoản phải thu
         </button>
         <div class="table-responsive">
@@ -81,20 +77,22 @@
                 <td>{{ value.id }}</td>
                 <td>{{ value.partner_name }}</td>
                 <td>
-                  {{ value.principal | currency:'VNĐ ':'symbol':'1.0-0' }}
+                  {{ value.amount_debt | currency:'VNĐ ':'symbol':'1.0-0' }}
                 </td>
                 <td>
-                  {{ value.principal | currency:'VNĐ ':'symbol':'1.0-0' }}
+                  {{ value.name }}
                 </td>
-                <td>{{ value.name }}</td>
-                <td>{{ value.status}}</td>
+                <td>{{ value.amount_paid | currency:'VNĐ ':'symbol':'1.0-0' }}</td>
+                <td style="text-align: center">
+                  <span class="badge {{
+                      status(value.status)[1]
+                    }}">{{
+                    status(value.status)[0]
+                    }}</span>
+                </td>
                 <td>{{ value.due_at }}</td>
                 <td>
-                  <a
-                    [routerLink]="['../edit', value.id]"
-                    class="btn btn-success mx-2"
-                    >Sửa</a
-                  >
+                  <a [routerLink]="['../edit', value.id]" class="btn btn-success mx-2">Sửa</a>
                   <button data-id="{{value.id}}" class="btn btn-danger">
                     Thanh toán
                   </button>

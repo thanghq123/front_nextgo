@@ -124,4 +124,18 @@ export class ListRecoveryComponent implements OnInit, AfterViewInit{
     })
   }
 
+  status(key: number): any{
+    // const result = [];
+    if(key == 0){
+       return ['Quá hạn', 'bg-danger'];
+    }else if(key == 1){
+      return ['Chưa thanh toán', 'bg-warning'];
+    }else if(key == 2){
+      return ['Thanh toán 1 phần', 'bg-primary']
+    }else if(key == 3){
+      return ['Đã thanh toán', 'bg-success']
+    }
+
+  }
+
 }

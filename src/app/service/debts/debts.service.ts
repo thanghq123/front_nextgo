@@ -17,7 +17,7 @@ export class DebtsService extends CRUDServiceService<Debts> {
     dataService: HandleDataService
  ) {
    super(http, dataService);
-   this.apiUrl = this.dataService.getUrl('debts');
+   this.apiUrl = this.dataService.getUrl('debt');
    this.domain_name = environment.domain_name;
  }
  getAllRecovery(){

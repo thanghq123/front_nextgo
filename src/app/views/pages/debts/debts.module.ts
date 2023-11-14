@@ -12,13 +12,13 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxMaskModule, IConfig } from 'ngx-mask';
 import { FormsModule } from '@angular/forms';
-
+import { NgbDropdownModule, NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { DebtsComponent } from './debts.component';
 import { ListRecoveryComponent } from './recovery/list/list.component';
 import { ListRepayComponent } from './repay/list/list.component';
 import { CreateRecoveryComponent } from './recovery/create/create.component';
-import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
+import { EditRecoveryComponent } from './recovery/edit/edit.component';
 
 const routes: Routes = [
   {
@@ -37,6 +37,10 @@ const routes: Routes = [
       {
         path: 'recovery/create',
         component:  CreateRecoveryComponent
+      },
+      {
+        path: 'recovery/edit/:id',
+        component:  EditRecoveryComponent
       },
       {
         path: 'repay/list',
@@ -61,6 +65,7 @@ const routes: Routes = [
     ListRecoveryComponent,
     ListRepayComponent,
     CreateRecoveryComponent,
+    EditRecoveryComponent,
 
   ],
   imports: [
@@ -79,7 +84,8 @@ const routes: Routes = [
     NgSelectModule,
     FormsModule,
     NgxMaskModule.forRoot({ validation: true}),
-    NgbTypeaheadModule
+    NgbTypeaheadModule,
+    NgbDropdownModule,
   ]
 })
 export class DebtsModule { }
