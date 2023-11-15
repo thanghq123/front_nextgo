@@ -12,6 +12,8 @@ export class NavbarsellComponent implements OnInit {
   tabCurrent : number ;
   modalPrice : any;
   dataBill :  any;
+  payment : any;
+  modalBatches : any;
   constructor(
     private router : Router,
     private DatalayoutService : DatalayoutService
@@ -22,7 +24,9 @@ export class NavbarsellComponent implements OnInit {
     let tabCurrentJson = localStorage.getItem('TabCurrentIndex')!;
     let tabModalJson = localStorage.getItem('TabModal')!;
     let OutPutResult = localStorage.getItem('dataBill')!;
-    if (!tabOrder || !tabCurrentJson || !tabModalJson || !OutPutResult) {
+    let paymentResult = localStorage.getItem('dataPayment')!;
+    let modalBathches= localStorage.getItem('dataBatches')!;
+    if (!tabOrder || !tabCurrentJson || !tabModalJson || !OutPutResult || !paymentResult || !modalBathches) {
         this.tabOder =[
           {
             ListProductCart: [
@@ -88,6 +92,12 @@ export class NavbarsellComponent implements OnInit {
             // }
           ]
         ]
+        this.modalBatches = [
+          [
+          
+          ]
+        ]
+
 
         this.dataBill = [
           {
@@ -99,18 +109,33 @@ export class NavbarsellComponent implements OnInit {
             cash : 0,
           }
         ]
+
+        this.payment = [
+          [
+            {
+              payment_method : 0,
+              pricePayment : 0,
+              status : false
+            }
+          ]
+        ]
         localStorage.setItem('tabOrder', JSON.stringify(this.tabOder));
         localStorage.setItem('TabCurrentIndex', JSON.stringify(this.tabCurrent));
         localStorage.setItem('TabModal', JSON.stringify(this.modalPrice));
         localStorage.setItem('dataBill', JSON.stringify(this.dataBill));
+        localStorage.setItem('dataPayment', JSON.stringify(this.payment));
+        localStorage.setItem('dataBatches', JSON.stringify(this.modalBatches));
+
         
     } else {
         this.tabOder = JSON.parse(tabOrder);
         this.tabCurrent = JSON.parse(tabCurrentJson);
         this.modalPrice =  JSON.parse(tabModalJson);
         this.dataBill =  JSON.parse(OutPutResult);
+        this.payment =   JSON.parse(paymentResult);
+        this.modalBatches =   JSON.parse(modalBathches);
     }
-    this.DatalayoutService.changeData({tabOrder :  this.tabOder ,tabCurrent : this.tabCurrent,tabModal : this.modalPrice,dataBill : this.dataBill });
+    this.DatalayoutService.changeData({tabOrder :  this.tabOder ,tabCurrent : this.tabCurrent,tabModal : this.modalPrice,dataBill : this.dataBill,payment : this.payment,dataBatches : this.modalBatches });
     
 
     this.DatalayoutService.currentData.subscribe((data) => {
@@ -159,7 +184,7 @@ export class NavbarsellComponent implements OnInit {
   AddOder(){
     console.log(this.tabOder);
     
-    this.DatalayoutService.triggerEvent('addTabOder',{tabOder : this.tabOder});
+    this.DatalayoutService.triggerEvent('addTabOder',{tabOder : this.tabOder,modalDataAdd : this.modalPrice});
   }
 
   onLogout(e: Event) {

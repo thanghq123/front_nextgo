@@ -6,6 +6,8 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { CustomersService } from 'src/app/service/customers/customers.service';
 import { ListProducts } from 'src/app/interface/listProduct/list-products';
 import { ListProductsService } from 'src/app/service/listProduct/list-products.service';
+import { OrderService } from 'src/app/service/order/order.service';
+import { PaymentService } from 'src/app/service/payment/payment.service';
 @Component({
   selector: 'app-tabshop',
   templateUrl: './tabshop.component.html',
@@ -15,7 +17,7 @@ export class TabshopComponent implements OnInit {
   quantity: number = 0;
   basicModalCloseResult: string = '';
   modelRadio = 1;
-  modelTypePay = '';
+  modelTypePay = 0;
   defaultAccordionCode: any;
   listProductCart: any;
   tabDefault: number = 0;
@@ -38,6 +40,7 @@ export class TabshopComponent implements OnInit {
   changeBill: number = 0;
   noteBill: string;
   people: any = [];
+  batchesData: any = [];
   selectedSearchPersonId: string = '';
   dataAdd: {
     name: string;
@@ -50,11 +53,38 @@ export class TabshopComponent implements OnInit {
   dataInfoUser: any;
   ListProducts: any[];
   versionProduct: any;
+  pricePayment: number;
+  iconsData: any = [
+    {
+      id: 0,
+      icon: '../../../../../assets/images/others/Payment_Cash.svg',
+      name: 'Tiền mặt',
+    },
+    {
+      id: 1,
+      icon: '../../../../../assets/images/others/Payment_Transfer.svg',
+      name: 'Chuyển Khoản',
+    },
+    {
+      id: 2,
+      icon: '../../../../../assets/images/others/Debt.68ccc6d1.svg',
+      name: 'Ghi nợ',
+    },
+  ];
+
+  dataBtnPayment: any;
+  customTemplateSelectedPeople: any;
+
+  selectedPeopleBatches: any;
+  productItemsBatches: any;
+  idbatches: number;
   constructor(
     private modalService: NgbModal,
     private DatalayoutService: DatalayoutService,
     private CustomersService: CustomersService,
-    private ListProductsService: ListProductsService
+    private ListProductsService: ListProductsService,
+    private OrderService: OrderService,
+    private  PaymentService : PaymentService
   ) {}
 
   ngOnInit(): void {
@@ -65,7 +95,6 @@ export class TabshopComponent implements OnInit {
 
       if (data.payload) {
         for (const iterator in data.payload) {
-          console.log(data.payload[iterator]);
           for (const item of data.payload[iterator]) {
             item.quantity = item.variation_quantities.reduce(
               (sum: number, valueCurrent: any) => sum + valueCurrent.quantity,
@@ -125,9 +154,16 @@ export class TabshopComponent implements OnInit {
         0
       );
 
+      this.productItemsBatches = data.dataBatches;
+
       this.tabDefault = data.tabCurrent;
       this.modalData = data.tabModal;
-      console.log(this.dataBill);
+      this.dataBtnPayment = data.payment;
+      // console.log(data.payment[this.tabDefault][0].pricePayment);
+      // if(data.payment[this.tabDefault][0].pricePayment > 0){
+
+      //     this.pricePayment = data.payment[this.tabDefault].reduce((acc :number, item : any) => acc + item.pricePayment,0 )
+      // }
       if (!this.dataBill) {
         this.dataBill = data.dataBill;
         this.priceBill = data.dataBill[this.tabDefault].totalPrice;
@@ -136,6 +172,8 @@ export class TabshopComponent implements OnInit {
         this.taxBill = data.dataBill[this.tabDefault].service;
         this.modelRadioBill = data.dataBill[this.tabDefault].radio;
         this.cashPrice = data.dataBill[this.tabDefault].cash;
+        this.pricePayment = data.dataBill[this.tabDefault].cash;
+
         this.changeTotalBill();
         if (data.dataBill[this.tabDefault].note) {
           this.noteBill = data.dataBill[this.tabDefault].note;
@@ -148,9 +186,12 @@ export class TabshopComponent implements OnInit {
       let dataOrder = null;
       let dataBill = null;
       let dataModal = null;
+      let dataPayment = null;
+      let dataBatches = null;
       switch (event.name) {
         case 'addTabOder':
           if (this.dataCurrent.length < 4) {
+            const { modalDataAdd } = event.data;
             this.totalMoney = 0;
             this.dataCurrent.push({
               ListProductCart: [],
@@ -165,14 +206,26 @@ export class TabshopComponent implements OnInit {
               cash: 0,
             });
 
-            this.modalData.push([]);
-            console.log(this.modalData);
-            
+            this.dataBtnPayment.push([
+              {
+                payment_method: 0,
+                pricePayment: 0,
+                status: false,
+              },
+            ]);
+            this.productItemsBatches.push([]);
+            console.log(modalDataAdd);
+            modalDataAdd.push([])
+
+            dataModal = modalDataAdd;
             // this.modalData.push([]);
             this.tabDefault = this.dataCurrent.length - 1;
+            dataBatches = this.productItemsBatches;
             dataOrder = this.dataCurrent;
             dataBill = this.dataBill;
-            dataModal = this.modalData;
+        
+            
+            dataPayment = this.dataBtnPayment;
             this.listProductCart = this.dataCurrent.map(
               (value: any, index: number) => {
                 return value.ListProductCart;
@@ -184,6 +237,7 @@ export class TabshopComponent implements OnInit {
             this.modelRadioBill = this.dataBill[this.tabDefault].radio;
             this.priceBill = this.dataBill[this.tabDefault].totalPrice;
             this.cashPrice = this.dataBill[this.tabDefault].cash;
+            this.pricePayment = this.dataBill[this.tabDefault].cash;
             this.changeTotalBill();
             if (this.dataBill[this.tabDefault].note) {
               this.noteBill = this.dataBill[this.tabDefault].note;
@@ -201,18 +255,28 @@ export class TabshopComponent implements OnInit {
             }
             localStorage.setItem('tabOrder', JSON.stringify(this.dataCurrent));
             localStorage.setItem('dataBill', JSON.stringify(this.dataBill));
-               localStorage.setItem('TabModal', JSON.stringify(this.modalData));
+            localStorage.setItem('TabModal', JSON.stringify(modalDataAdd));
+            localStorage.setItem(
+              'dataPayment',
+              JSON.stringify(this.dataBtnPayment)
+            );
+            localStorage.setItem(
+              'dataBatches',
+              JSON.stringify(this.productItemsBatches)
+            );
             this.DatalayoutService.changeData({ tabCurrent: this.tabDefault });
             localStorage.setItem(
               'TabCurrentIndex',
               JSON.stringify(this.tabDefault)
             );
 
-         
             // window.location.reload();
           } else {
             dataOrder = this.dataCurrent;
             dataBill = this.dataBill;
+            dataBatches = this.productItemsBatches;
+            dataModal = this.modalData;
+            dataPayment = this.dataBtnPayment;
             Swal.fire({
               toast: true,
               position: 'top-end',
@@ -231,6 +295,9 @@ export class TabshopComponent implements OnInit {
 
           this.dataCurrent = dataOrder;
           this.dataBill = dataBill;
+          this.dataBtnPayment = dataPayment;
+          this.productItemsBatches = dataBatches;
+          this.modalData = dataModal;
           console.log(this.dataBill);
           break;
         case 'changeTab':
@@ -248,6 +315,8 @@ export class TabshopComponent implements OnInit {
           this.modelRadioBill = this.dataBill[this.tabDefault].radio;
           this.priceBill = this.dataBill[this.tabDefault].totalPrice;
           this.cashPrice = this.dataBill[this.tabDefault].cash;
+          this.pricePayment = this.dataBill[this.tabDefault].cash;
+
           this.changeTotalBill();
           if (this.dataBill[this.tabDefault].note) {
             this.noteBill = this.dataBill[this.tabDefault].note;
@@ -277,7 +346,9 @@ export class TabshopComponent implements OnInit {
           if (idRemove > 0) {
             this.dataCurrent.splice(idRemove, 1);
             this.dataBill.splice(idRemove, 1);
+            this.dataBtnPayment.splice(this.tabDefault, 1);
             modalData.splice(this.tabDefault, 1);
+            this.productItemsBatches.splice(this.tabDefault, 1);
             dataModal = modalData;
             this.tabDefault = idRemove == 0 ? 0 : idRemove - 1;
             this.singleTax = this.dataBill[this.tabDefault].discount;
@@ -287,6 +358,8 @@ export class TabshopComponent implements OnInit {
             this.priceBill = this.dataBill[this.tabDefault].totalPrice;
             dataOrder = this.dataCurrent;
             dataBill = this.dataBill;
+            dataPayment = this.dataBtnPayment;
+            dataBatches = this.productItemsBatches;
             if (
               Object.keys(this.dataCurrent[this.tabDefault].infoOrder).length >
               0
@@ -300,6 +373,14 @@ export class TabshopComponent implements OnInit {
             localStorage.setItem('tabOrder', JSON.stringify(this.dataCurrent));
             localStorage.setItem('dataBill', JSON.stringify(this.dataBill));
             localStorage.setItem('TabModal', JSON.stringify(modalData));
+            localStorage.setItem(
+              'dataPayment',
+              JSON.stringify(this.dataBtnPayment)
+            );
+            localStorage.setItem(
+              'dataBatches',
+              JSON.stringify(this.productItemsBatches)
+            );
             this.DatalayoutService.changeData({ tabCurrent: this.tabDefault });
             localStorage.setItem(
               'TabCurrentIndex',
@@ -309,13 +390,14 @@ export class TabshopComponent implements OnInit {
           this.dataCurrent = dataOrder;
           this.dataBill = dataBill;
           this.modalData = dataModal;
+          this.dataBtnPayment = dataPayment;
+          this.productItemsBatches = dataBatches;
           break;
         default:
           throw new Error('Error Event component');
       }
     });
 
-    
     this.CustomersService.GetData().subscribe((response: any) => {
       // console.log(response.payload.data);
       this.people = response.payload;
@@ -324,7 +406,6 @@ export class TabshopComponent implements OnInit {
           person.displayName = `${person.name} - ${person.tel}`;
         });
       }
-      
     });
   }
 
@@ -389,11 +470,12 @@ export class TabshopComponent implements OnInit {
     });
     localStorage.setItem('dataBill', JSON.stringify(this.dataBill));
   }
-// Sửa tính toán tiền phải trả
+  // Sửa tính toán tiền phải trả
   changeCash(event: any): void {
     if (!event.target.value) {
       this.cashPrice = 0;
       event.target.value = 0;
+      this.pricePayment = 0;
     }
 
     if (this.cashPrice > this.priceBill) {
@@ -412,6 +494,22 @@ export class TabshopComponent implements OnInit {
 
   // Tính toán giá tiền và update lại
   resultTotal(e: any) {
+    this.updateQuantity(
+      this.listProductCart[this.tabDefault],
+      +e.target.id,
+      +e.target.value,
+      e.target.name
+    );
+    this.totalMoney = this.listProductCart[this.tabDefault].reduce(
+      (total: number, current: any) => {
+        return total + current.result;
+      },
+      0
+    );
+    localStorage.setItem('tabOrder', JSON.stringify(this.dataCurrent));
+  }
+
+  resultTotalBatches(e: any) {
     this.updateQuantity(
       this.listProductCart[this.tabDefault],
       +e.target.id,
@@ -524,9 +622,14 @@ export class TabshopComponent implements OnInit {
         0
       );
       this.modalData[this.tabDefault].splice(id, 1);
+      this.productItemsBatches[this.tabDefault].splice(id, 1);
       this.resultBill(this.tabDefault);
       localStorage.setItem('tabOrder', JSON.stringify(this.dataCurrent));
       localStorage.setItem('TabModal', JSON.stringify(this.modalData));
+      localStorage.setItem(
+        'dataBatches',
+        JSON.stringify(this.productItemsBatches)
+      );
     }
   }
 
@@ -539,15 +642,15 @@ export class TabshopComponent implements OnInit {
 
   // Kiểm tra đầu vào data
   limitInput(event: any) {
-    console.log(this.discount,this.modelRadio);
-    
+    console.log(this.discount, this.modelRadio);
+
     if (this.modelRadio == 1 && this.discount > 100) {
       event.target.value = 100;
       this.discount = 100;
-    }else if (this.discount < 0){
+    } else if (this.discount < 0) {
       event.target.value = 0;
       this.discount = 0;
-    }else {
+    } else {
       this.discount =
         this.discount > this.priceFormModal
           ? this.priceFormModal
@@ -559,6 +662,17 @@ export class TabshopComponent implements OnInit {
         return total + current.result;
       },
       0
+    );
+  }
+
+  updateBatches(id: number) {
+    const dataFind = this.productItemsBatches[this.tabDefault].find(
+      (item: any) => item.id === id
+    );
+    dataFind.batches = this.selectedPeopleBatches;
+    localStorage.setItem(
+      'dataBatches',
+      JSON.stringify(this.productItemsBatches)
     );
   }
 
@@ -639,16 +753,121 @@ export class TabshopComponent implements OnInit {
       .catch((res) => {});
   }
 
+  changePayment(type: number = 0) {
+    let itemsUpdate =
+      this.dataBtnPayment[this.tabDefault][
+        this.dataBtnPayment[this.tabDefault].length - 1
+      ];
+    // console.log(this.pricePayment,type,this.cashPrice,itemsUpdate);
+    console.log(itemsUpdate);
+
+    let dataUpdate = null;
+    if (!itemsUpdate.status) {
+      // if(itemsUpdate.pricePayment >= this.priceBill && itemsUpdate.status == false){
+
+      itemsUpdate.payment_method = this.modelTypePay;
+      itemsUpdate.pricePayment = +itemsUpdate.pricePayment;
+      console.log(this.dataBtnPayment);
+
+      if (itemsUpdate.pricePayment > this.priceBill) {
+        this.changeBill = itemsUpdate.pricePayment - this.priceBill;
+        this.paymentPrice = 0;
+      } else {
+        this.changeBill = 0;
+        this.paymentPrice = this.priceBill - itemsUpdate.pricePayment;
+      }
+
+      this.pricePayment = this.dataBtnPayment[this.tabDefault].reduce(
+        (acc: number, item: any) => acc + item.pricePayment,
+        0
+      );
+
+      if (this.modelTypePay == 0) {
+        this.cashPrice = this.pricePayment;
+      } else {
+        this.cashPrice = 0;
+      }
+    } else {
+      if (this.pricePayment < this.priceBill) {
+        if (type == 2) {
+          this.dataBtnPayment[this.tabDefault].push({
+            payment_method: 2,
+            pricePayment: this.priceBill - itemsUpdate.pricePayment,
+            status: true,
+          });
+
+          this.pricePayment = this.dataBtnPayment[this.tabDefault].reduce(
+            (acc: number, item: any) => acc + item.pricePayment,
+            0
+          );
+
+          if (this.pricePayment > this.priceBill) {
+            this.changeBill = this.pricePayment - this.priceBill;
+            this.paymentPrice = 0;
+          } else {
+            this.changeBill = 0;
+            this.paymentPrice = this.priceBill - this.pricePayment;
+          }
+        } else {
+          this.dataBtnPayment[this.tabDefault].push({
+            payment_method: type,
+            pricePayment: 0,
+            status: false,
+          });
+        }
+
+        dataUpdate = this.dataBtnPayment;
+      }
+    }
+
+    localStorage.setItem('dataPayment', JSON.stringify(this.dataBtnPayment));
+  }
+
+  // Xác nhận thanh toán
+  paymentOrder(type: number) {
+    const data =
+      this.dataBtnPayment[this.tabDefault][
+        this.dataBtnPayment[this.tabDefault].length - 1
+      ];
+
+    // data.payment_method = this.modelTypePay;
+    // data.pricePayment = +this.pricePayment;
+    data.status = true;
+
+    // console.log(this.modelTypePay);
+    // console.log(this.priceBill);
+    // this.pricePayment
+    // changeCash()
+    if (this.pricePayment > this.priceBill) {
+      this.changeBill = this.pricePayment - this.priceBill;
+      this.paymentPrice = 0;
+    } else {
+      this.changeBill = 0;
+      this.paymentPrice = this.priceBill - this.pricePayment;
+    }
+
+    this.updateBill(this.dataBill, this.tabDefault, {
+      cash: this.pricePayment,
+    });
+
+    localStorage.setItem('dataPayment', JSON.stringify(this.dataBtnPayment));
+
+    // this.priceBill
+    // this.cashPrice
+    // if(this.priceBill){
+
+    // }
+  }
+
   addProduct(item: any) {
     this.modalData = JSON.parse(localStorage.getItem('TabModal')!);
     console.log(this.modalData);
     const ResultFind = this.listProductCart[this.tabDefault].find(
       (itemCurrent: any) => itemCurrent.id === item.id
     );
- 
 
     if (ResultFind) {
-      ResultFind.quanity = ResultFind.quanity+1;
+      ResultFind.quanity = ResultFind.quanity + 1;
       ResultFind.result = ResultFind.quanity * ResultFind.price_export;
       Swal.fire({
         toast: true,
@@ -665,14 +884,14 @@ export class TabshopComponent implements OnInit {
         },
       });
     } else {
+      console.log(item);
+
       this.listProductCart[this.tabDefault].push({
         ...item,
         quanity: 1,
         result: 1 * item.price_export,
       });
 
-    
-      
       this.modalData[this.tabDefault].push({
         id: item.id,
         priceCurrent: item.price_export,
@@ -682,28 +901,52 @@ export class TabshopComponent implements OnInit {
         result: item.price_export,
       });
 
-      Swal.fire({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3000,
-        title: 'Thành công!',
-        text: 'Thêm sản phẩm thành công',
-        icon: 'success',
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.addEventListener('mouseenter', Swal.stopTimer);
-          toast.addEventListener('mouseleave', Swal.resumeTimer);
-        },
-      });
-     
+      if (item.batchs.length > 0) {
+        this.productItemsBatches[this.tabDefault].push({
+          id: item.id,
+          batches: [],
+        });
+        // this.selectedPeopleBatches
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 3000,
+          title: 'Cảnh báo!',
+          text: 'Vui lòng chọn lô sản phẩm',
+          icon: 'warning',
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer);
+            toast.addEventListener('mouseleave', Swal.resumeTimer);
+          },
+        });
+      } else {
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 3000,
+          title: 'Thành công!',
+          text: 'Thêm sản phẩm thành công',
+          icon: 'success',
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer);
+            toast.addEventListener('mouseleave', Swal.resumeTimer);
+          },
+        });
+      }
     }
 
     console.log(this.modalData);
-    
 
     localStorage.setItem('tabOrder', JSON.stringify(this.dataCurrent));
     localStorage.setItem('TabModal', JSON.stringify(this.modalData));
+    localStorage.setItem(
+      'dataBatches',
+      JSON.stringify(this.productItemsBatches)
+    );
     this.totalMoney = this.listProductCart[this.tabDefault].reduce(
       (total: number, current: any) => {
         return total + current.result;
@@ -734,8 +977,8 @@ export class TabshopComponent implements OnInit {
           (itemCurrent: any) => itemCurrent.id === item.id
         );
 
-        if(ResultFind){
-          ResultFind.quanity = ResultFind.quanity+1;
+        if (ResultFind) {
+          ResultFind.quanity = ResultFind.quanity + 1;
           Swal.fire({
             toast: true,
             position: 'top-end',
@@ -750,7 +993,16 @@ export class TabshopComponent implements OnInit {
               toast.addEventListener('mouseleave', Swal.resumeTimer);
             },
           });
-        }else {
+        } else {
+          console.log(item.id);
+          if (item.batchs.length > 0) {
+            this.productItemsBatches[this.tabDefault].push({
+              id: item.id,
+              batches: [],
+            });
+          }
+
+          console.log(this.productItemsBatches);
           this.listProductCart[this.tabDefault].push({
             ...item,
             quanity: 1,
@@ -779,7 +1031,10 @@ export class TabshopComponent implements OnInit {
             },
           });
         }
-        
+        localStorage.setItem(
+          'dataBatches',
+          JSON.stringify(this.productItemsBatches)
+        );
         localStorage.setItem('tabOrder', JSON.stringify(this.dataCurrent));
         localStorage.setItem('TabModal', JSON.stringify(this.modalData));
         this.totalMoney = this.listProductCart[this.tabDefault].reduce(
@@ -793,21 +1048,304 @@ export class TabshopComponent implements OnInit {
     });
   }
 
-  openLgModal(content: TemplateRef<any>) {
+  openLgModalBatches(content: TemplateRef<any>, id: number) {
+    console.log(id);
+
+    const data = this.listProductCart[this.tabDefault].find(
+      (item: any) => item.id === id
+    );
+    this.batchesData = data.batchs;
+
+    this.idbatches = id;
+    // const data = batches.
+    for (let i = 0; i < this.batchesData.length; i++) {
+      let batchId = this.batchesData[i].id;
+
+      // Tìm các phần tử trong mảng quality có batch_id tương ứng
+      let matchingQuality = data.variation_quantities.filter(
+        (item: any) => item.batch_id === batchId
+      );
+
+      let totalQuantity = matchingQuality.reduce(
+        (sum: number, item: any) => sum + item.quantity,
+        0
+      );
+      this.batchesData[i].quality = totalQuantity;
+      this.batchesData[i].payQuality = 1;
+    }
+
+    const ResultData = this.productItemsBatches[this.tabDefault].find(
+      (item: any) => item.id === id
+    );
+    this.selectedPeopleBatches = ResultData.batches;
+
+    console.log(ResultData);
+
     this.modalService
       .open(content, { size: 'lg' })
       .result.then((result) => {
-        console.log('Modal closed' + result);
+        if (result) {
+          data.quanity = ResultData.batches.reduce(
+            (acc: number, item: any) => acc + item.payQuality,
+            0
+          );
+          localStorage.setItem('tabOrder', JSON.stringify(this.dataCurrent));
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            title: 'Thành công!',
+            text: 'Áp dụng lô hàng thành công',
+            icon: 'success',
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer);
+              toast.addEventListener('mouseleave', Swal.resumeTimer);
+            },
+          });
+        }
       })
       .catch((res) => {});
   }
 
+  openLgModal(content: TemplateRef<any>) {
+    const dataProductCurrent = this.listProductCart[this.tabDefault].filter(
+      (item: any) => item.batchs.length > 0
+    );
 
-  limitInputTax(event : any){
-    if(+event.target.value > 100){
+    // console.log(this.listProductCart[this.tabDefault]);
+
+    for (let index = 0; index < dataProductCurrent.length; index++) {
+      const element = dataProductCurrent[index];
+      const dataFind = this.productItemsBatches[this.tabDefault].find(
+        (dataBatches: any) => dataBatches.id === element.id
+      );
+
+      if (dataFind.batches.length == 0) {
+        const data = this.listProductCart[this.tabDefault].find(
+          (item: any) => item.id === element.id
+        );
+        this.batchesData = data.batchs;
+        for (let i = 0; i < this.batchesData.length; i++) {
+          let batchId = this.batchesData[i].id;
+
+          // Tìm các phần tử trong mảng quality có batch_id tương ứng
+          let matchingQuality = data.variation_quantities.filter(
+            (item: any) => item.batch_id === batchId
+          );
+
+          let totalQuantity = matchingQuality.reduce(
+            (sum: number, item: any) => sum + item.quantity,
+            0
+          );
+          this.batchesData[i].quality = totalQuantity;
+          this.batchesData[i].payQuality = 1;
+        }
+        const resultBatches = element.batchs.find(
+          (itemBathces: any) => itemBathces.quality > 0
+        );
+        dataFind.batches.push(resultBatches);
+
+        localStorage.setItem(
+          'dataBatches',
+          JSON.stringify(this.productItemsBatches)
+        );
+      }
+
+      console.log(this.dataCurrent);
+    }
+
+    this.modelTypePay =
+      this.dataBtnPayment[this.tabDefault][
+        this.dataBtnPayment[this.tabDefault].length - 1
+      ].payment_method;
+    this.pricePayment = this.dataBtnPayment[this.tabDefault].reduce(
+      (acc: number, item: any) => acc + item.pricePayment,
+      0
+    );
+    if (this.pricePayment > this.priceBill) {
+      this.changeBill = this.pricePayment - this.priceBill;
+      this.paymentPrice = 0;
+    } else {
+      this.changeBill = 0;
+      this.paymentPrice = this.priceBill - this.pricePayment;
+    }
+    this.modalService
+      .open(content, { size: 'lg' })
+      .result.then((result) => {
+        if (result) {
+          const dataSend = {
+            customer_id: this.selectedSearchPersonId,
+            created_by: 1,
+            discount: this.DiscountBill,
+            discount_type: this.modelRadioBill,
+            tax: this.singleTax,
+            service_charge: this.taxBill,
+            total_product: this.listProductCart[this.tabDefault].length,
+            total_price: this.priceBill,
+            status: 1,
+            payment_status: 1,
+            order_details: this.listProductCart[this.tabDefault].map(
+              (item: any, index: number) => {
+                return {
+                  ...item,
+                  batches_focus: this.productItemsBatches[this.tabDefault].find(
+                    (itemBatches: any) => itemBatches.id == item.id
+                  ),
+                  priceModal: this.modalData[this.tabDefault].find(
+                    (itemmodal: any) => itemmodal.id == item.id
+                  ),
+                };
+              }
+            ),
+          };
+          console.log(this.tabDefault);
+          if (this.selectedSearchPersonId != '') {
+           console.log(dataSend);
+            const DataPayemntResponse = {
+              paymentable_id : 'id',
+              amount : this.priceBill,
+              amount_in : this.pricePayment,
+              amount_refund : this.changeBill,
+              payment_method : this.dataBtnPayment[this.tabDefault],
+              note : this.dataBill[this.tabDefault].note == undefined ? "" : this.dataBill[this.tabDefault].note
+            }
+
+            console.log(DataPayemntResponse);
+            
+            // this.OrderService.create(dataSend).subscribe((data : any) => {
+            //   // console.log(data.payload.id);
+            //   if(data.status){
+            //   let dataOrder = null;
+            //   let dataBill = null;
+            //   let dataPayment = null;
+            //   let dataBatches = null;
+            //   if (this.tabDefault == 0) {
+            //     this.dataCurrent[this.tabDefault].ListProductCart = [];
+            //     this.dataCurrent[this.tabDefault].infoOrder = [];
+            //     console.log(this.dataCurrent[this.tabDefault]);
+            //     this.listProductCart = this.dataCurrent.map(
+            //       (value: any, index: number) => {
+            //         return value.ListProductCart;
+            //       }
+            //     );
+            //     this.dataInfoUser = this.dataCurrent.map(
+            //       (value: any, index: number) => {
+            //         return value.infoOrder;
+            //       }
+            //     );
+  
+            //     this.selectedSearchPersonId = '';
+  
+            //     this.pricePayment = this.dataBtnPayment[this.tabDefault].reduce(
+            //       (acc: number, item: any) => acc + item.pricePayment,
+            //       0
+            //     );
+  
+            //     this.changeBill = 0;
+  
+            //     this.dataBill[this.tabDefault] = {
+            //       discount: 0,
+            //       tax: 0,
+            //       totalPrice: 0,
+            //       service: 0,
+            //       radio: 1,
+            //       cash: 0,
+            //     };
+  
+            //     this.dataBtnPayment[this.tabDefault] = [
+            //       {
+            //         payment_method: 0,
+            //         pricePayment: 0,
+            //         status: false,
+            //       },
+            //     ];
+            //     this.productItemsBatches[this.tabDefault] = [];
+            //     this.modalData[this.tabDefault] = [];
+  
+            //       localStorage.setItem('tabOrder', JSON.stringify(this.dataCurrent));
+            //     localStorage.setItem('dataBill', JSON.stringify(this.dataBill));
+            //     localStorage.setItem('TabModal', JSON.stringify(this.modalData));
+            //     localStorage.setItem('dataPayment', JSON.stringify(this.dataBtnPayment));
+            //     localStorage.setItem('dataBatches', JSON.stringify(this.productItemsBatches));
+            //   }else {
+            //     this.dataCurrent.splice(this.tabDefault, 1);
+            //   this.dataBill.splice(this.tabDefault, 1);
+            //   this.dataBtnPayment.splice(this.tabDefault, 1);
+            //   this.modalData.splice(this.tabDefault, 1);
+            //   this.productItemsBatches.splice(this.tabDefault, 1);
+            //   this.tabDefault = this.tabDefault - 1;
+            //   this.singleTax = this.dataBill[this.tabDefault].discount;
+            //   this.DiscountBill = this.dataBill[this.tabDefault].tax;
+            //   this.taxBill = this.dataBill[this.tabDefault].service;
+            //   this.modelRadioBill = this.dataBill[this.tabDefault].radio;
+            //   this.priceBill = this.dataBill[this.tabDefault].totalPrice;
+            //    dataOrder = this.dataCurrent;
+            //    dataBill = this.dataBill;
+            //    dataPayment = this.dataBtnPayment;
+            //    dataBatches = this.productItemsBatches;
+            //   if (
+            //     Object.keys(this.dataCurrent[this.tabDefault].infoOrder).length >
+            //     0
+            //   ) {
+            //     this.selectedSearchPersonId =
+            //       this.dataCurrent[this.tabDefault].infoOrder.id;
+            //   } else {
+            //     this.selectedSearchPersonId = '';
+            //   }
+  
+            //   localStorage.setItem('tabOrder', JSON.stringify(this.dataCurrent));
+            //   localStorage.setItem('dataBill', JSON.stringify(this.dataBill));
+            //   localStorage.setItem('TabModal', JSON.stringify(this.modalData));
+            //   localStorage.setItem(
+            //     'dataPayment',
+            //     JSON.stringify(this.dataBtnPayment)
+            //   );
+            //   localStorage.setItem(
+            //     'dataBatches',
+            //     JSON.stringify(this.productItemsBatches)
+            //   );
+            //   this.DatalayoutService.changeData({ tabCurrent: this.tabDefault });
+            //   localStorage.setItem(
+            //     'TabCurrentIndex',
+            //     JSON.stringify(this.tabDefault)
+            //   );
+            //   }
+  
+            //   this.dataCurrent  = dataOrder;
+            //   this.dataBill  = dataBill;
+            //   this.dataBtnPayment   = dataPayment;
+            //   this.productItemsBatches  = dataBatches;
+            //   }
+             
+            // })
+          } else {
+            Swal.fire({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 3000,
+              title: 'Thất bại!',
+              text: 'Vui lòng thêm khách hàng vào đơn!!',
+              icon: 'error',
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer);
+                toast.addEventListener('mouseleave', Swal.resumeTimer);
+              },
+            });
+          }
+        }
+      })
+      .catch((res) => {});
+  }
+
+  limitInputTax(event: any) {
+    if (+event.target.value > 100) {
       event.target.value = 100;
       this.tax = 100;
-    }else if(+event.target.value < 0 || event.target.value == '') {
+    } else if (+event.target.value < 0 || event.target.value == '') {
       event.target.value = 0;
       this.tax = 0;
     }
@@ -850,6 +1388,81 @@ export class TabshopComponent implements OnInit {
       this.resultBill(this.tabDefault);
       localStorage.setItem('tabOrder', JSON.stringify(this.dataCurrent));
     }
+  }
+
+  removeBatches(id: number) {}
+
+  increaseQuantityBatches(id: number) {
+    let inputValue = <HTMLInputElement>(
+      document.getElementById(`quantityBatches-${id}`)
+    );
+    const count = 1 + Number(inputValue.value);
+    // console.log(inputValue.value);
+    const dataBatches = this.selectedPeopleBatches.find(
+      (item: any) => item.id === id
+    );
+    dataBatches.payQuality = count;
+    localStorage.setItem(
+      'dataBatches',
+      JSON.stringify(this.productItemsBatches)
+    );
+  }
+
+  decreaseQuantityBatches(id: number) {
+    let inputValue = <HTMLInputElement>(
+      document.getElementById(`quantityBatches-${id}`)
+    );
+    if (+inputValue.value > 0) {
+      console.log(this.productItemsBatches);
+
+      const dataBatches = this.selectedPeopleBatches.find(
+        (item: any) => item.id === id
+      );
+      dataBatches.payQuality = +inputValue.value - 1;
+      localStorage.setItem(
+        'dataBatches',
+        JSON.stringify(this.productItemsBatches)
+      );
+    }
+  }
+
+  removePayment(index: number) {
+    console.log(index);
+    if (index == 0) {
+      console.log(this.dataBtnPayment[this.tabDefault]);
+
+      const data = this.dataBtnPayment[this.tabDefault][index];
+      data.payment_method = 0;
+      data.pricePayment = 0;
+      data.status = false;
+      this.pricePayment = this.dataBtnPayment[this.tabDefault].reduce(
+        (acc: number, item: any) => acc + item.pricePayment,
+        0
+      );
+      if (this.pricePayment > this.priceBill) {
+        this.changeBill = this.pricePayment - this.priceBill;
+        this.paymentPrice = 0;
+      } else {
+        this.changeBill = 0;
+        this.paymentPrice = this.priceBill - this.pricePayment;
+      }
+      localStorage.setItem('dataPayment', JSON.stringify(this.dataBtnPayment));
+    } else {
+      this.dataBtnPayment[this.tabDefault].splice(index, 1);
+      this.pricePayment = this.dataBtnPayment[this.tabDefault].reduce(
+        (acc: number, item: any) => acc + item.pricePayment,
+        0
+      );
+      if (this.pricePayment > this.priceBill) {
+        this.changeBill = this.pricePayment - this.priceBill;
+        this.paymentPrice = 0;
+      } else {
+        this.changeBill = 0;
+        this.paymentPrice = this.priceBill - this.pricePayment;
+      }
+      localStorage.setItem('dataPayment', JSON.stringify(this.dataBtnPayment));
+    }
+    console.log(this.dataBtnPayment);
   }
 
   updateQuantity(array: any, id: number, newQuantity: any, name: string) {
