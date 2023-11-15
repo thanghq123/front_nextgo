@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { Router, ParamMap, ActivatedRoute } from '@angular/router';
@@ -11,13 +11,16 @@ import {
 } from 'rxjs/operators';
 
 import { Observable, Subject } from 'rxjs';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
 import { CustomersService } from 'src/app/service/customers/customers.service';
 import { DebtsService } from 'src/app/service/debts/debts.service';
+import { PaymentService } from 'src/app/service/payment/payment.service';
 
 @Component({
   selector: 'app-edit',
   templateUrl: './edit.component.html',
-  styleUrls: ['./edit.component.scss']
+  styleUrls: ['./edit.component.scss'],
 })
 export class EditRecoveryComponent implements OnInit {
   recoveryFormEdit = new FormGroup({
@@ -34,14 +37,36 @@ export class EditRecoveryComponent implements OnInit {
   debt: any;
   id: any;
   isLoading = false;
+  basicModalCloseResult: string = '';
+  typePayment: any[] = [];
+  oldPayment: any;
+  dataAdd: {
+    payment_at: string;
+    payment_method: number;
+    amount_in: number;
+    reference_code: string;
+    note: string;
+  } = {
+    payment_at: '',
+    payment_method: 0,
+    amount_in: 0,
+    reference_code: '',
+    note: '',
+  };
 
   constructor(
     private _debtService: DebtsService,
+    private _paymentService: PaymentService,
     private router: Router,
     private route: ActivatedRoute,
-  ) { }
+    private modalService: NgbModal
+  ) {}
 
   ngOnInit(): void {
+    this.typePayment = [
+      { id: 0, name: 'Tiền mặt' },
+      { id: 1, name: 'Chuyển khoản' },
+    ];
 
     this.route.paramMap.subscribe((queryParams) => {
       const id = queryParams.get('id');
@@ -52,7 +77,8 @@ export class EditRecoveryComponent implements OnInit {
           (data) => {
             const debtData = data.payload;
             this.debt = data.payload;
-            // console.log(this.debt);
+            this.oldPayment = data.payload.payments;
+            console.log(this.oldPayment[0].id);
             this.recoveryFormEdit.patchValue({
               name: debtData.name,
               amount_debt: debtData.amount_debt,
@@ -60,7 +86,7 @@ export class EditRecoveryComponent implements OnInit {
               due_at: debtData.due_at,
               note: debtData.note,
               partner_name: debtData.partner_name,
-              status: debtData.status
+              status: debtData.status,
             });
             this.isLoading = false;
           },
@@ -96,8 +122,93 @@ export class EditRecoveryComponent implements OnInit {
 
     return result;
   }
+  paymentMethod(id: number) {
+    let result = '';
+
+    switch (id) {
+      case 0:
+        result = 'Tiền mặt';
+        break;
+      case 1:
+        result = 'Chuyển khoản';
+        break;
+      default:
+        result = 'Trạng thái không xác định';
+        break;
+    }
+    return result;
+  }
+
+  openBasicModal(content: TemplateRef<any>) {
+    this.modalService
+      .open(content, {})
+      .result.then((result) => {
+        console.log(result);
+
+        const dataSend = {
+          id: this.id,
+          amount: this.debt.amount_debt,
+          amount_in: this.dataAdd.amount_in,
+          amount_refund: 0,
+          payment_method: this.dataAdd.payment_method,
+          payment_at:
+            this.dataAdd.payment_at != ''
+              ? this.dataAdd.payment_at
+              : new Date(),
+          reference_code: this.dataAdd.reference_code,
+          note: this.dataAdd.note,
+        };
+        console.log(dataSend);
+
+        if (dataSend.amount_in != 0) {
+          this._paymentService
+            .createDebtPayment(dataSend)
+            .subscribe((response: any) => {
+              if (response.status) {
+                Swal.fire({
+                  toast: true,
+                  position: 'top-end',
+                  showConfirmButton: false,
+                  timer: 3000,
+                  title: 'Thành công!',
+                  text: 'Thêm thanh toán thành công',
+                  icon: 'success',
+                  timerProgressBar: true,
+                  didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer);
+                    toast.addEventListener('mouseleave', Swal.resumeTimer);
+                  },
+                });
+                this.dataAdd = {
+                  payment_at: '',
+                  payment_method: 0,
+                  amount_in: 0,
+                  reference_code: '',
+                  note: '',
+                };
+              } else {
+                console.log(response);
+                const errorMessages = [];
+                for (const key in response.meta.errors) {
+                  const messages = response.meta.errors[key];
+                  for (const message of messages) {
+                    errorMessages.push(`${key}: ${message}`);
+                  }
+                }
+                this.showNextMessage(errorMessages);
+              }
+            });
+        }else{
+          this.showNextMessage('Bạn cần nhập số tiền')
+        }
+
+        this.basicModalCloseResult = 'Modal closed' + result;
+      })
+      .catch((res) => {});
+  }
   onSubmit(): void {
-    if (this.recoveryFormEdit.valid) { // Kiểm tra xem form có hợp lệ không trước khi log dữ liệu
+    if (this.recoveryFormEdit.valid) {
+      // Kiểm tra xem form có hợp lệ không trước khi log dữ liệu
       const dataSend = {
         id: this.id,
         name: String(this.recoveryFormEdit.value.name),
@@ -105,41 +216,39 @@ export class EditRecoveryComponent implements OnInit {
         debit_at: String(this.recoveryFormEdit.value.debit_at),
         due_at: String(this.recoveryFormEdit.value.due_at),
         note: String(this.recoveryFormEdit.value.note),
-        type: 0
-      }
+        type: 0,
+      };
       console.log(dataSend);
-      this._debtService.update(dataSend).subscribe(
-        (response: any) => {
-          if (response.status == true) {
-            this.recoveryFormEdit.reset();
-            Swal.fire({
-              toast: true,
-              position: 'top-end',
-              showConfirmButton: false,
-              timer: 3000,
-              title: 'Thành công!',
-              text: 'Cập nhật thông tin khoản thu thành công',
-              icon: 'success',
-              timerProgressBar: true,
-              didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer);
-                toast.addEventListener('mouseleave', Swal.resumeTimer);
-              },
-            });
-            location.reload();
-          } else {
-            console.log(response);
-            const errorMessages = [];
-            for (const key in response.meta.errors) {
-              const messages = response.meta.errors[key];
-              for (const message of messages) {
-                errorMessages.push(`${key}: ${message}`);
-              }
+      this._debtService.update(dataSend).subscribe((response: any) => {
+        if (response.status == true) {
+          // this.recoveryFormEdit.reset();
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            title: 'Thành công!',
+            text: 'Cập nhật thông tin khoản thu thành công',
+            icon: 'success',
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer);
+              toast.addEventListener('mouseleave', Swal.resumeTimer);
+            },
+          });
+          // location.reload();
+        } else {
+          console.log(response);
+          const errorMessages = [];
+          for (const key in response.meta.errors) {
+            const messages = response.meta.errors[key];
+            for (const message of messages) {
+              errorMessages.push(`${key}: ${message}`);
             }
-            this.showNextMessage(errorMessages);
           }
+          this.showNextMessage(errorMessages);
         }
-      )
+      });
       // Log dữ liệu từ form
       // Bạn có thể xử lý dữ liệu ở đây, gửi nó đến server hoặc thực hiện các hành động khác
     } else {
@@ -168,6 +277,4 @@ export class EditRecoveryComponent implements OnInit {
       });
     }
   }
-  }
-
-
+}

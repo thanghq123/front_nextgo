@@ -33,6 +33,8 @@ export class ListRecoveryComponent implements OnInit, AfterViewInit{
 
   openBasicModal(content: TemplateRef<any>) {
     this.modalService.open(content, {}).result.then((result) => {
+      console.log(result);
+
       this.basicModalCloseResult = "Modal closed" + result
     }).catch((res) => {});
   }

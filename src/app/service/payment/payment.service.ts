@@ -12,17 +12,23 @@ export class PaymentService extends CRUDServiceService<any> {
   private readonly domain_name: String;
   constructor(http: HttpClient, dataService: HandleDataService) {
     super(http, dataService);
-    this.apiUrl = this.dataService.getUrl('payment/order');
+    this.apiUrl = this.dataService.getUrl('payment');
     this.domain_name = environment.domain_name;
   }
- 
+
   createPayment(data : any): Observable<any> {
     return this.http.post(
-      `${this.apiUrl}/${data.id}`,
+      `${this.apiUrl}/order/${data.id}`,
       this.dataService.handleData(data)
     );
   }
- 
+  createDebtPayment(data : any): Observable<any> {
+    return this.http.post(
+      `${this.apiUrl}/debt`,
+      this.dataService.handleData(data)
+    );
+  }
+
 
   handleData(data: any = {}) {
     return {
