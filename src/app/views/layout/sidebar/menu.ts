@@ -91,5 +91,21 @@ export const MENU: MenuItem[] = [
     label: 'Mẫu In',
     icon: 'printer',
     link: '/print'
+
+  },
+  {
+    label: 'Sổ công nợ',
+    icon: 'target',
+    subItems: [
+      {
+        label: 'Khoản phải thu',
+        link: '/debts/recovery/list'
+      },
+      {
+        label: 'Khoản phải trả',
+        link: '/debts/repay/list'
+      },
+
+    ]
   }
 ];

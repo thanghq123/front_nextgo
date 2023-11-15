@@ -1,10 +1,10 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { DataTable } from 'simple-datatables';
-import { Observable,of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import Swal from 'sweetalert2';
-import { Locations } from 'src/app/interface/locations/locations';
-import { LocationsService } from 'src/app/service/locations/locations.service';
+import { DataTable } from 'simple-datatables';
 
+import { Debts } from 'src/app/interface/debts/debts';
+import { DebtsService } from 'src/app/service/debts/debts.service';
 
 
 @Component({
@@ -12,13 +12,15 @@ import { LocationsService } from 'src/app/service/locations/locations.service';
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss']
 })
-export class ListComponent implements OnInit, AfterViewInit {
-  listLocations: Observable<Locations[]>;
+export class ListRecoveryComponent implements OnInit, AfterViewInit{
+  listRecovery: Observable<any>;
   isLoading = false;
 
+  constructor(
+    private _recoService: DebtsService,
 
-  constructor(private _locaService: LocationsService) {
-    this.listLocations = new Observable();
+  ) {
+    this.listRecovery = new Observable();
    }
 
   ngOnInit(): void {
@@ -26,7 +28,7 @@ export class ListComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.listLocations.subscribe(() => {
+    this.listRecovery.subscribe(() => {
       setTimeout(() => {
         const db = new DataTable('#dataTableExample');
         setTimeout(() => {
@@ -44,12 +46,12 @@ export class ListComponent implements OnInit, AfterViewInit {
     Array.from(deleteButtons).forEach((button) => {
       button.addEventListener('click', (event) => {
         const id = (event.target as Element).getAttribute('id');
-        this.deleteLocation(Number(id));
+        this.deleteReco(Number(id));
       });
     });
   }
 
-  deleteLocation(id: number) {
+  deleteReco(id: number) {
     Swal.fire({
       title: 'Bạn có chắc chắn muốn xóa?',
       text: 'Bạn sẽ không thể hoàn tác lại hành động này!',
@@ -61,7 +63,7 @@ export class ListComponent implements OnInit, AfterViewInit {
     }).then((result) => {
       if (result.isConfirmed) {
         // If confirmed, delete the category
-        this._locaService.delete(id).subscribe(
+        this._recoService.delete(id).subscribe(
           (response) => {
             Swal.fire({
               toast: true,
@@ -69,7 +71,7 @@ export class ListComponent implements OnInit, AfterViewInit {
               showConfirmButton: false,
               timer: 1000,
               title: "Đã xóa!",
-              text: "Đơn vị đã được xóa.",
+              text: "Thương hiệu đã được xóa.",
               icon: "success",
               timerProgressBar: true,
               didOpen: (toast) => {
@@ -78,6 +80,7 @@ export class ListComponent implements OnInit, AfterViewInit {
               },
             });
             // Navigate to the list after successful deletion
+
             setTimeout(() => {
               location.reload();
             }, 1000);
@@ -94,21 +97,21 @@ export class ListComponent implements OnInit, AfterViewInit {
 
   refreshData(): void{
     this.isLoading = true;
-    this._locaService.GetData().subscribe({
+    this._recoService.getAllRecovery().subscribe({
       next: (res: any) => {
-        console.log(res.data);
+        // console.log(res.data);
         if(res.status == true){
-          this.listLocations = of(res.payload) ;
+          this.listRecovery = of(res.payload.data) ;
+          console.log(res.payload.data);
           this.isLoading = false;
-          // console.log(res);
-          this.listLocations.subscribe(
+          // console.log(this.listBrands);
+          this.listRecovery.subscribe(
             (res)=> {
               setTimeout(() => {
                 const db = new DataTable('#dataTableExample');
                 db.on('datatable.init', () => {
                   this.addDeleteEventHandlers();
               });
-
               }, 0)
             })
 
@@ -116,7 +119,7 @@ export class ListComponent implements OnInit, AfterViewInit {
       },
       error: (err: any) => {
         console.log(err);
-        Swal.fire('Lỗi!', 'Có lỗi xảy ra. Vui lòng liên hệ QTV.', 'error');
+        Swal.fire('Lỗi!', 'Có lỗi xảy ra.', 'error');
       }
     })
   }

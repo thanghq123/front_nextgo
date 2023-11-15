@@ -11,8 +11,12 @@
   <div class="col-md-12 grid-margin stretch-card">
     <div class="card">
       <div class="card-body">
-        <h2 *ngIf="status == 1" style="text-align: center">Xác nhận nhập kho</h2>
-        <h2 *ngIf="status != 1" style="text-align: center">Chi tiết đơn nhập kho</h2>
+        <h2 *ngIf="status == 1" style="text-align: center">
+          Xác nhận nhập kho
+        </h2>
+        <h2 *ngIf="status != 1" style="text-align: center">
+          Chi tiết đơn nhập kho
+        </h2>
         <h6 class="card-title">Thông tin cơ bản</h6>
         <div *ngIf="isLoading" class="loadingcustomcss">
           <button class="btn btn-primary" type="button" disabled>
@@ -106,13 +110,13 @@
                   Chi nhánh
                 </label>
                 <input
-              type="text"
-              class="form-control"
-              id="exampleInputUsername1"
-              formControlName="inventory_name"
-              autocomplete="off"
-              [readonly]="true"
-            />
+                  type="text"
+                  class="form-control"
+                  id="exampleInputUsername1"
+                  formControlName="inventory_name"
+                  autocomplete="off"
+                  [readonly]="true"
+                />
               </div>
             </div>
             <!-- Col -->
@@ -122,13 +126,13 @@
                   Kho
                 </label>
                 <input
-              type="text"
-              class="form-control"
-              id="exampleInputUsername1"
-              formControlName="inventory_name"
-              autocomplete="off"
-              [readonly]="true"
-            />
+                  type="text"
+                  class="form-control"
+                  id="exampleInputUsername1"
+                  formControlName="inventory_name"
+                  autocomplete="off"
+                  [readonly]="true"
+                />
               </div>
             </div>
             <!-- Col -->
@@ -146,13 +150,13 @@
                         <th>Giá nhập</th>
                         <th>Số lượng</th>
                         <th>Thành tiền</th>
-                        <!-- <th></th> -->
+                        <th></th>
                       </tr>
                     </thead>
                     <tbody>
                       <ng-container *ngIf="listStorage && listStorage.length">
                         <tr *ngFor="let value of listStorage; let i = index">
-                          <th>{{i + 1}}</th>
+                          <th>{{ i + 1 }}</th>
                           <td>{{ value.variation_name }}</td>
                           <td>
                             <!-- <input
@@ -163,7 +167,12 @@
                               class="form-control"
                               id="exampleInputText1"
                             /> -->
-                            <p>{{ listStorage[i].price | currency:'VNĐ':'symbol':'1.0-0' }}</p>
+                            <p>
+                              {{
+                                listStorage[i].price
+                                  | currency : "VNĐ" : "symbol" : "1.0-0"
+                              }}
+                            </p>
                           </td>
                           <td>
                             <!-- <input
@@ -174,14 +183,14 @@
                               class="form-control"
                               id="exampleInputText1"
                             /> -->
-                            <p>{{listStorage[i].quantity}}</p>
+                            <p>{{ listStorage[i].quantity }}</p>
                           </td>
-                          <td>
+                          <td >
                             {{
                               calculateTotal(
                                 listStorage[i].price,
                                 listStorage[i].quantity
-                              ) | currency: 'VNĐ' :  "symbol" : "1.0-0"
+                              ) | currency : "VNĐ" : "symbol" : "1.0-0"
                             }}
                           </td>
                           <th>
@@ -194,8 +203,14 @@
                           </th>
                         </tr>
                         <tr>
-                          <th style="color: red;">TỔNG TIỀN</th>
-                          <td colspan="4" style="text-align: right;">{{calculateTotalPrice() | currency: 'VNĐ' : "symbol" : "1.0-0"}}</td>
+                          <th style="color: red">TỔNG TIỀN</th>
+                          <td colspan="5" style="text-align: right">
+                            {{
+                              calculateTotalPrice()
+                                | currency : "VNĐ" : "symbol" : "1.0-0"
+                            }}
+                          </td>
+
                         </tr>
                       </ng-container>
                     </tbody>
@@ -204,14 +219,26 @@
               </div>
             </div>
           </div>
-          <button *ngIf="status === 1"
+          <button
+            *ngIf="status === 1"
             type="submit"
             [disabled]="storageConfirmForm.invalid"
             class="btn btn-primary me-2"
           >
             Xác nhận
           </button>
-          <button *ngIf="status === 2"
+          <button
+            *ngIf="status === 1"
+            type="button"
+            (click)="cancel()"
+            [disabled]="storageConfirmForm.invalid"
+            class="btn btn-danger me-2"
+          >
+            Hủy đơn
+          </button>
+
+          <button
+            *ngIf="status === 2"
             type="button"
             [disabled]="storageConfirmForm.invalid"
             class="btn btn-primary me-2"
@@ -226,4 +253,3 @@
     </div>
   </div>
 </div>
-

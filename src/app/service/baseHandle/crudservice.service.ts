@@ -28,13 +28,20 @@ export abstract class CRUDServiceService<T> {
 
   createFormData(data: T) {
     const headers = new HttpHeaders();
-    return this.http.post<T>(`${this.apiUrl}/store`, data, { headers });
+    return this.http.post<T>(`${this.apiUrl}/store`, this.dataService.handleData(data), { headers });
   }
 
   GetOneRecord(id: string): Observable<any> {
     return this.http.post<T>(
       `${this.apiUrl}/show`,
       this.dataService.handleData(id)
+    );
+  }
+
+  searchName(value: string): Observable<any>{
+    return this.http.post<T>(
+      `${this.apiUrl}/search`,
+      this.dataService.handleData(value)
     );
   }
 
