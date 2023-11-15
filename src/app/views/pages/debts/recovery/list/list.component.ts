@@ -1,10 +1,12 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, TemplateRef } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import Swal from 'sweetalert2';
 import { DataTable } from 'simple-datatables';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { Debts } from 'src/app/interface/debts/debts';
 import { DebtsService } from 'src/app/service/debts/debts.service';
+
 
 
 @Component({
@@ -15,9 +17,11 @@ import { DebtsService } from 'src/app/service/debts/debts.service';
 export class ListRecoveryComponent implements OnInit, AfterViewInit{
   listRecovery: Observable<any>;
   isLoading = false;
+  basicModalCloseResult: string = '';
 
   constructor(
     private _recoService: DebtsService,
+    private modalService: NgbModal
 
   ) {
     this.listRecovery = new Observable();
@@ -27,73 +31,79 @@ export class ListRecoveryComponent implements OnInit, AfterViewInit{
     this.refreshData();
   }
 
+  openBasicModal(content: TemplateRef<any>) {
+    this.modalService.open(content, {}).result.then((result) => {
+      this.basicModalCloseResult = "Modal closed" + result
+    }).catch((res) => {});
+  }
+
   ngAfterViewInit(): void {
-    this.listRecovery.subscribe(() => {
-      setTimeout(() => {
-        const db = new DataTable('#dataTableExample');
-        setTimeout(() => {
-          const db = new DataTable('#dataTableExample');
-          db.on('datatable.init', () => {
-            this.addDeleteEventHandlers();
-        });
-        }, 0)
-      }, 0);
-    });
+    // this.listRecovery.subscribe(() => {
+    //   setTimeout(() => {
+    //     const db = new DataTable('#dataTableExample');
+    //     setTimeout(() => {
+    //       const db = new DataTable('#dataTableExample');
+    //       db.on('datatable.init', () => {
+    //         this.addDeleteEventHandlers();
+    //     });
+    //     }, 0)
+    //   }, 0);
+    // });
   }
 
-  addDeleteEventHandlers(): void {
-    const deleteButtons = document.getElementsByClassName('btn-danger');
-    Array.from(deleteButtons).forEach((button) => {
-      button.addEventListener('click', (event) => {
-        const id = (event.target as Element).getAttribute('id');
-        this.deleteReco(Number(id));
-      });
-    });
-  }
+  // addDeleteEventHandlers(): void {
+  //   const deleteButtons = document.getElementsByClassName('btn-danger');
+  //   Array.from(deleteButtons).forEach((button) => {
+  //     button.addEventListener('click', (event) => {
+  //       const id = (event.target as Element).getAttribute('id');
+  //       this.deleteReco(Number(id));
+  //     });
+  //   });
+  // }
 
-  deleteReco(id: number) {
-    Swal.fire({
-      title: 'Bạn có chắc chắn muốn xóa?',
-      text: 'Bạn sẽ không thể hoàn tác lại hành động này!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Có, xóa nó!',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // If confirmed, delete the category
-        this._recoService.delete(id).subscribe(
-          (response) => {
-            Swal.fire({
-              toast: true,
-              position: "top-end",
-              showConfirmButton: false,
-              timer: 1000,
-              title: "Đã xóa!",
-              text: "Thương hiệu đã được xóa.",
-              icon: "success",
-              timerProgressBar: true,
-              didOpen: (toast) => {
-                toast.addEventListener("mouseenter", Swal.stopTimer);
-                toast.addEventListener("mouseleave", Swal.resumeTimer);
-              },
-            });
-            // Navigate to the list after successful deletion
+  // deleteReco(id: number) {
+  //   Swal.fire({
+  //     title: 'Bạn có chắc chắn muốn xóa?',
+  //     text: 'Bạn sẽ không thể hoàn tác lại hành động này!',
+  //     icon: 'warning',
+  //     showCancelButton: true,
+  //     confirmButtonColor: '#3085d6',
+  //     cancelButtonColor: '#d33',
+  //     confirmButtonText: 'Có, xóa nó!',
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       // If confirmed, delete the category
+  //       this._recoService.delete(id).subscribe(
+  //         (response) => {
+  //           Swal.fire({
+  //             toast: true,
+  //             position: "top-end",
+  //             showConfirmButton: false,
+  //             timer: 1000,
+  //             title: "Đã xóa!",
+  //             text: "Thương hiệu đã được xóa.",
+  //             icon: "success",
+  //             timerProgressBar: true,
+  //             didOpen: (toast) => {
+  //               toast.addEventListener("mouseenter", Swal.stopTimer);
+  //               toast.addEventListener("mouseleave", Swal.resumeTimer);
+  //             },
+  //           });
+  //           // Navigate to the list after successful deletion
 
-            setTimeout(() => {
-              location.reload();
-            }, 1000);
-          },
-          (error) => {
-            if(error.success == false){
-              Swal.fire('Lỗi!',`${error.meta.name}`, 'error');
-            }
-          }
-        );
-      }
-    });
-  }
+  //           setTimeout(() => {
+  //             location.reload();
+  //           }, 1000);
+  //         },
+  //         (error) => {
+  //           if(error.success == false){
+  //             Swal.fire('Lỗi!',`${error.meta.name}`, 'error');
+  //           }
+  //         }
+  //       );
+  //     }
+  //   });
+  // }
 
   refreshData(): void{
     this.isLoading = true;
@@ -110,7 +120,7 @@ export class ListRecoveryComponent implements OnInit, AfterViewInit{
               setTimeout(() => {
                 const db = new DataTable('#dataTableExample');
                 db.on('datatable.init', () => {
-                  this.addDeleteEventHandlers();
+                  // this.addDeleteEventHandlers();
               });
               }, 0)
             })

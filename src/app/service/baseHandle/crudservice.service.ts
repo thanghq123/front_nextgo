@@ -38,13 +38,6 @@ export abstract class CRUDServiceService<T> {
     );
   }
 
-  searchName(value: string): Observable<any>{
-    return this.http.post<T>(
-      `${this.apiUrl}/search`,
-      this.dataService.handleData(value)
-    );
-  }
-
   update(data: any): Observable<any> {
     return this.http.post<T>(
       `${this.apiUrl}/update`,

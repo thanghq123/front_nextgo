@@ -93,9 +93,7 @@
                 <td>{{ value.due_at }}</td>
                 <td>
                   <a [routerLink]="['../edit', value.id]" class="btn btn-success mx-2">Sửa</a>
-                  <button data-id="{{value.id}}" class="btn btn-danger">
-                    Thanh toán
-                  </button>
+
                 </td>
               </tr>
             </tbody>
@@ -110,8 +108,29 @@
               </tr>
             </tfoot>
           </table>
+
         </div>
       </div>
     </div>
   </div>
 </div>
+<button class="btn btn-primary" (click)="openBasicModal(basicModal)">Launch demo modal</button>
+                  <!-- Modal -->
+                  <ng-template #basicModal let-modal>
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                      <button type="button" class="btn-close" (click)="modal.close('by: close icon')"
+                        aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <p>Modal body</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary"
+                        (click)="modal.close('by: close button')">Close</button>
+                      <button type="button" class="btn btn-primary" (click)="modal.close('by: save button')">Save
+                        changes</button>
+                    </div>
+                  </ng-template>
+                  <!-- Close result -->
+                  <p *ngIf="basicModalCloseResult != ''" class="mt-2">{{basicModalCloseResult}}</p>
