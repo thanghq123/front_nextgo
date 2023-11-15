@@ -47,7 +47,7 @@
             <label for="exampleInputUsername1" class="form-label">Tổng phải thu<span
                 class="text-danger">(*)</span></label>
             <input type="text" class="form-control" id="exampleInputUsername1" formControlName="principal"
-              autocomplete="off" placeholder="Nhập số tiền phải thu" />
+              autocomplete="off" placeholder="Nhập số tiền phải thu" mask="separator.2" thousandSeparator=","/>
             <div *ngIf="
                 recoveryForm.controls.name.invalid &&
                 recoveryForm.controls.name.touched

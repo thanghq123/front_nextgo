@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
-import { Router, ParamMap } from '@angular/router';
+import { Router, ParamMap, ActivatedRoute } from '@angular/router';
 import {
   debounceTime,
   switchMap,
@@ -20,19 +20,50 @@ import { DebtsService } from 'src/app/service/debts/debts.service';
   styleUrls: ['./edit.component.scss']
 })
 export class EditRecoveryComponent implements OnInit {
-  recoveryForm = new FormGroup({
+  recoveryFormEdit = new FormGroup({
     name: new FormControl('', Validators.required),
-    principal: new FormControl('', Validators.required),
+    amount_debt: new FormControl('', Validators.required),
     debit_at: new FormControl('', Validators.required),
     due_at: new FormControl('', Validators.required),
-    partner: new FormControl(''),
     note: new FormControl(''),
+    // id_user: new FormControl(''),
+    partner_name: new FormControl(''),
+    status: new FormControl('')
   })
-  constructor() { }
+  debt: any;
+  id: string;
+
+  constructor(
+    private _debtService: DebtsService,
+    private router: Router,
+    private route: ActivatedRoute,
+  ) { }
 
   ngOnInit(): void {
+    this.route.paramMap.subscribe((queryParams) => {
+      const id = queryParams.get('id');
+      if (id !== null) {
+        this.id = id;
+        // this.isLoading = true;
+        this._debtService.GetOneRecord(id).subscribe(
+          (data) => {
+            const debtData = data.payload;
+            this.recoveryFormEdit.patchValue(debtData);
+            console.log(debtData);
+
+            // this.isLoading = false; // Stop loading
+          },
+          (error) => {
+            Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
+          }
+        );
+      } else {
+        this.router.navigate(['debts/recovery/list']);
+      }
+    });
   }
   onSubmit(): void {
+    console.log(this.recoveryFormEdit.value);
 
   }
 

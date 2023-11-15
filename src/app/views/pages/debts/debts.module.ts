@@ -86,6 +86,7 @@ const routes: Routes = [
     NgxMaskModule.forRoot({ validation: true}),
     NgbTypeaheadModule,
     NgbDropdownModule,
+
   ]
 })
 export class DebtsModule { }

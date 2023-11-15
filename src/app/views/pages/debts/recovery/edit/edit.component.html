@@ -27,12 +27,18 @@
       <div class="col-md-6 grid-margin stretch-card">
         <div class="card">
           <div class="card-body">
-            <div class="d-flex justify-content-between align-items-baseline">
-              <h6 class="card-title mb-0">Còn lại chưa thu</h6>
-            </div>
             <div class="row">
-              <div class="col-6 col-md-12 col-xl-5">
-                <h3 class="mb-2">3,897</h3>
+              <div class="col-6 col-md-12">
+                <div class="d-flex justify-content-evenly">
+                  <div class="row ">
+                    <p>Đã thanh toán</p>
+                    <h3 class="mb-2">3,897</h3>
+                  </div>
+                  <div class="row ">
+                    <p>Còn lại</p>
+                    <h3 class="mb-2">3,897</h3>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -42,40 +48,72 @@
     </div>
   </div>
 </div>
-
 <div class="row">
   <div class="col-md-12 grid-margin stretch-card">
     <div class="card">
       <div class="card-body">
         <h6 class="card-title">Thông tin khoản phải thu</h6>
 
-        <form class="forms-sample" [formGroup]="recoveryForm" (ngSubmit)="onSubmit()">
+        <form class="forms-sample"  [formGroup]="recoveryFormEdit" (ngSubmit)="onSubmit()">
           <div class="row">
-            <div class="col-md-6 grid-margin">
-              <div class="row mb-3">
-                <label for="firstName1" class="col-sm-3 col-form-label">First name</label>
-                <div class="col-sm-9">
-                  <input type="text" class="form-control" id="firstName1" placeholder="First name">
-                </div>
-              </div>
-              <div class="row mb-3">
-                <label for="firstName1" class="col-sm-3 col-form-label">First name</label>
-                <div class="col-sm-9">
-                  <input type="text" class="form-control" id="firstName1" placeholder="First name">
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6 grid-margin">
-              <div class="row mb-3">
-                <label for="firstName1" class="col-sm-3 col-form-label">First name</label>
-                <div class="col-sm-9">
-                  <input type="text" class="form-control" id="firstName1" placeholder="First name">
+            <div class="col-md-12 grid-margin">
+              <div class="card">
+                <div class="card-body">
+                  <form class="forms-sample">
+                    <div class="row mb-3">
+                      <div class="col-md-6">
+                        <label for="name" class="form-label">Tên khoản thu:</label>
+                        <input type="text" id="name" formControlName="name" class="form-control mb-4 mb-md-0" />
+                      </div>
+                      <div class="col-md-6">
+                        <label for="amount_debt" class="form-label">Tổng phải thu:</label>
+                        <input formControlName="amount_debt" id="amount_debt" class="form-control mb-4 mb-md-0" mask="separator.2"
+                          thousandSeparator="," />
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <div class="col-md-6">
+                        <label for="id" class="form-label">Mã khoản thu:</label>
+                        <!-- <input formControlName="id_user" id="id" type="text" class="form-control mb-4 mb-md-0" [value]="123"/> -->
+                      </div>
+                      <div class="col-md-6">
+                        <!-- <label for="created_by" class="form-label">Người tạo:</label>
+                        <input formControlName="partner_name" id="created_by" class="form-control" [value]="123" readonly/> -->
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <div class="col-md-6">
+                        <label for="status" class="form-label">Trạng thái:</label>
+                        <input formControlName="status" id="status" class="form-control mb-4 mb-md-0" readonly/>
+                      </div>
+                      <div class="col-md-6">
+                        <label for="partner_name" class="form-label">Giao dịch với:</label>
+                        <input formControlName="partner_name" class="form-control mb-4 mb-md-0" id="partner_name" [value]="123" readonly />
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <div class="col-md-6">
+                        <label for="debit_at" class="form-label">Ngày ghi nợ:</label>
+                        <input formControlName="debit_at" id="debit_at" class="form-control mb-4 mb-md-0" />
+                      </div>
+                      <div class="col-md-6">
+                        <label for="due_at" class="form-label">Hạn trả:</label>
+                        <input formControlName="due_at" id="due_at" class="form-control mb-4 mb-md-0" />
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <div class="col-md-12">
+                        <label for="note" class="form-label">Ghi chú:</label>
+                        <input formControlName="note" id="note" class="form-control mb-4 mb-md-0" />
+                      </div>
+                    </div>
+                  </form>
                 </div>
               </div>
             </div>
           </div>
 
-          <button type="submit" [disabled]="recoveryForm.invalid" class="btn btn-primary me-2">
+          <button type="submit" [disabled]="recoveryFormEdit.invalid" class="btn btn-primary me-2">
             Cập nhật
           </button>
           <button class="btn btn-secondary" routerLink="/debts/recovery/list">
@@ -95,24 +133,24 @@
         <div class="row">
           <div class="col-md-6 grid-margin">
             <div class="row mb-3">
-              <label for="firstName1" class="col-sm-3 col-form-label">First name</label>
-              <div class="col-sm-9">
-                <input type="text" class="form-control" id="firstName1" placeholder="First name">
-              </div>
+              <label for="firstName1" class="col-sm-3 col-form-label">Tổng phải thu</label>
+              <!-- <div class="col-sm-9">
+                <input type="text" id="firstName1" class="form-control" [value]="" disabled>
+              </div> -->
             </div>
             <div class="row mb-3">
-              <label for="firstName1" class="col-sm-3 col-form-label">First name</label>
-              <div class="col-sm-9">
-                <input type="text" class="form-control" id="firstName1" placeholder="First name">
-              </div>
+              <label for="firstName1" class="col-sm-3 col-form-label">Còn lại</label>
+              <!-- <div class="col-sm-9">
+                <input type="text" id="firstName1" class="form-control" [value]="" disabled>
+              </div> -->
             </div>
           </div>
           <div class="col-md-6 grid-margin">
             <div class="row mb-3">
-              <label for="firstName1" class="col-sm-3 col-form-label">First name</label>
-              <div class="col-sm-9">
-                <input type="text" class="form-control" id="firstName1" placeholder="First name">
-              </div>
+              <label for="firstName1" class="col-sm-3 col-form-label">Đã thanh toán</label>
+              <!-- <div class="col-sm-9">
+                <input type="text" id="firstName1" class="form-control" [value]="" disabled>
+              </div> -->
             </div>
           </div>
         </div>
