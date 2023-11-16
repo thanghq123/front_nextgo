@@ -56,6 +56,16 @@ export const MENU: MenuItem[] = [
     ],
   },
   {
+    label: 'Đơn Hàng',
+    icon: 'mail',
+    subItems: [
+      {
+        label: 'Danh sách đơn hàng',
+        link: 'products/list',
+      }
+    ],
+  },
+  {
     label: "Bán hàng",
     icon: 'home',
     link: 'shop/tabshop'
