@@ -18,6 +18,8 @@ import { FeatherIconModule } from '../../core/feather-icon/feather-icon.module';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
+import { NavbarsellComponent } from './baseSell/navbarsell/navbarsell.component';
+import { NavbarSellComponent } from './baseSell/navbar-sell.component';
 import { NavbarSpecialComponent } from './base-special/navbar-special/navbar-special.component';
 
 
@@ -27,7 +29,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 
 
 @NgModule({
-  declarations: [BaseComponent, NavbarComponent, SidebarComponent, FooterComponent, ContentAnimateDirective, BaseSpecialComponent, NavbarSpecialComponent],
+  declarations: [BaseComponent, NavbarComponent, SidebarComponent, FooterComponent, ContentAnimateDirective, BaseSpecialComponent, NavbarSpecialComponent, NavbarsellComponent, NavbarSellComponent],
   imports: [
     CommonModule,
     RouterModule,

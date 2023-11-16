@@ -63,7 +63,6 @@ export class CreateComponent implements OnInit {
 
     this._location.GetData().subscribe((res: any) => {
       this.listLocation = res.payload;
-
       // console.log(this.listLocation);
     });
   }

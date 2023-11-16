@@ -3,48 +3,47 @@ import { MenuItem } from './menu.model';
 export const MENU: MenuItem[] = [
   {
     label: 'Main',
-    isTitle: true
+    isTitle: true,
   },
   {
     label: 'Danh mục',
     icon: 'home',
-    link: '/categories/list'
+    link: '/categories/list',
   },
   {
     label: 'Thương hiệu',
     icon: 'target',
-    link: '/brands/list'
+    link: '/brands/list',
   },
   {
     label: 'Đơn vị tính',
     icon: 'target',
-    link: '/item-units/list'
-  }
-  ,
+    link: '/item-units/list',
+  },
   {
     label: 'Bảo hành',
     icon: 'home',
-    link: '/warranties/list'
+    link: '/warranties/list',
   },
   {
     label: 'Nhóm khách hàng',
     icon: 'home',
-    link: '/group_customers/list'
+    link: '/group_customers/list',
   },
   {
     label: 'Khách hàng',
     icon: 'home',
-    link: '/customers/list'
+    link: '/customers/list',
   },
   {
     label: 'Nhóm Nhà Cung Cấp',
     icon: 'home',
-    link: '/group_suppliers/list'
+    link: '/group_suppliers/list',
   },
   {
     label: 'Nhà Cung Cấp',
     icon: 'home',
-    link: '/suppliers/list'
+    link: '/suppliers/list',
   },
   {
     label: 'Sản phẩm',
@@ -53,16 +52,15 @@ export const MENU: MenuItem[] = [
       {
         label: 'Danh sách sản phẩm',
         link: 'products/list',
-      },
-       {
-        label: 'Bán hàng',
-        link: 'shop/tabshop',
-      },
-    ]},
-{    label: 'Chi nhánh',
-    icon: 'target',
-    link: '/locations/list'
+      }
+    ],
   },
+  {
+    label: "Bán hàng",
+    icon: 'home',
+    link: 'shop/tabshop'
+  },
+  { label: 'Chi nhánh', icon: 'target', link: '/locations/list' },
   {
     label: 'Kho & tồn',
     icon: 'target',
@@ -77,7 +75,7 @@ export const MENU: MenuItem[] = [
       // },
       {
         label: 'Nhập kho',
-        link: '/storage/import'
+        link: '/storage/import',
       },
       // {
       //   label: 'Xuất kho',
@@ -87,8 +85,9 @@ export const MENU: MenuItem[] = [
       //   label: 'Chuyển kho',
       //   link: '/suppliers/list'
       // },
-    ]
-  },{
+    ],
+  }
+,{
     label: 'Mẫu In',
     icon: 'printer',
     link: '/print'

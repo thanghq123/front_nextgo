@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { BaseComponent } from './views/layout/base/base.component';
 import { AuthGuard } from './core/guard/auth.guard';
 import { ErrorPageComponent } from './views/pages/error-page/error-page.component';
+import { NavbarSellComponent } from './views/layout/baseSell/navbar-sell.component';
 import { BaseSpecialComponent } from './views/layout/base-special/base-special.component';
 import { EditComponent } from './views/pages/print/edit/edit.component';
 const routes: Routes = [
@@ -79,11 +80,7 @@ const routes: Routes = [
             (m) => m.ProductsModule
           ),
       },
-      {
-        path: 'shop',
-        loadChildren: () =>
-          import('./views/pages/shop/shop.module').then((m) => m.ShopModule),
-      },
+      
       {
         path: 'locations',
         loadChildren: () =>
@@ -177,6 +174,16 @@ const routes: Routes = [
       // { path: '**', redirectTo: 'dashboard', pathMatch: 'full' }
     ],
   },
+  { path: '', 
+  component: NavbarSellComponent,
+   canActivate: [AuthGuard] ,
+   children: [
+    {
+      path: 'shop',
+      loadChildren: () =>
+        import('./views/pages/shop/shop.module').then((m) => m.ShopModule),
+    }
+  ]},
   { path: '',
   // component: BaseSpecialComponent,
    canActivate: [AuthGuard] ,
