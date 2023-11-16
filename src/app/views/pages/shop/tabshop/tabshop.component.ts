@@ -1204,7 +1204,7 @@ export class TabshopComponent implements OnInit {
             service_charge: this.taxBill,
             total_product: this.listProductCart[this.tabDefault].length,
             total_price: this.priceBill,
-            status: 1,
+            status: 2,
             payment_status: 1,
             order_details: this.listProductCart[this.tabDefault].map(
               (item: any, index: number) => {
