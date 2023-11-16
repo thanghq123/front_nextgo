@@ -462,14 +462,13 @@ export class TabshopComponent implements OnInit {
     this.priceBill = priceCurrent;
     // console.log(this.dataBill[idTab]);
     // console.log(this.dataBill[this.tabDefault]);
-    console.log(this.priceBill);
-    this.updateBill(this.dataBill, idTab, {
-      discount: this.singleTax,
-      tax: this.DiscountBill,
-      totalPrice: this.priceBill,
-      service: this.taxBill,
-      radio: this.modelRadioBill,
-    });
+      this.updateBill(this.dataBill, idTab, {
+        discount: this.singleTax,
+        tax: this.DiscountBill,
+        totalPrice: this.priceBill,
+        service: this.taxBill,
+        radio: this.modelRadioBill,
+      });
     localStorage.setItem('dataBill', JSON.stringify(this.dataBill));
   }
   // Sửa tính toán tiền phải trả
@@ -624,7 +623,10 @@ export class TabshopComponent implements OnInit {
         0
       );
       this.modalData[this.tabDefault].splice(id, 1);
-      this.productItemsBatches[this.tabDefault].splice(id, 1);
+      console.log(this.productItemsBatches);
+      if(this.productItemsBatches){
+        this.productItemsBatches[this.tabDefault].splice(id, 1);
+      }
       this.resultBill(this.tabDefault);
       localStorage.setItem('tabOrder', JSON.stringify(this.dataCurrent));
       localStorage.setItem('TabModal', JSON.stringify(this.modalData));
@@ -968,6 +970,7 @@ export class TabshopComponent implements OnInit {
 
   addProductQuality(item: any) {
     this.modalData = JSON.parse(localStorage.getItem('TabModal')!);
+    this.dataBill = JSON.parse(localStorage.getItem('dataBill')!);
     Swal.fire({
       title: 'Bán vượt quá số tồn kho',
       text: 'Sản phẩm này hiện không đủ số lượng trong kho. Bạn vẫn muốn bán chứ ?',
@@ -982,7 +985,10 @@ export class TabshopComponent implements OnInit {
         const ResultFind = this.listProductCart[this.tabDefault].find(
           (itemCurrent: any) => itemCurrent.id === item.id
         );
-
+          console.log(this.listProductCart);
+          console.log(ResultFind);
+          
+          
         if (ResultFind) {
           ResultFind.quanity = ResultFind.quanity + 1;
           Swal.fire({
@@ -1007,13 +1013,13 @@ export class TabshopComponent implements OnInit {
               batches: [],
             });
           }
-
-          console.log(this.productItemsBatches);
+          
           this.listProductCart[this.tabDefault].push({
             ...item,
             quanity: 1,
             result: 1 * item.price_export,
           });
+
           this.modalData[this.tabDefault].push({
             id: item.id,
             priceCurrent: item.price_export,
@@ -1022,6 +1028,10 @@ export class TabshopComponent implements OnInit {
             radioDiscount: 1,
             result: item.price_export,
           });
+
+          console.log(this.dataCurrent);
+          console.log(this.listProductCart);
+          
           Swal.fire({
             toast: true,
             position: 'top-end',
@@ -1049,6 +1059,7 @@ export class TabshopComponent implements OnInit {
           },
           0
         );
+
         this.resultBill(this.tabDefault);
       }
     });
@@ -1120,6 +1131,8 @@ export class TabshopComponent implements OnInit {
       (item: any) => item.batchs.length > 0
     );
 
+
+      
     // console.log(this.listProductCart[this.tabDefault]);
 
     for (let index = 0; index < dataProductCurrent.length; index++) {
@@ -1161,7 +1174,8 @@ export class TabshopComponent implements OnInit {
 
       console.log(this.dataCurrent);
     }
-
+    console.log(this.dataBtnPayment);
+    
     this.modelTypePay =
       this.dataBtnPayment[this.tabDefault][
         this.dataBtnPayment[this.tabDefault].length - 1
@@ -1216,10 +1230,7 @@ export class TabshopComponent implements OnInit {
               // console.log(data.payload.id);
 
               if (data.status) {
-                let dataOrder = null;
-                let dataBill = null;
-                let dataPayment = null;
-                let dataBatches = null;
+        
                 // Lấy thời gian hiện tại
                 const now = new Date();
 
@@ -1319,6 +1330,9 @@ export class TabshopComponent implements OnInit {
                             toast.addEventListener('mouseleave', Swal.resumeTimer);
                           },
                         });
+                        setTimeout(() => {
+                          window.location.reload();
+                        },1000)
                       }
                       }
                     );
@@ -1347,6 +1361,10 @@ export class TabshopComponent implements OnInit {
                               toast.addEventListener('mouseleave', Swal.resumeTimer);
                             },
                           });
+                          setTimeout(() => {
+                            window.location.reload();
+                          },1000)
+     
                         }
                       }
                     );
@@ -1443,6 +1461,9 @@ export class TabshopComponent implements OnInit {
                             toast.addEventListener('mouseleave', Swal.resumeTimer);
                           },
                         });
+                        setTimeout(() => {
+                          window.location.reload();
+                        },1000)
                       }
                       }
                     );
@@ -1471,6 +1492,9 @@ export class TabshopComponent implements OnInit {
                               toast.addEventListener('mouseleave', Swal.resumeTimer);
                             },
                           });
+                          setTimeout(() => {
+                            window.location.reload();
+                          },1000)
                         }
                       }
                     );
@@ -1488,10 +1512,6 @@ export class TabshopComponent implements OnInit {
                   this.taxBill = this.dataBill[this.tabDefault].service;
                   this.modelRadioBill = this.dataBill[this.tabDefault].radio;
                   this.priceBill = this.dataBill[this.tabDefault].totalPrice;
-                  dataOrder = this.dataCurrent;
-                  dataBill = this.dataBill;
-                  dataPayment = this.dataBtnPayment;
-                  dataBatches = this.productItemsBatches;
                   if (
                     Object.keys(this.dataCurrent[this.tabDefault].infoOrder)
                       .length > 0
@@ -1530,11 +1550,8 @@ export class TabshopComponent implements OnInit {
                     JSON.stringify(this.tabDefault)
                   );
                 }
-
-                this.dataCurrent = dataOrder;
-                this.dataBill = dataBill;
-                this.dataBtnPayment = dataPayment;
-                this.productItemsBatches = dataBatches;
+                console.log(this.dataBill);
+                
               }
             });
           } else {
