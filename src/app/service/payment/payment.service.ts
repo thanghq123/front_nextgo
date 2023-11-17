@@ -16,16 +16,25 @@ export class PaymentService extends CRUDServiceService<any> {
     this.domain_name = environment.domain_name;
   }
 
-  createPayment(data : any): Observable<any> {
-    return this.http.post(
-      `${this.apiUrl}/order/${data.id}`,
-      this.dataService.handleData(data)
-    );
-  }
   createDebtPayment(data : any): Observable<any> {
     return this.http.post(
       `${this.apiUrl}/debt`,
       this.dataService.handleData(data)
+
+ 
+  createPayment(data : any) : any {
+    console.log({
+      domain_name: this.domain_name,
+      order_payment : data
+    });
+    
+    return this.http.post(
+      `${this.apiUrl}/order`,
+      {
+        domain_name: this.domain_name,
+        order_payment : data
+      }
+
     );
   }
 
@@ -33,7 +42,7 @@ export class PaymentService extends CRUDServiceService<any> {
   handleData(data: any = {}) {
     return {
       domain_name: this.domain_name,
-      ...data,
+      order_payment : data,
     };
   }
 }

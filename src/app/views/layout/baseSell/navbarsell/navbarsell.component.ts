@@ -14,12 +14,15 @@ export class NavbarsellComponent implements OnInit {
   dataBill :  any;
   payment : any;
   modalBatches : any;
+  docElement: HTMLElement;
+isFullScreen: boolean = false;
   constructor(
     private router : Router,
     private DatalayoutService : DatalayoutService
   ) { }
 
   ngOnInit(): void {
+    this.docElement = document.documentElement;
     let tabOrder = localStorage.getItem('tabOrder');
     let tabCurrentJson = localStorage.getItem('TabCurrentIndex')!;
     let tabModalJson = localStorage.getItem('TabModal')!;
@@ -157,7 +160,15 @@ export class NavbarsellComponent implements OnInit {
     this.DatalayoutService.triggerEvent('changeTab',{id : i});
     this.tabCurrent = i;
   }
-
+  fullScreen(){
+    if (!this.isFullScreen) {
+      this.docElement.requestFullscreen();
+    }
+    else {
+      document.exitFullscreen();
+    }
+    this.isFullScreen = !this.isFullScreen;
+  }
   removeTab(index : number){
     if(index > 0){
       this.DatalayoutService.triggerEvent('removeTab',{idRemove : index,modalData : this.modalPrice});

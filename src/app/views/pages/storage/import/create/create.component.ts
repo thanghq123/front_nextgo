@@ -53,7 +53,7 @@ export class CreateComponent implements OnInit {
     private _product: SearchProductService
   ) {
     this._supplier.GetData().subscribe((res: any) => {
-      this.listSupplier = res.payload.data;
+      this.listSupplier = res.payload;
       console.log(this.listSupplier);
     });
     this._product.GetData().subscribe((res: any) => {
