@@ -71,7 +71,8 @@ const routes: Routes = [
     NgSelectModule,
     FormsModule,
     NgxMaskModule.forRoot({ validation: true}),
-    NgbTypeaheadModule
+    NgbTypeaheadModule,
+
   ]
 })
 export class ImportModule { }

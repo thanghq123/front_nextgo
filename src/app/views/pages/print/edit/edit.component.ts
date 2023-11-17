@@ -389,7 +389,7 @@ export class EditComponent implements OnInit {
           });
         }
       },
-      (error) => {
+      (error: any) => {
         // console.log(error);
         if (error.error.status == false) {
           Swal.fire({

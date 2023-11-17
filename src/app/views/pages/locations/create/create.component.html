@@ -57,7 +57,7 @@
             <label for="exampleInputUsername1" class="form-label">
               Tỉnh thành phố
             </label>
-            <ng-select [searchable]="true" (change)="onProvinceChange()" formControlName="province_code"
+            <ng-select [searchable]="true" (change)="onProvinceChange()" [(ngModel)]="codeProvince" formControlName="province_code"
               placeholder="Chọn Tỉnh">
               <ng-option *ngFor="let item of provinces" [value]="item.id">
                 {{item.name}}
@@ -69,7 +69,7 @@
             <label for="exampleInputUsername1" class="form-label">
               Chọn Huyện
             </label>
-            <ng-select [searchable]="true" (change)="onDistrictChange()" formControlName="district_code"
+            <ng-select [searchable]="true" (change)="onDistrictChange()" [(ngModel)]="codeDistrict" formControlName="district_code"
               placeholder="Chọn Tỉnh">
               <ng-option *ngFor="let item of districts" [value]="item.id">
                 {{item.name}}
@@ -82,7 +82,7 @@
               <label for="exampleInputUsername1" class="form-label">
                 Chọn Xã
               </label>
-              <ng-select [searchable]="true" formControlName="ward_code" placeholder="Chọn Xã">
+              <ng-select [searchable]="true" formControlName="ward_code" [(ngModel)]="codeWard" placeholder="Chọn Xã">
                 <ng-option *ngFor="let item of wards" [value]="item.id">
                   {{item.name}}
                 </ng-option>

@@ -28,25 +28,26 @@
           </div>
           <div class="mb-3">
             <ng-template #rt let-r="result" let-t="term">
-              <img [src]="'https://upload.wikimedia.org/wikipedia/commons/thumb/' + r['flag']" class="me-1" style="width: 16px">
-              <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+              <!-- <img [src]="'https://upload.wikimedia.org/wikipedia/commons/thumb/' + r['flag']" class="me-1" style="width: 16px"> -->
+              <ngb-highlight [result]="r.name_tel" [term]="t"></ngb-highlight>
             </ng-template>
             <label for="exampleInputUsername1" class="form-label">Giao dịch với<span
                 class="text-danger">(*)</span></label>
-            <input id="typeahead-template" type="text" class="form-control" [(ngModel)]="model" [ngbTypeahead]="search"
-              [resultTemplate]="rt" [inputFormatter]="formatter" />
-            <div *ngIf="
+            <input id="typeahead-template" type="text" class="form-control" [(ngModel)]="resultModel" [ngbTypeahead]="search"
+              [resultTemplate]="rt" [inputFormatter]="formatter" formControlName="partner" />
+              <!-- <p class="text-muted mt-2">Model: {{resultModel | json}}</p> -->
+            <!-- <div *ngIf="
                 recoveryForm.controls.name.invalid &&
                 recoveryForm.controls.name.touched
               " class="alert alert-danger mt-2">
               Không để trống tên khoản thu
-            </div>
+            </div> -->
           </div>
           <div class="mb-3">
             <label for="exampleInputUsername1" class="form-label">Tổng phải thu<span
                 class="text-danger">(*)</span></label>
             <input type="text" class="form-control" id="exampleInputUsername1" formControlName="principal"
-              autocomplete="off" placeholder="Nhập số tiền phải thu" />
+              autocomplete="off" placeholder="Nhập số tiền phải thu" mask="separator.2" thousandSeparator=","/>
             <div *ngIf="
                 recoveryForm.controls.name.invalid &&
                 recoveryForm.controls.name.touched
