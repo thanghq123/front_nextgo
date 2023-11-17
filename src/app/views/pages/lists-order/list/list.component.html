@@ -1,1 +1,62 @@
-<p>list works!</p>
+<nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a routerLink=".">Danh mục</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Danh sách đơn hàng</li>
+    </ol>
+  </nav>
+  
+  <div class="row">
+    <div class="col-md-12 stretch-card">
+    <div class="card">
+        <div class="card-body">
+        <h6 class="card-title">Quản lí danh sách đơn hàng</h6>
+        <div class="table-responsive">
+          <!-- <div *ngIf="isLoading" class="d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div> -->
+            <table *ngIf="!isLoading" id="dataTableExample" class="table">
+            <thead>
+                <tr>
+                <th>Mã đơn</th>
+                <th>Ngày tạo đơn</th>
+                <th>Trạng thái đơn</th>
+                <th>Khách hàng</th>
+                <th>Tổng tiền</th>
+                <th>Trạng thái thanh toán</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let value of fakeData">
+                <td [routerLink]="['detail', value.id]">{{ value.id }}</td>
+                <td [routerLink]="['detail', value.id]">{{ value.created_at | date:'dd-MM-yyyy' }}</td>
+                <td [routerLink]="['detail', value.id]" ><span class="status">{{ value.status === 0 ? 'Hủy' :'Hoàn thành' }}</span></td>
+                <td [routerLink]="['detail', value.id]">{{ value.customer_data.name }}</td>
+                <td [routerLink]="['detail', value.id]">{{ value.total_price  | currency:'đ' }}</td>
+                <td [routerLink]="['detail', value.id]"><span class="status">
+                    {{ 
+                        value.payment_status == 0 
+                          ? 'Chưa thanh toán' 
+                          : (value.payment_status == 1 ? 'Thanh toán' : 'Đã thanh toán') 
+                      }}
+                </span></td>
+                </tr>
+            </tbody>
+            <!-- <tfoot>
+                <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                </tr>
+            </tfoot> -->
+            </table>
+        </div>
+        </div>
+    </div>
+    </div>
+  </div>
+  

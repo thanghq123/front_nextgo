@@ -61,7 +61,7 @@ export const MENU: MenuItem[] = [
     subItems: [
       {
         label: 'Danh sách đơn hàng',
-        link: 'products/list',
+        link: 'ListOrders',
       }
     ],
   },

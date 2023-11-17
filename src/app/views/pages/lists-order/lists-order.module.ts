@@ -11,18 +11,11 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { ListsOrderComponent } from './lists-order.component';
-
+import { ListComponent } from './list/list.component';
 const routes : Routes =  [
   {
     path: '',
-    component: ListsOrderComponent,
-    children: [
-      {
-        path: '',
-        redirectTo: 'list',
-        pathMatch: 'full'
-      }
-    ]
+    component: ListComponent 
   }
 ]
 

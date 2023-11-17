@@ -6,6 +6,7 @@ import { ErrorPageComponent } from './views/pages/error-page/error-page.componen
 import { NavbarSellComponent } from './views/layout/baseSell/navbar-sell.component';
 import { BaseSpecialComponent } from './views/layout/base-special/base-special.component';
 import { EditComponent } from './views/pages/print/edit/edit.component';
+import { DetailComponent } from './views/pages/lists-order/detail/detail.component';
 const routes: Routes = [
   {
     path: 'auth',
@@ -36,6 +37,13 @@ const routes: Routes = [
         loadChildren: () =>
           import('./views/pages/group-customers/group-customers.module').then(
             (m) => m.GroupCustomersModule
+          ),
+      },
+      {
+        path: 'ListOrders',
+        loadChildren: () =>
+          import('./views/pages/lists-order/lists-order.module').then(
+            (m) => m.ListsOrderModule
           ),
       },
       {
@@ -191,6 +199,9 @@ const routes: Routes = [
     {
       path: 'print/edit',
       component : EditComponent
+    },{
+      path: 'ListOrders/detail/:id',
+      component : DetailComponent
     }
   ]},
   {
