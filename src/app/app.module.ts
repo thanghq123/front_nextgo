@@ -16,10 +16,16 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { SortablejsModule } from 'ngx-sortablejs';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { ListsOrderComponent } from './views/pages/lists-order/lists-order.component';
+import { ListComponent } from './views/pages/lists-order/list/list.component';
+import { DetailComponent } from './views/pages/lists-order/detail/detail.component';
 @NgModule({
   declarations: [
     AppComponent,
     ErrorPageComponent,
+    ListsOrderComponent,
+    ListComponent,
+    DetailComponent,
 
   ],
   imports: [
