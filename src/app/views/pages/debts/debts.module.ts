@@ -19,6 +19,8 @@ import { ListRecoveryComponent } from './recovery/list/list.component';
 import { ListRepayComponent } from './repay/list/list.component';
 import { CreateRecoveryComponent } from './recovery/create/create.component';
 import { EditRecoveryComponent } from './recovery/edit/edit.component';
+import { DetailRepayComponent } from './repay/detail/detail.component';
+import { RepayCreateComponent } from './repay/create/create.component';
 
 const routes: Routes = [
   {
@@ -42,11 +44,19 @@ const routes: Routes = [
         path: 'recovery/edit/:id',
         component:  EditRecoveryComponent
       },
+      //REPAY
       {
         path: 'repay/list',
         component:  ListRepayComponent
       },
-
+      {
+        path: 'repay/edit/:id',
+        component:  DetailRepayComponent
+      },
+      {
+        path: 'repay/create',
+        component:  RepayCreateComponent
+      },
       // {
       //   path: 'edit/:id',
       //   component: EditComponent
@@ -66,6 +76,8 @@ const routes: Routes = [
     ListRepayComponent,
     CreateRecoveryComponent,
     EditRecoveryComponent,
+    DetailRepayComponent,
+    RepayCreateComponent
 
   ],
   imports: [

@@ -38,6 +38,13 @@ export class CreateComponent implements OnInit {
     gender: new FormControl(0),
   });
 
+  codeProvince: any;
+  codeDistrict: any;
+  codeWard: any;
+  province: any;
+  district: any[] = [];
+  ward: any[] = [];
+
   constructor(
     private CustomersService: CustomersService,
     private GroupCustomersService: GroupCustomersService,
@@ -79,6 +86,7 @@ export class CreateComponent implements OnInit {
           data.status != 'error'
             ? data.results
             : [{ id: 0, name: `${data.message}` }];
+            this.district = data.results
       });
 
     this.districtChangeSubject
@@ -91,6 +99,7 @@ export class CreateComponent implements OnInit {
           data.status != 'error'
             ? data.results
             : { id: 0, name: `${data.message}`, status: false };
+            this.ward = data.results;
         this.isWardDataLoaded = data.status != 'error' ? true : false;
         // if (this.wards && this.wards.status != false) {
         //   this.customersForm
@@ -110,6 +119,7 @@ export class CreateComponent implements OnInit {
     // });
     this.provinceChangeSubject.next(
       Number(this.customersForm.value.province_code)
+      // this.codeDistrict =
     );
   }
 
@@ -126,6 +136,8 @@ export class CreateComponent implements OnInit {
 
   onSubmit() {
     if (this.customersForm.valid) {
+      const nameDistrict = this.district.find(item => item.id == this.codeDistrict).name;
+      const nameWard = this.ward.find(item => item.id == this.codeWard).name;
       const dataToSend = {
         name: String(this.customersForm.value.name),
         type: Number(this.customersForm.value.type) || 0,
@@ -137,14 +149,15 @@ export class CreateComponent implements OnInit {
         email: String(this.customersForm.value.email) || null,
         tel: String(this.customersForm.value.tel),
         status: Number(this.customersForm.value.status),
-        address_detail: String(this.customersForm.value.address_detail) || null,
+        address_detail: String(this.customersForm.value.address_detail + ', ' + nameWard + ', ' + nameDistrict + ', ' +  this.provinces[this.codeProvince].name ) || null,
         note: String(this.customersForm.value.note) || null,
         ward_code: Number(this.customersForm.value.ward_code) || null,
         created_at: new Date(),
         updated_at: null,
       };
+      // console.log(nameDistrict, nameWard);
 
-      // console.log(dataToSend);
+      console.log(dataToSend);
 
       this.CustomersService.create(dataToSend).subscribe(
         (response: any) => {
@@ -191,7 +204,7 @@ export class CreateComponent implements OnInit {
             //     },
             //   });
             // }
-           
+
           }
         },
         (error) => {
@@ -226,5 +239,5 @@ export class CreateComponent implements OnInit {
       });
     }
   }
-  
+
 }

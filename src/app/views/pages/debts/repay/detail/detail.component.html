@@ -2,7 +2,7 @@
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a routerLink=".">Danh mục</a></li>
     <li class="breadcrumb-item active" aria-current="page">
-      Chỉnh sửa khoản phải thu
+      Chỉnh sửa khoản phải trả
     </li>
   </ol>
 </nav>
@@ -20,7 +20,7 @@
         <div class="card">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-baseline">
-              <h6 class="card-title mb-0">Tổng khoản thu</h6>
+              <h6 class="card-title mb-0">Tổng khoản trả</h6>
             </div>
             <div class="row">
               <div class="col-6 col-md-12 col-xl-5">
@@ -59,9 +59,9 @@
   <div class="col-md-12 grid-margin stretch-card">
     <div class="card">
       <div class="card-body">
-        <h6 class="card-title">Thông tin khoản phải thu</h6>
+        <h6 class="card-title">Thông tin khoản phải trả</h6>
 
-        <form class="forms-sample" [formGroup]="recoveryFormEdit" (ngSubmit)="onSubmit()">
+        <form class="forms-sample" [formGroup]="repayForm" (ngSubmit)="onSubmit()">
           <div class="row">
             <div class="col-md-12 grid-margin">
               <div class="card">
@@ -125,10 +125,10 @@
             </div>
           </div>
 
-          <button type="submit" [disabled]="recoveryFormEdit.invalid" class="btn btn-primary me-2">
+          <button type="submit" [disabled]="repayForm.invalid" class="btn btn-primary me-2">
             Cập nhật
           </button>
-          <button class="btn btn-secondary" routerLink="/debts/recovery/list">
+          <button class="btn btn-secondary" routerLink="/debts/repay/list">
             Trở về
           </button>
         </form>
@@ -262,3 +262,4 @@
 </ng-template>
 <!-- Close result -->
 <p *ngIf="basicModalCloseResult != ''" class="mt-2">{{basicModalCloseResult}}</p>
+

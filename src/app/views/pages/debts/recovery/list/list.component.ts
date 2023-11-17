@@ -14,10 +14,12 @@ import { DebtsService } from 'src/app/service/debts/debts.service';
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss']
 })
-export class ListRecoveryComponent implements OnInit, AfterViewInit{
+export class ListRecoveryComponent implements OnInit{
   listRecovery: Observable<any>;
   isLoading = false;
   basicModalCloseResult: string = '';
+  totalRevenue: number;
+  uncollectedMoney: number;
 
   constructor(
     private _recoService: DebtsService,
@@ -39,82 +41,24 @@ export class ListRecoveryComponent implements OnInit, AfterViewInit{
     }).catch((res) => {});
   }
 
-  ngAfterViewInit(): void {
-    // this.listRecovery.subscribe(() => {
-    //   setTimeout(() => {
-    //     const db = new DataTable('#dataTableExample');
-    //     setTimeout(() => {
-    //       const db = new DataTable('#dataTableExample');
-    //       db.on('datatable.init', () => {
-    //         this.addDeleteEventHandlers();
-    //     });
-    //     }, 0)
-    //   }, 0);
-    // });
-  }
-
-  // addDeleteEventHandlers(): void {
-  //   const deleteButtons = document.getElementsByClassName('btn-danger');
-  //   Array.from(deleteButtons).forEach((button) => {
-  //     button.addEventListener('click', (event) => {
-  //       const id = (event.target as Element).getAttribute('id');
-  //       this.deleteReco(Number(id));
-  //     });
-  //   });
-  // }
-
-  // deleteReco(id: number) {
-  //   Swal.fire({
-  //     title: 'Bạn có chắc chắn muốn xóa?',
-  //     text: 'Bạn sẽ không thể hoàn tác lại hành động này!',
-  //     icon: 'warning',
-  //     showCancelButton: true,
-  //     confirmButtonColor: '#3085d6',
-  //     cancelButtonColor: '#d33',
-  //     confirmButtonText: 'Có, xóa nó!',
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       // If confirmed, delete the category
-  //       this._recoService.delete(id).subscribe(
-  //         (response) => {
-  //           Swal.fire({
-  //             toast: true,
-  //             position: "top-end",
-  //             showConfirmButton: false,
-  //             timer: 1000,
-  //             title: "Đã xóa!",
-  //             text: "Thương hiệu đã được xóa.",
-  //             icon: "success",
-  //             timerProgressBar: true,
-  //             didOpen: (toast) => {
-  //               toast.addEventListener("mouseenter", Swal.stopTimer);
-  //               toast.addEventListener("mouseleave", Swal.resumeTimer);
-  //             },
-  //           });
-  //           // Navigate to the list after successful deletion
-
-  //           setTimeout(() => {
-  //             location.reload();
-  //           }, 1000);
-  //         },
-  //         (error) => {
-  //           if(error.success == false){
-  //             Swal.fire('Lỗi!',`${error.meta.name}`, 'error');
-  //           }
-  //         }
-  //       );
-  //     }
-  //   });
-  // }
-
   refreshData(): void{
     this.isLoading = true;
-    this._recoService.getAllRecovery().subscribe({
+    this._recoService.getAllRecovery({type: 0}).subscribe({
       next: (res: any) => {
         // console.log(res.data);
         if(res.status == true){
           this.listRecovery = of(res.payload.data) ;
+          const payment: any[] = res.payload.data
           console.log(res.payload.data);
+          this.totalRevenue = 0;
+          if(res.payload.data){
+            payment.forEach((payment) => {
+              this.totalRevenue += payment.amount_debt;
+            });
+            payment.forEach((payment) => {
+              this.uncollectedMoney = payment.amount_debt - payment.amount_paid;
+            });
+          }
           this.isLoading = false;
           // console.log(this.listBrands);
           this.listRecovery.subscribe(

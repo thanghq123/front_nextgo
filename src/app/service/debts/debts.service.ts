@@ -20,11 +20,11 @@ export class DebtsService extends CRUDServiceService<Debts> {
    this.apiUrl = this.dataService.getUrl('debt');
    this.domain_name = environment.domain_name;
  }
- getAllRecovery(){
-  return this.http.post(`${this.apiUrl}`, this.handleData());
+ getAllRecovery(data: any){
+  return this.http.post(`${this.apiUrl}`, this.handleData(data));
  }
- getAllRepay(){
-  return this.http.post(`${this.apiUrl}/repay`, this.handleData());
+ getAllRepay(data: any){
+  return this.http.post(`${this.apiUrl}`, this.handleData(data));
  }
  handleData(data: any = {}) {
   return {

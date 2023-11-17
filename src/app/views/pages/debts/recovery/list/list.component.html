@@ -19,7 +19,7 @@
             </div>
             <div class="row">
               <div class="col-6 col-md-12 col-xl-5">
-                <h3 class="mb-2">3,897</h3>
+                <h3 class="mb-2">{{totalRevenue | currency:'VNĐ ':'symbol':'1.0-0'}}</h3>
               </div>
             </div>
           </div>
@@ -33,7 +33,7 @@
             </div>
             <div class="row">
               <div class="col-6 col-md-12 col-xl-5">
-                <h3 class="mb-2">3,897</h3>
+                <h3 class="mb-2">{{uncollectedMoney | currency:'VNĐ ':'symbol':'1.0-0'}}</h3>
               </div>
             </div>
           </div>
@@ -82,7 +82,7 @@
                 <td>
                   {{ value.name }}
                 </td>
-                <td>{{ value.amount_paid | currency:'VNĐ ':'symbol':'1.0-0' }}</td>
+                <td>{{ value.amount_debt - value.amount_paid | currency:'VNĐ ':'symbol':'1.0-0' }}</td>
                 <td style="text-align: center">
                   <span class="badge {{
                       status(value.status)[1]
@@ -117,8 +117,8 @@
     </div>
   </div>
 </div>
-<button type="button" class="btn btn-primary" (click)="openBasicModal(basicModal)">Thanh toán</button>
-<!-- Modal -->
+<!-- <button type="button" class="btn btn-primary" (click)="openBasicModal(basicModal)">Thanh toán</button>
+Modal
 <ng-template #basicModal let-modal>
   <div class="modal-header">
     <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
@@ -133,5 +133,5 @@
       changes</button>
   </div>
 </ng-template>
-<!-- Close result -->
-<p *ngIf="basicModalCloseResult != ''" class="mt-2">{{basicModalCloseResult}}</p>
+Close result
+<p *ngIf="basicModalCloseResult != ''" class="mt-2">{{basicModalCloseResult}}</p> -->

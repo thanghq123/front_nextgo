@@ -17,13 +17,15 @@ import { CustomersService } from 'src/app/service/customers/customers.service';
 import { DebtsService } from 'src/app/service/debts/debts.service';
 import { PaymentService } from 'src/app/service/payment/payment.service';
 
+
 @Component({
-  selector: 'app-edit',
-  templateUrl: './edit.component.html',
-  styleUrls: ['./edit.component.scss'],
+  selector: 'app-detail',
+  templateUrl: './detail.component.html',
+  styleUrls: ['./detail.component.scss']
 })
-export class EditRecoveryComponent implements OnInit {
-  recoveryFormEdit = new FormGroup({
+export class DetailRepayComponent implements OnInit {
+
+  repayForm = new FormGroup({
     name: new FormControl('', Validators.required),
     amount_debt: new FormControl('', Validators.required),
     debit_at: new FormControl('', Validators.required),
@@ -90,7 +92,7 @@ export class EditRecoveryComponent implements OnInit {
             } else {
               this.totalPayment = 0;
             }
-            this.recoveryFormEdit.patchValue({
+            this.repayForm.patchValue({
               name: debtData.name,
               amount_debt: debtData.amount_debt,
               debit_at: debtData.debit_at,
@@ -106,7 +108,7 @@ export class EditRecoveryComponent implements OnInit {
           }
         );
       } else {
-        this.router.navigate(['debts/recovery/list']);
+        this.router.navigate(['debts/repay/list']);
       }
     });
   }
@@ -226,29 +228,28 @@ export class EditRecoveryComponent implements OnInit {
       .catch((res) => {});
   }
   onSubmit(): void {
-    if (this.recoveryFormEdit.valid) {
+    if (this.repayForm.valid) {
       // Kiểm tra xem form có hợp lệ không trước khi log dữ liệu
       const dataSend = {
         ...this.debt,
         id: this.id,
-        name: String(this.recoveryFormEdit.value.name),
-        amount_debt: Number(this.recoveryFormEdit.value.amount_debt),
-        debit_at: String(this.recoveryFormEdit.value.debit_at),
-        due_at: String(this.recoveryFormEdit.value.due_at),
-        note: String(this.recoveryFormEdit.value.note),
+        name: String(this.repayForm.value.name),
+        amount_debt: Number(this.repayForm.value.amount_debt),
+        debit_at: String(this.repayForm.value.debit_at),
+        due_at: String(this.repayForm.value.due_at),
+        note: String(this.repayForm.value.note),
         type: 0,
       };
       console.log(dataSend);
       this._debtService.update(dataSend).subscribe((response: any) => {
         if (response.status == true) {
-          // this.recoveryFormEdit.reset();
           Swal.fire({
             toast: true,
             position: 'top-end',
             showConfirmButton: false,
             timer: 3000,
             title: 'Thành công!',
-            text: 'Cập nhật thông tin khoản thu thành công',
+            text: 'Cập nhật thông tin khoản trả thành công',
             icon: 'success',
             timerProgressBar: true,
             didOpen: (toast) => {
@@ -297,4 +298,5 @@ export class EditRecoveryComponent implements OnInit {
       });
     }
   }
+
 }
