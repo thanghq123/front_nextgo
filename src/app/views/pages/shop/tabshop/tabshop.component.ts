@@ -462,13 +462,13 @@ export class TabshopComponent implements OnInit {
     this.priceBill = priceCurrent;
     // console.log(this.dataBill[idTab]);
     // console.log(this.dataBill[this.tabDefault]);
-      this.updateBill(this.dataBill, idTab, {
-        discount: this.singleTax,
-        tax: this.DiscountBill,
-        totalPrice: this.priceBill,
-        service: this.taxBill,
-        radio: this.modelRadioBill,
-      });
+    this.updateBill(this.dataBill, idTab, {
+      discount: this.singleTax,
+      tax: this.DiscountBill,
+      totalPrice: this.priceBill,
+      service: this.taxBill,
+      radio: this.modelRadioBill,
+    });
     localStorage.setItem('dataBill', JSON.stringify(this.dataBill));
   }
   // Sửa tính toán tiền phải trả
@@ -624,7 +624,7 @@ export class TabshopComponent implements OnInit {
       );
       this.modalData[this.tabDefault].splice(id, 1);
       console.log(this.productItemsBatches);
-      if(this.productItemsBatches){
+      if (this.productItemsBatches) {
         this.productItemsBatches[this.tabDefault].splice(id, 1);
       }
       this.resultBill(this.tabDefault);
@@ -792,11 +792,9 @@ export class TabshopComponent implements OnInit {
         this.cashPrice = 0;
       }
     } else {
-    
-      
       if (this.pricePayment < this.priceBill) {
         console.log(type);
-        
+
         if (type == 2) {
           this.dataBtnPayment[this.tabDefault].push({
             payment_method: 2,
@@ -985,10 +983,9 @@ export class TabshopComponent implements OnInit {
         const ResultFind = this.listProductCart[this.tabDefault].find(
           (itemCurrent: any) => itemCurrent.id === item.id
         );
-          console.log(this.listProductCart);
-          console.log(ResultFind);
-          
-          
+        console.log(this.listProductCart);
+        console.log(ResultFind);
+
         if (ResultFind) {
           ResultFind.quanity = ResultFind.quanity + 1;
           Swal.fire({
@@ -1013,7 +1010,7 @@ export class TabshopComponent implements OnInit {
               batches: [],
             });
           }
-          
+
           this.listProductCart[this.tabDefault].push({
             ...item,
             quanity: 1,
@@ -1031,7 +1028,7 @@ export class TabshopComponent implements OnInit {
 
           console.log(this.dataCurrent);
           console.log(this.listProductCart);
-          
+
           Swal.fire({
             toast: true,
             position: 'top-end',
@@ -1131,8 +1128,6 @@ export class TabshopComponent implements OnInit {
       (item: any) => item.batchs.length > 0
     );
 
-
-      
     // console.log(this.listProductCart[this.tabDefault]);
 
     for (let index = 0; index < dataProductCurrent.length; index++) {
@@ -1175,7 +1170,7 @@ export class TabshopComponent implements OnInit {
       console.log(this.dataCurrent);
     }
     console.log(this.dataBtnPayment);
-    
+
     this.modelTypePay =
       this.dataBtnPayment[this.tabDefault][
         this.dataBtnPayment[this.tabDefault].length - 1
@@ -1230,7 +1225,6 @@ export class TabshopComponent implements OnInit {
               // console.log(data.payload.id);
 
               if (data.status) {
-        
                 // Lấy thời gian hiện tại
                 const now = new Date();
 
@@ -1264,24 +1258,38 @@ export class TabshopComponent implements OnInit {
                       };
                     } else {
                       return {
-                        partner_id: id,
-                        partner_type: type,
-                        name,
-                        amount_debt: item.pricePayment,
-                        amount_paid: 0,
-                        debit_at: nowDate,
-                        due_at: nextYearDate,
+                        ...item,
+                        paymentable_id: idOrder,
+                        amount: this.priceBill,
+                        amount_in: this.pricePayment,
+                        amount_refund: this.changeBill,
                         note:
                           this.dataBill[this.tabDefault].note == undefined
                             ? ''
                             : this.dataBill[this.tabDefault].note,
-                        type: 0,
-                        status: 1,
+                        reference_code: null,
                         statusMap: false,
                       };
+                      //  {
+                      //   partner_id: id,
+                      //   partner_type: type,
+                      //   name,
+                      //   amount_debt: item.pricePayment,
+                      //   amount_paid: 0,
+                      //   debit_at: nowDate,
+                      //   due_at: nextYearDate,
+                      //   note:
+                      //     this.dataBill[this.tabDefault].note == undefined
+                      //       ? ''
+                      //       : this.dataBill[this.tabDefault].note,
+                      //   type: 0,
+                      //   status: 1,
+                      //   statusMap: false,
+                      // };
                     }
                   }
                 );
+
                 const dataPayementApi = dataResult.filter(
                   (item: any) => item.statusMap == true
                 );
@@ -1303,50 +1311,16 @@ export class TabshopComponent implements OnInit {
                   type: 0,
                   status: 1,
                 };
+
+                console.log(objDebts);
                 if (this.tabDefault == 0) {
                   console.log(dataDebtsApi);
-                 
-                  if (dataPayementApi && dataDebtsApi) {
-                    this.PaymentService.createPayment(
-                      dataPayementApi
-                    ).subscribe((data: any) => {
-                      console.log(data);
-                    });
 
-                    this.DebtsService.createDebts(dataDebtsApi).subscribe(
-                      (data: any) => {
-                      if(data.status){
-                        Swal.fire({
-                          toast: true,
-                          position: 'top-end',
-                          showConfirmButton: false,
-                          timer: 3000,
-                          title: 'Thành Công!',
-                          text: 'Đã đặt hàng thành công!!',
-                          icon: 'success',
-                          timerProgressBar: true,
-                          didOpen: (toast) => {
-                            toast.addEventListener('mouseenter', Swal.stopTimer);
-                            toast.addEventListener('mouseleave', Swal.resumeTimer);
-                          },
-                        });
-                        setTimeout(() => {
-                          window.location.reload();
-                        },1000)
-                      }
-                      }
-                    );
-                   
-                  } else {
-                    this.PaymentService.createPayment(
-                      dataPayementApi
-                    ).subscribe((data: any) => {
-                      console.log(data);
-                    });
-                    console.log(objDebts);
+                  if (dataPayementApi && dataDebtsApi) {
+                    objDebts.amount_debt = dataDebtsApi.pricePayment;
                     this.DebtsService.createDebts(objDebts).subscribe(
                       (data: any) => {
-                        if(data.status){
+                        if (data.status) {
                           Swal.fire({
                             toast: true,
                             position: 'top-end',
@@ -1357,18 +1331,76 @@ export class TabshopComponent implements OnInit {
                             icon: 'success',
                             timerProgressBar: true,
                             didOpen: (toast) => {
-                              toast.addEventListener('mouseenter', Swal.stopTimer);
-                              toast.addEventListener('mouseleave', Swal.resumeTimer);
+                              toast.addEventListener(
+                                'mouseenter',
+                                Swal.stopTimer
+                              );
+                              toast.addEventListener(
+                                'mouseleave',
+                                Swal.resumeTimer
+                              );
                             },
                           });
                           setTimeout(() => {
                             window.location.reload();
-                          },1000)
-     
+                          }, 1000);
                         }
                       }
                     );
-                  
+                    this.PaymentService.createPayment(dataResult).subscribe(
+                      (data: any) => {
+                        console.log(data);
+                      }
+                    );
+                  } else {
+                    dataResult.push({
+                      payment_method: 2,
+                      pricePayment: this.paymentPrice,
+                      status: true,
+                      paymentable_id: idOrder,
+                      amount: this.priceBill,
+                      amount_in: this.pricePayment,
+                      amount_refund: this.changeBill,
+                      note: this.dataBill[this.tabDefault].note == undefined
+                      ? ''
+                      : this.dataBill[this.tabDefault].note,
+                      reference_code: null,
+                      statusMap: true
+                  })
+                    this.PaymentService.createPayment(
+                      dataResult
+                    ).subscribe((data: any) => {
+                      console.log(data);
+                    });
+                    this.DebtsService.createDebts(objDebts).subscribe(
+                      (data: any) => {
+                        if (data.status) {
+                          Swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            title: 'Thành Công!',
+                            text: 'Đã đặt hàng thành công!!',
+                            icon: 'success',
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                              toast.addEventListener(
+                                'mouseenter',
+                                Swal.stopTimer
+                              );
+                              toast.addEventListener(
+                                'mouseleave',
+                                Swal.resumeTimer
+                              );
+                            },
+                          });
+                          setTimeout(() => {
+                            window.location.reload();
+                          }, 1000);
+                        }
+                      }
+                    );
                   }
                   this.dataCurrent[this.tabDefault].ListProductCart = [];
                   this.dataCurrent[this.tabDefault].infoOrder = [];
@@ -1436,48 +1468,19 @@ export class TabshopComponent implements OnInit {
                   );
                 } else {
                   if (dataPayementApi && dataDebtsApi) {
-                    this.PaymentService.createPayment(
-                      dataPayementApi
-                    ).subscribe((data: any) => {
-                      console.log(data);
-                    });
-
-                    console.log(dataDebtsApi);
-
-                    this.DebtsService.createDebts(dataDebtsApi).subscribe(
+                    objDebts.amount_debt = dataDebtsApi.pricePayment;
+                    
+                    this.PaymentService.createPayment(dataResult).subscribe(
                       (data: any) => {
-                      if(data.status){
-                        Swal.fire({
-                          toast: true,
-                          position: 'top-end',
-                          showConfirmButton: false,
-                          timer: 3000,
-                          title: 'Thành Công!',
-                          text: 'Đã đặt hàng thành công!!',
-                          icon: 'success',
-                          timerProgressBar: true,
-                          didOpen: (toast) => {
-                            toast.addEventListener('mouseenter', Swal.stopTimer);
-                            toast.addEventListener('mouseleave', Swal.resumeTimer);
-                          },
-                        });
-                        setTimeout(() => {
-                          window.location.reload();
-                        },1000)
-                      }
+                        console.log(data);
                       }
                     );
-                   
-                  } else {
-                    this.PaymentService.createPayment(
-                      dataPayementApi
-                    ).subscribe((data: any) => {
-                      console.log(data);
-                    });
-                    console.log(objDebts);
                     this.DebtsService.createDebts(objDebts).subscribe(
                       (data: any) => {
-                        if(data.status){
+                        if (data.status) {
+                          // console.log(dataDebtsApi);
+                          // console.log(dataResult);
+
                           Swal.fire({
                             toast: true,
                             position: 'top-end',
@@ -1498,7 +1501,55 @@ export class TabshopComponent implements OnInit {
                         }
                       }
                     );
-                  
+                  } else {
+                    dataResult.push({
+                      payment_method: 2,
+                      pricePayment: this.paymentPrice,
+                      status: true,
+                      paymentable_id: idOrder,
+                      amount: this.priceBill,
+                      amount_in: this.pricePayment,
+                      amount_refund: this.changeBill,
+                      note: this.dataBill[this.tabDefault].note == undefined
+                      ? ''
+                      : this.dataBill[this.tabDefault].note,
+                      reference_code: null,
+                      statusMap: true
+                  })
+                    this.PaymentService.createPayment(
+                      dataResult
+                    ).subscribe((data: any) => {
+                      console.log(data);
+                    });
+                    this.DebtsService.createDebts(objDebts).subscribe(
+                      (data: any) => {
+                        if (data.status) {
+                          Swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            title: 'Thành Công!',
+                            text: 'Đã đặt hàng thành công!!',
+                            icon: 'success',
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                              toast.addEventListener(
+                                'mouseenter',
+                                Swal.stopTimer
+                              );
+                              toast.addEventListener(
+                                'mouseleave',
+                                Swal.resumeTimer
+                              );
+                            },
+                          });
+                          setTimeout(() => {
+                            window.location.reload();
+                          }, 1000);
+                        }
+                      }
+                    );
                   }
 
                   this.dataCurrent.splice(this.tabDefault, 1);
@@ -1551,7 +1602,6 @@ export class TabshopComponent implements OnInit {
                   );
                 }
                 console.log(this.dataBill);
-                
               }
             });
           } else {
