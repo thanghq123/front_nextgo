@@ -96,7 +96,7 @@ export class ListComponent implements OnInit, AfterViewInit {
     this.isLoading = true;
     this._locaService.GetData().subscribe({
       next: (res: any) => {
-        console.log(res.data);
+        // console.log(res.data);
         if(res.status == true){
           this.listLocations = of(res.payload) ;
           this.isLoading = false;

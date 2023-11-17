@@ -15,6 +15,12 @@ export class PaymentService extends CRUDServiceService<any> {
     this.apiUrl = this.dataService.getUrl('payment');
     this.domain_name = environment.domain_name;
   }
+
+  createDebtPayment(data : any): Observable<any> {
+    return this.http.post(
+      `${this.apiUrl}/debt`,
+      this.dataService.handleData(data)
+
  
   createPayment(data : any) : any {
     console.log({
@@ -28,9 +34,10 @@ export class PaymentService extends CRUDServiceService<any> {
         domain_name: this.domain_name,
         order_payment : data
       }
+
     );
   }
- 
+
 
   handleData(data: any = {}) {
     return {
