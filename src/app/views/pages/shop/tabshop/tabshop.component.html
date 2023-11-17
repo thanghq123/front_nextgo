@@ -47,7 +47,7 @@
                                     </div>
                                 </td>
                                 <td class="text-primary align-middle">{{ item.result | currency:'VND' }}</td>
-                          
+
 
                                 <ng-container *ngIf="item.batchs.length > 0; else otherIff">
                                     <td class="align-middle" style="cursor: pointer;" (click)="openLgModalBatches(batches,item.id)">
@@ -61,13 +61,13 @@
                                     <i class="feather text-danger icon-x icon-md " (click)="removeItemCart(i)"></i>
                                 </td>
 
-                                
-                                
+
+
                             </tr>
-                      
-                                  
-                        
-                        
+
+
+
+
                         </tbody>
                     </table>
                 </div>
@@ -286,7 +286,7 @@
                                             <i class="feather icon-x-circle text-danger" (click)="removeBatches(item.id)"></i>
                                         </td>
                                       </tr>
-                                   
+
                                     </tbody>
                                   </table>
 

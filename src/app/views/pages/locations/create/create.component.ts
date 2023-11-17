@@ -45,6 +45,13 @@ export class CreateComponent implements OnInit {
     is_main: new FormControl('', Validators.required),
   });
 
+  codeProvince: any;
+  codeDistrict: any;
+  codeWard: any;
+  province: any;
+  district: any[] = [];
+  ward: any[] = [];
+
   constructor(
     private formBuilder: FormBuilder,
     private _locaService: LocationsService,
@@ -82,6 +89,7 @@ export class CreateComponent implements OnInit {
           data.status != 'error'
             ? data.results
             : [{ id: 0, name: `${data.message}` }];
+            this.district = data.results
       });
 
     this.districtChangeSubject
@@ -94,6 +102,7 @@ export class CreateComponent implements OnInit {
           data.status != 'error'
             ? data.results
             : { id: 0, name: `${data.message}`, status: false };
+            this.ward = data.results;
         this.isWardDataLoaded = data.status != 'error' ? true : false;
       });
   }
@@ -163,9 +172,15 @@ export class CreateComponent implements OnInit {
 
   onSubmit() {
     if (this.locationsForm.valid) {
+      const nameDistrict = this.district.find(item => item.id == this.codeDistrict).name;
+      const nameWard = this.ward.find(item => item.id == this.codeWard).name;
+      // console.log(this.district);
+
       const formData = new FormData();
 
       const locationsData = this.locationsForm.value;
+      console.log(locationsData);
+
       formData.append('domain_name', String(this.domain_name));
       if (this.locationsForm.value.image) {
       formData.append('image', this.img);
@@ -175,13 +190,13 @@ export class CreateComponent implements OnInit {
       formData.append('tel', String(locationsData.tel));
       formData.append('status', String(locationsData.status));
       formData.append('is_main', String(locationsData.is_main));
-      formData.append('address_detail', String(locationsData.address_detail));
+      formData.append('address_detail', String(locationsData.address_detail + ', ' + nameWard + ', ' + nameDistrict + ', ' +  this.provinces[this.codeProvince].name ));
       formData.append('created_by', '1');
       formData.append('province_code', String(locationsData.province_code));
       formData.append('district_code', String(locationsData.district_code));
       formData.append('ward_code', String(locationsData.ward_code));
       formData.append('description', String(locationsData.description));
-      // console.log(this.img);
+      console.log(formData.get('address_detail'));
 
       this._locaService.createFormData(formData).subscribe(
         (response: any) => {
@@ -214,7 +229,7 @@ export class CreateComponent implements OnInit {
             this.showNextMessage(errorMessages);
           }
         },
-        (error) => {
+        (error: any) => {
           console.log(error);
           Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
         }
