@@ -19,15 +19,15 @@ export class PaymentService extends CRUDServiceService<any> {
   createDebtPayment(data : any): Observable<any> {
     return this.http.post(
       `${this.apiUrl}/debt`,
-      this.dataService.handleData(data)
+      this.dataService.handleData(data))
+    }
 
- 
   createPayment(data : any) : any {
     console.log({
       domain_name: this.domain_name,
       order_payment : data
     });
-    
+
     return this.http.post(
       `${this.apiUrl}/order`,
       {

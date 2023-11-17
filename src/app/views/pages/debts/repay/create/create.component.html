@@ -35,7 +35,7 @@
                 class="text-danger">(*)</span></label>
             <input id="typeahead-template" type="text" class="form-control" [(ngModel)]="resultModel" [ngbTypeahead]="search"
               [resultTemplate]="rt" [inputFormatter]="formatter" formControlName="partner" />
-              <p class="text-muted mt-2">Model: {{resultModel | json}}</p>
+              <!-- <p class="text-muted mt-2">Model: {{resultModel | json}}</p> -->
             <!-- <div *ngIf="
                 recoveryForm.controls.name.invalid &&
                 recoveryForm.controls.name.touched
