@@ -28,7 +28,7 @@ export abstract class CRUDServiceService<T> {
 
   createFormData(data: any) {
     const headers = new HttpHeaders();
-    return this.http.post<T>(`${this.apiUrl}/store`, this.dataService.handleData(data), { headers });
+    return this.http.post<T>(`${this.apiUrl}/store`, data, { headers });
   }
 
   GetOneRecord(id: string): Observable<any> {
