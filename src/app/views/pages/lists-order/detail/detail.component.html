@@ -167,10 +167,46 @@
                                         </table>
                                   </div>
                               </div>
-                    
                           </div>
                         </div>
                       </div>
+
+
+                      <div class="col-md-12 grid-margin stretch-card mt-4">
+                        <div class="card">
+                          <div class="card-body">
+                    
+                            <h6 class="card-title fw-bolder mb-4 fs-4">Thanh toán</h6>
+                              <div class="row">
+                                  <div class="col-12">
+                                    <table  id="dataTableExample" class="table">
+                                        <thead>
+                                            <tr>
+                                            <th>#</th>
+                                            <th>Phương thức</th>
+                                            <th>Số tiền thanh toán</th>
+                                            <th>Trạng thái</th>
+                                            <th>Thời gian</th>
+                                            <th>Mã tham chiếu</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let value of dataOneFake.payment">
+                                            <td>{{ value.id }}</td>
+                                            <td>{{ value.payment_method == 0 ? 'Tiền mặt' : (value.payment_method == 1 ? 'Chuyển khoản' : 'Ghi nợ') }}</td>
+                                            <td>{{ value.amount }}</td>
+                                            <td>Chưa có data</td>
+                                            <td>{{ value.payment_at }}</td>
+                                            <td>{{ value.reference_code == null ? '- - -' : value.reference_code }}</td>
+                                            </tr>
+                                        </tbody>
+                                        </table>
+                                  </div>
+                              </div>
+                          </div>
+                        </div>
+                      </div>
+
                   </div>
             
             </div>
