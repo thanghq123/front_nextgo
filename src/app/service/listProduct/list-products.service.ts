@@ -8,8 +8,8 @@ export class ListProductsService {
   private apiUrlProducts : string = environment.apiTennatv1;
   constructor(private http: HttpClient) { }
   getProducts() {
-    return this.http.post(`${this.apiUrlProducts}get-product`,{ domain_name: "tenant1",
-    location: 1});
+    return this.http.post(`${this.apiUrlProducts}get-product`,{ domain_name: environment.domain_name,
+    location: environment.location_id});
   }
 
 }
