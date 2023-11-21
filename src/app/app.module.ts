@@ -20,7 +20,6 @@ import { NgSelectModule } from '@ng-select/ng-select';
   declarations: [
     AppComponent,
     ErrorPageComponent,
-
   ],
   imports: [
     BrowserModule,

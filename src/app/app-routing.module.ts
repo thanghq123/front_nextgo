@@ -80,7 +80,6 @@ const routes: Routes = [
             (m) => m.ProductsModule
           ),
       },
-      
       {
         path: 'locations',
         loadChildren: () =>
@@ -98,6 +97,20 @@ const routes: Routes = [
         loadChildren: () =>
           import('./views/pages/storage/import/import.module').then(
             (m) => m.ImportModule
+          ),
+      },
+      {
+        path: 'storage/detail',
+        loadChildren: () =>
+          import('./views/pages/storage/detail/detail.module').then(
+            (m) => m.DetailModule
+          ),
+      },
+      {
+        path: 'storage/trans',
+        loadChildren: () =>
+          import('./views/pages/storage/trans/trans.module').then(
+            (m) => m.TransModule
           ),
       },
       {
@@ -174,7 +187,7 @@ const routes: Routes = [
       // { path: '**', redirectTo: 'dashboard', pathMatch: 'full' }
     ],
   },
-  { path: '', 
+  { path: '',
   component: NavbarSellComponent,
    canActivate: [AuthGuard] ,
    children: [
