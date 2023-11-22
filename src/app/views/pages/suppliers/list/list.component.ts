@@ -94,8 +94,6 @@ export class ListComponent implements OnInit {
           this.Customers.subscribe((categories) => {
             setTimeout(() => {
                 const dataTable = new DataTable('#dataTableExample');
-                // Here, use the 'categories' data to populate your DataTable
-                // ...
                 dataTable.on('datatable.init', () => {
                     this.addDeleteEventHandlers();
                 });

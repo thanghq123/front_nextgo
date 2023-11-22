@@ -28,19 +28,19 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let value of fakeData">
-                <td [routerLink]="['detail', value.id]">{{ value.id }}</td>
-                <td [routerLink]="['detail', value.id]">{{ value.created_at | date:'dd-MM-yyyy' }}</td>
-                <td [routerLink]="['detail', value.id]" ><span class="status">{{ value.status === 0 ? 'Hủy' :'Hoàn thành' }}</span></td>
-                <td [routerLink]="['detail', value.id]">{{ value.customer_data.name }}</td>
-                <td [routerLink]="['detail', value.id]">{{ value.total_price  | currency:'đ' }}</td>
-                <td [routerLink]="['detail', value.id]"><span class="status">
-                    {{ 
-                        value.payment_status == 0 
-                          ? 'Chưa thanh toán' 
-                          : (value.payment_status == 1 ? 'Thanh toán' : 'Đã thanh toán') 
-                      }}
-                </span></td>
+                <tr *ngFor="let value of fakeData | async">
+                <td > <a [routerLink]="['detail', value.id]" class="text-black">{{ value.id }}</a> </td>
+                <td > <a [routerLink]="['detail', value.id]"  class="text-black">{{ value.created_at  }}</a></td>
+                <td  > <a [routerLink]="['detail', value.id]"><span class="status">{{ value.status === 0 ? 'Hủy' :'Hoàn thành' }}</span></a> </td>
+                <td > <a [routerLink]="['detail', value.id]"  class="text-black">{{ value.customer_data.name }}</a></td>
+                <td > <a [routerLink]="['detail', value.id]"  class="text-black">{{ value.total_price   }}</a></td>
+                <td > <a [routerLink]="['detail', value.id]" ><span class="status">
+                  {{ 
+                      value.payment_status == 0 
+                        ? 'Chưa thanh toán' 
+                        : (value.payment_status == 1 ? 'Thanh toán' : 'Đã thanh toán') 
+                    }}
+              </span></a> </td>
                 </tr>
             </tbody>
             <!-- <tfoot>

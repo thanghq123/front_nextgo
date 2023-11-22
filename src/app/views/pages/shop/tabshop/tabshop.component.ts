@@ -1223,7 +1223,8 @@ export class TabshopComponent implements OnInit {
 
             this.OrderService.create(dataSend).subscribe((data: any) => {
               // console.log(data.payload.id);
-
+              console.log(data);
+              
               if (data.status) {
                 // Lấy thời gian hiện tại
                 const now = new Date();

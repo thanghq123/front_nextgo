@@ -18,6 +18,7 @@ export class HandleDataService {
     }
     return {
       domain_name: this.domain_name,
+      location: 1,
       ...data,
     };
   }
