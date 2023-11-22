@@ -9,6 +9,7 @@ import { ListProductsService } from 'src/app/service/listProduct/list-products.s
 import { OrderService } from 'src/app/service/order/order.service';
 import { PaymentService } from 'src/app/service/payment/payment.service';
 import { DebtsService } from 'src/app/service/debts/debts.service';
+import {environment} from "../../../../../environments/environment";
 @Component({
   selector: 'app-tabshop',
   templateUrl: './tabshop.component.html',
@@ -1221,7 +1222,7 @@ export class TabshopComponent implements OnInit {
           if (this.selectedSearchPersonId != '') {
             console.log('đã vào đây');
 
-            this.OrderService.create(dataSend).subscribe((data: any) => {
+            this.OrderService.create(dataSend, environment.location_id).subscribe((data: any) => {
               // console.log(data.payload.id);
               console.log(data);
               
@@ -1470,7 +1471,7 @@ export class TabshopComponent implements OnInit {
                 } else {
                   if (dataPayementApi && dataDebtsApi) {
                     objDebts.amount_debt = dataDebtsApi.pricePayment;
-                    
+
                     this.PaymentService.createPayment(dataResult).subscribe(
                       (data: any) => {
                         console.log(data);
