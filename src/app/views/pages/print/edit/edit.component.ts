@@ -32,6 +32,7 @@ export class EditComponent implements OnInit {
   listLocation: any;
   salesUnit: any[] = [];
   printSize: any[] = [];
+  public defaultForm: any;
   public myContent: any;
   public myContentPreview: SafeHtml;
   isLoading = true;
@@ -90,7 +91,17 @@ export class EditComponent implements OnInit {
     private _router: Router,
     private sanitizer: DomSanitizer
   ) {
-    this.myContent = `
+    this._printService.GetOneRecord(`1`).subscribe(
+      (res) => {
+        if(res.status == true){
+          this.oldForm = res.payload.form;
+          this.myContentPreview = this.getSafeHtml(this.oldForm);
+          // console.log(this.oldForm);
+        }
+
+      }
+    )
+    this.defaultForm = `
         <div class="bfs-font bfs-m bill-body bill-print-body bta-default" id="bill-body-id">
           <p class="bfs-bold bfs-l bta-left"><strong>{Ten_Cua_hang}</strong></p>
 
@@ -282,7 +293,7 @@ export class EditComponent implements OnInit {
             checkAndHideClass("bill_item_tax_container", "0", "bill_item_tax");
         </script>
    `;
-    this.myContentPreview = this.getSafeHtml(this.myContent);
+
     this._locationService.GetData().subscribe(
       (res: any) => {
         this.isLoading = true;
@@ -341,13 +352,14 @@ export class EditComponent implements OnInit {
   onSubmit() {
     // this.submitEvent.emit();
     const dataSend = {
-      name: 'Đơn bán hàng',
-      form: JSON.parse(JSON.stringify(this.myContent)),
-      default: 1,
+      id: 1,
+      name: 'Đơn bán hàngg',
+      form: JSON.parse(JSON.stringify(this.oldForm)),
+      default: 0,
     };
     console.log(dataSend);
 
-    this._printService.createFormData(dataSend).subscribe(
+    this._printService.update(dataSend).subscribe(
       (response: any) => {
         if (response.status == true) {
           Swal.fire({
@@ -356,7 +368,7 @@ export class EditComponent implements OnInit {
             showConfirmButton: false,
             timer: 3000,
             title: 'Thành công!',
-            text: 'Thêm thành công',
+            text: 'Cập nhật thành công',
             icon: 'success',
             timerProgressBar: true,
             didOpen: (toast) => {
@@ -413,5 +425,35 @@ export class EditComponent implements OnInit {
 
   getSafeHtml(html: string): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(html);
+  }
+
+  toDefault(){
+    Swal.fire({
+      title: 'Biểu mẫu này sẽ trở về mặc định?',
+      text: 'Bạn sẽ không thể hoàn tác lại hành động này!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Có, tiến hành!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.oldForm = this.defaultForm;
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 3000,
+          title: 'Thành công!',
+          text: 'Biểu mẫu đã trở về mặc định',
+          icon: 'success',
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer);
+            toast.addEventListener('mouseleave', Swal.resumeTimer);
+          },
+        });
+      }
+    });
   }
 }
