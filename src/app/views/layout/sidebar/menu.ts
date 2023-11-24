@@ -69,10 +69,10 @@ export const MENU: MenuItem[] = [
       //   label: 'Quản lý kho',
       //   link: '/suppliers/list'
       // },
-      // {
-      //   label: 'Tồn kho',
-      //   link: '/suppliers/list'
-      // },
+      {
+        label: 'Tồn kho',
+        link: '/storage/detail'
+      },
       {
         label: 'Nhập kho',
         link: '/storage/import',
@@ -81,10 +81,10 @@ export const MENU: MenuItem[] = [
       //   label: 'Xuất kho',
       //   link: '/suppliers/list'
       // },
-      // {
-      //   label: 'Chuyển kho',
-      //   link: '/suppliers/list'
-      // },
+      {
+        label: 'Chuyển kho',
+        link: '/storage/trans'
+      },
     ],
   }
 ,{

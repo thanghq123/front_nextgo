@@ -80,7 +80,7 @@
                 <div class="card-header align-items-center">
                   <div class="row align-items-center">
                     <div class="col-md-6">
-                      <button type="button" class="btn btn-secondary">Về mặc định</button>
+                      <button type="button" (click)="toDefault()" class="btn btn-secondary">Về mặc định</button>
                     </div>
                     <div class="col-md-6">
                       <button type="button" class="btn btn-primary" (click)="openXlModal(xlModal)">
@@ -112,7 +112,7 @@
                     </div>
                   </ng-template>
                 </div>
-                <ckeditor data="{{myContent}}" [(ngModel)]="myContent" [config]="config" (change)="onChange($event)" #myckeditor="ngModel" name="myckeditor" required
+                <ckeditor data="{{oldForm}}" [(ngModel)]="oldForm" [config]="config" (change)="onChange($event)" #myckeditor="ngModel" name="myckeditor" required
                   debounce="500"></ckeditor>
               </div>
             </div>
