@@ -5,7 +5,7 @@ import {
   ViewChild,
   Output,
   EventEmitter,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -81,7 +81,7 @@ export class EditComponent implements OnInit {
         'BGColor',
         '-',
       ],
-    ]
+    ],
   };
 
   constructor(
@@ -91,161 +91,164 @@ export class EditComponent implements OnInit {
     private _router: Router,
     private sanitizer: DomSanitizer
   ) {
-    this._printService.GetOneRecord(`1`).subscribe(
-      (res) => {
-        if(res.status == true){
-          this.oldForm = res.payload.form;
-          this.myContentPreview = this.getSafeHtml(this.oldForm);
-          // console.log(this.oldForm);
-        }
-
+    this._printService.GetOneRecord(`1`).subscribe((res) => {
+      if (res.status == true) {
+        this.oldForm = res.payload.form;
+        this.myContentPreview = this.getSafeHtml(this.oldForm);
+        // console.log(this.oldForm);
       }
-    )
+    });
     this.defaultForm = `
-        <div class="bfs-font bfs-m bill-body bill-print-body bta-default" id="bill-body-id">
-          <p class="bfs-bold bfs-l bta-left"><strong>{Ten_Cua_hang}</strong></p>
+    <div>
+<p><strong>{Ten_Cua_hang}</strong></p>
 
-          <p class="bfs-s bta-left" id="mc_address">{Ten_Chi_Nhanh} - {Dia_Chi_Chi_Nhanh}</p>
+<p>{Ten_Chi_Nhanh} - {Dia_Chi_Chi_Nhanh}</p>
 
-          <p class="bfs-s bta-left" id="mc_phone">{Dien_Thoai_Chi_Nhanh}</p>
-          <hr />
+<p>{Dien_Thoai_Chi_Nhanh}</p>
 
-          <p>&nbsp;</p>
-          <h2 style="text-align:center"><strong>HÓA ĐƠN BÁN HÀNG</strong></h2>
-          <p>&nbsp;</p>
+<hr />
+<p>&nbsp;</p>
 
-          <div class="bill-row">
-              <div class="bfs-s bill-col-left-4 bill-row">
-                  <table border="0" cellpadding="1" cellspacing="1" style="width:100%">
-                    <tbody>
-                        <tr>
-                            <td><strong>Ngày: </strong>{Ngay_Tao}</td>
-                            <td><strong>HĐ: {Ma_Don_Hang}</strong></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Nhân viên: </strong>&nbsp;{Nguoi_Phu_Trach}</td>
-                            <td>&nbsp;</td>
-                        </tr>
-                    </tbody>
-                  </table>
+<h2 style="text-align:center"><strong>H&Oacute;A ĐƠN B&Aacute;N H&Agrave;NG</strong></h2>
 
+<p>&nbsp;</p>
 
-                  <p>&nbsp;</p>
-              </div>
-          </div>
+<div>
+<div>
+<table border="0" cellpadding="1" cellspacing="1" style="width:100%">
+	<tbody>
+		<tr>
+			<td><strong>Ng&agrave;y: </strong>{Ngay_Tao}</td>
+			<td><strong>HĐ: {Ma_Don_Hang}</strong></td>
+		</tr>
+		<tr>
+			<td><strong>Nh&acirc;n vi&ecirc;n: </strong>&nbsp;{Nguoi_Phu_Trach}</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
 
-          <div class="bill-col-left-5 bill-text-bold">
-              <table align="center" border="0" cellpadding="1" cellspacing="1" style="width:100%">
-                  <tbody>
-                      <tr>
-                          <td style="text-align:justify; width:40%"><h3><strong>Sản phẩm</strong></h3></td>
-                          <td style="text-align:justify"><h3><strong>Đơn giá</strong></h3></td>
-                          <td style="text-align:justify"><h3><strong>Số lượng</strong></h3></td>
-                          <td style="text-align:justify"><h3><strong>Thành tiền</strong></h3></td>
-                      </tr>
-                      <tr>
-                          <td>{Ten_Phien_Ban}</td>
-                          <td>{Don_Gia}</td>
-                          <td>{So_Luong_Ban}</td>
-                          <td>{Thanh_Tien}</td>
-                      </tr>
-                      <tr>
-                          <td>KM</td>
-                          <td>&nbsp;</td>
-                          <td>&nbsp;</td>
-                          <td>{Chiet_khau_Phien_Ban}</td>
-                      </tr>
-                      <tr>
-                          <td>Thuế SP</td>
-                          <td>&nbsp;</td>
-                          <td>&nbsp;</td>
-                          <td>{Thue_Phien_Ban}</td>
-                      </tr>
-                      <tr>
-                          <td>Cộng tiền hàng</td>
-                          <td>&nbsp;</td>
-                          <td>&nbsp;</td>
-                          <td>{Tong_Tien_Hang}</td>
-                      </tr>
-                      <tr>
-                          <td>Chiết khấu SP</td>
-                          <td>&nbsp;</td>
-                          <td>&nbsp;</td>
-                          <td>{Tong_Chiet_Khau_San_Pham}</td>
-                      </tr>
-                      <tr>
-                          <td>Chiết khấu đơn</td>
-                          <td>&nbsp;</td>
-                          <td>&nbsp;</td>
-                          <td>{Chiet_Khau_Don_Hang}</td>
-                      </tr>
-                      <tr>
-                          <td>Tổng tiền thuế</td>
-                          <td>&nbsp;</td>
-                          <td>&nbsp;</td>
-                          <td>{Tong_Thue}</td>
-                      </tr>
-                      <tr>
-                          <td>Phí khác</td>
-                          <td>&nbsp;</td>
-                          <td>&nbsp;</td>
-                          <td>{Phi_Khac}</td>
-                      </tr>
-                      <tr>
-                          <td>
-                          <h3><strong>TỔNG TIỀN</strong></h3>
-                          </td>
-                          <td>&nbsp;</td>
-                          <td>&nbsp;</td>
-                          <td>{Tong_Can_Thanh_Toan}</td>
-                      </tr>
-                      <tr>
-                          <td>Tiền khách đưa</td>
-                          <td>&nbsp;</td>
-                          <td>&nbsp;</td>
-                          <td>{Khach_Thanh_Toan}</td>
-                      </tr>
-                      <tr>
-                          <td>Ghi nợ</td>
-                          <td>&nbsp;</td>
-                          <td>&nbsp;</td>
-                          <td>{Tien_No}</td>
-                      </tr>
-                      <tr>
-                          <td>Tiền trả lại</td>
-                          <td>&nbsp;</td>
-                          <td>&nbsp;</td>
-                          <td>{Tien_Tra}</td>
-                      </tr>
-                      <tr>
-                          <td>
-                          <h4><strong>Khách hàng: </strong></h4>
-                          </td>
-                          <td>&nbsp;</td>
-                          <td>&nbsp;</td>
-                          <td>{Ten_Khach_Hang}</td>
-                      </tr>
-                      <tr>
-                          <td>
-                          <h4><strong>SĐT:&nbsp;&nbsp;</strong></h4>
-                          </td>
-                          <td>&nbsp;</td>
-                          <td>&nbsp;</td>
-                          <td>{Dien_Thoai_Khach}</td>
-                      </tr>
-                  </tbody>
-              </table>
+<p>&nbsp;</p>
+</div>
+</div>
 
-              <p>&nbsp;</p>
+<div>
+<table align="center" border="0" cellpadding="1" cellspacing="1" style="width:100%">
+	<tbody>
+		<tr>
+			<td style="text-align:justify; width:40%">
+			<h3><strong>Sản phẩm</strong></h3>
+			</td>
+			<td style="text-align:justify">
+			<h3><strong>Đơn gi&aacute;</strong></h3>
+			</td>
+			<td style="text-align:justify">
+			<h3><strong>Số lượng</strong></h3>
+			</td>
+			<td style="text-align:justify">
+			<h3><strong>Th&agrave;nh tiền</strong></h3>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="4">{Listproducts}</td>
+		</tr>
+		<tr>
+			<td>KM</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>{Chiet_khau_Phien_Ban}</td>
+		</tr>
+		<tr>
+			<td>Thuế SP</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>{Thue_Phien_Ban}</td>
+		</tr>
+		<tr>
+			<td>Cộng tiền h&agrave;ng</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>{Tong_Tien_Hang}</td>
+		</tr>
+		<tr>
+			<td>Chiết khấu SP</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>{Tong_Chiet_Khau_San_Pham}</td>
+		</tr>
+		<tr>
+			<td>Chiết khấu đơn</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>{Chiet_Khau_Don_Hang}</td>
+		</tr>
+		<tr>
+			<td>Tổng tiền thuế</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>{Tong_Thue}</td>
+		</tr>
+		<tr>
+			<td>Ph&iacute; kh&aacute;c</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>{Phi_Khac}</td>
+		</tr>
+		<tr>
+			<td>
+			<h3><strong>TỔNG TIỀN</strong></h3>
+			</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>{Tong_Can_Thanh_Toan}</td>
+		</tr>
+		<tr>
+			<td>Tiền kh&aacute;ch đưa</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>{Khach_Thanh_Toan}</td>
+		</tr>
+		<tr>
+			<td>Ghi nợ</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>{Tien_No}</td>
+		</tr>
+		<tr>
+			<td>Tiền trả lại</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>{Tien_Tra}</td>
+		</tr>
+		<tr>
+			<td>
+			<h4><strong>Kh&aacute;ch h&agrave;ng: </strong></h4>
+			</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>{Ten_Khach_Hang}</td>
+		</tr>
+		<tr>
+			<td>
+			<h4><strong>SĐT:&nbsp;&nbsp;</strong></h4>
+			</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>{Dien_Thoai_Khach}</td>
+		</tr>
+	</tbody>
+</table>
 
-              <hr />
-              <p>&nbsp;</p>
-          </div>
+<p>&nbsp;</p>
 
-          <h3 class="bfs-bold" style="text-align:center"><strong>CẢM ƠN QUÝ KHÁCH VÀ HẸN GẶP LẠI</strong></h3>
+<hr />
+<p>&nbsp;</p>
+</div>
 
-          <h3 class="bfs-bold" style="text-align:center"><strong>Powered by NextShop</strong></h3>
-        </div>
+<h3 style="text-align:center"><strong>CẢM ƠN QU&Yacute; KH&Aacute;CH V&Agrave; HẸN GẶP LẠI</strong></h3>
+
+<h3 style="text-align:center"><strong>Powered by NextShop</strong></h3>
+</div>
 
         <script type="text/javascript">
             function checkAndHideId(targetId, condition, containerIds) {
@@ -346,7 +349,7 @@ export class EditComponent implements OnInit {
       .result.then((result) => {
         console.log('Modal closed' + result);
       })
-      .catch((res) => {});
+      .catch((res) => { });
   }
 
   onSubmit() {
@@ -406,16 +409,16 @@ export class EditComponent implements OnInit {
         if (error.error.status == false) {
           Swal.fire({
             toast: true,
-            position: "top-end",
+            position: 'top-end',
             showConfirmButton: false,
             timer: 3000,
-            title: "Lỗi!",
+            title: 'Lỗi!',
             text: `${error.error.meta.errors.name[0]}`,
-            icon: "error",
+            icon: 'error',
             timerProgressBar: true,
             didOpen: (toast) => {
-              toast.addEventListener("mouseenter", Swal.stopTimer);
-              toast.addEventListener("mouseleave", Swal.resumeTimer);
+              toast.addEventListener('mouseenter', Swal.stopTimer);
+              toast.addEventListener('mouseleave', Swal.resumeTimer);
             },
           });
         }
@@ -427,7 +430,7 @@ export class EditComponent implements OnInit {
     return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 
-  toDefault(){
+  toDefault() {
     Swal.fire({
       title: 'Biểu mẫu này sẽ trở về mặc định?',
       text: 'Bạn sẽ không thể hoàn tác lại hành động này!',
