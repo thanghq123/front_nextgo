@@ -1,16 +1,25 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { BaseComponent } from './views/layout/base/base.component';
-import { AuthGuard } from './core/guard/auth.guard';
-import { ErrorPageComponent } from './views/pages/error-page/error-page.component';
-import { NavbarSellComponent } from './views/layout/baseSell/navbar-sell.component';
-import { BaseSpecialComponent } from './views/layout/base-special/base-special.component';
-import { EditComponent } from './views/pages/print/edit/edit.component';
+import {NgModule} from '@angular/core';
+import {Routes, RouterModule} from '@angular/router';
+import {BaseComponent} from './views/layout/base/base.component';
+import {AuthGuard} from './core/guard/auth.guard';
+import {ErrorPageComponent} from './views/pages/error-page/error-page.component';
+import {NavbarSellComponent} from './views/layout/baseSell/navbar-sell.component';
+import {BaseSpecialComponent} from './views/layout/base-special/base-special.component';
+import {EditComponent} from './views/pages/print/edit/edit.component';
+import {AuthComponent} from "./views/layout/auth/auth.component";
+
 const routes: Routes = [
   {
     path: 'auth',
+    component: AuthComponent,
     loadChildren: () =>
-      import('./views/pages/auth/auth.module').then((m) => m.AuthModule),
+      import('./views/pages/auth/auth.module').then((m) => m.AuthModule)
+  },
+  {
+    path: 'tenant',
+    component: AuthComponent,
+    loadChildren: () =>
+      import('./views/pages/tenant/tenant.module').then((m) => m.TenantModule),
   },
   {
     path: '',
@@ -155,7 +164,7 @@ const routes: Routes = [
         loadChildren: () =>
           import(
             './views/pages/advanced-form-elements/advanced-form-elements.module'
-          ).then((m) => m.AdvancedFormElementsModule),
+            ).then((m) => m.AdvancedFormElementsModule),
       },
       {
         path: 'charts-graphs',
@@ -183,29 +192,33 @@ const routes: Routes = [
             (m) => m.GeneralModule
           ),
       },
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      {path: '', redirectTo: 'dashboard', pathMatch: 'full'},
       // { path: '**', redirectTo: 'dashboard', pathMatch: 'full' }
     ],
   },
-  { path: '',
-  component: NavbarSellComponent,
-   canActivate: [AuthGuard] ,
-   children: [
-    {
-      path: 'shop',
-      loadChildren: () =>
-        import('./views/pages/shop/shop.module').then((m) => m.ShopModule),
-    }
-  ]},
-  { path: '',
-  // component: BaseSpecialComponent,
-   canActivate: [AuthGuard] ,
-   children: [
-    {
-      path: 'print/edit',
-      component : EditComponent
-    }
-  ]},
+  {
+    path: '',
+    component: NavbarSellComponent,
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: 'shop',
+        loadChildren: () =>
+          import('./views/pages/shop/shop.module').then((m) => m.ShopModule),
+      }
+    ]
+  },
+  {
+    path: '',
+    // component: BaseSpecialComponent,
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: 'print/edit',
+        component: EditComponent
+      }
+    ]
+  },
   {
     path: 'error',
     component: ErrorPageComponent,
@@ -219,11 +232,12 @@ const routes: Routes = [
     path: 'error/:type',
     component: ErrorPageComponent,
   },
-  { path: '**', redirectTo: 'error', pathMatch: 'full' },
+  {path: '**', redirectTo: 'error', pathMatch: 'full'},
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { scrollPositionRestoration: 'top' })],
+  imports: [RouterModule.forRoot(routes, {scrollPositionRestoration: 'top'})],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule {
+}

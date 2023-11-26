@@ -13,6 +13,7 @@ import { Subject } from 'rxjs';
 import { LocationsService } from 'src/app/service/locations/locations.service';
 import { AresService } from 'src/app/service/ares/ares.service';
 import { environment } from 'src/environments/environment';
+import {ConfigService} from "../../../../service/config/config.service";
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
@@ -56,9 +57,10 @@ export class CreateComponent implements OnInit {
     private formBuilder: FormBuilder,
     private _locaService: LocationsService,
     private AresService: AresService,
-    private router: Router
+    private router: Router,
+    private configService: ConfigService,
   ) {
-    this.domain_name = environment.domain_name;
+    this.domain_name = this.configService.domain_name;
   }
 
   ngOnInit(): void {
