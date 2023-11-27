@@ -5,10 +5,10 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-detail',
   templateUrl: './detail.component.html',
-  styleUrls: ['./detail.component.scss']
+  styleUrls: ['./detail.component.scss'],
 })
 export class DetailComponent implements OnInit {
-  dataOneFake  : any ;
+  dataOneFake: any;
   // = {
   //   id : 1,
   //   location_id : 1,
@@ -134,12 +134,12 @@ export class DetailComponent implements OnInit {
   //     }
   //   ]
   // }
-  id : string;
+  id: string;
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private OrderService : OrderService
-  ) { }
+    private OrderService: OrderService
+  ) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((queryParams) => {
@@ -151,9 +151,19 @@ export class DetailComponent implements OnInit {
           (data) => {
             this.dataOneFake = data.payload;
             console.log(this.dataOneFake);
-    //         this.dataOneFake.amount_refund = this.dataOneFake.payment.reduce((index : number,item : any) => item.amount_refund + index ,0)
-    // this.dataOneFake.amount_in = this.dataOneFake.payment.reduce((index : number,item : any) => item.amount + index ,0)
-    // this.dataOneFake.change = this.dataOneFake.amount_in > this.dataOneFake.amount_refund ? this.dataOneFake.amount_in - this.dataOneFake.amount_refund : 0;
+            this.dataOneFake.amount_in = this.dataOneFake.payment.reduce(
+              (total: number, item: any) => {
+                if (item.payment_method === 0 || item.payment_method === 1) {
+                  total += item.amount;
+                }
+                return total;
+              },
+              0
+            );
+            this.dataOneFake.change =
+              this.dataOneFake.amount_in > this.dataOneFake.total_price
+                ? this.dataOneFake.amount_in - this.dataOneFake.amount_refund
+                : 0;
           },
           (error) => {
             Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
@@ -163,12 +173,5 @@ export class DetailComponent implements OnInit {
         this.router.navigate(['../categories/list']);
       }
     });
-    
-
-    
-    
-    
-    
   }
-
 }

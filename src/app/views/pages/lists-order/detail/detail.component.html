@@ -10,11 +10,11 @@
                     <button type="button" class="btn btn-light" routerLink="/ListOrders">Quay lại</button>
                   </li>
                   <li class="nav-item">
-                    <h1 class="fs-4" style="transform: translateX(28%);">Chi tiết đơn hàng</h1>
+                    <h1 class="fs-4" style="transform: translateX(-30%);">Chi tiết đơn hàng</h1>
                   </li>
                   <li class="nav-item">
-                    <button type="submit" class="btn btn-outline-danger">Hủy Đơn</button>
-                    <button type="submit" class="btn btn-primary ms-2">In Hóa Đơn</button>
+                    <!-- <button type="submit" class="btn btn-outline-danger">Hủy Đơn</button>
+                    <button type="submit" class="btn btn-primary ms-2">In Hóa Đơn</button> -->
                   </li>
                 </ul>
               </div>
@@ -74,7 +74,7 @@
                                         </li>
                                         <li class="fs-5">
                                             <span class="text-secondary  fw-bolder">Ghi chú:</span>
-                                            {{  dataOneFake.note == '' ? '---' : dataOneFake.note }}
+                                            {{  dataOneFake.note == null ? '- - -' : dataOneFake.note }}
                                         </li>
                                     </ul>
                                 </div>
@@ -118,7 +118,7 @@
                                           </li>
                                           <li class="mb-4 fs-5">
                                               <span class="text-secondary fw-bolder">Địa chỉ:</span>
-                                              {{ dataOneFake.customer_data.address_detail  == "" ? '- - - ' : dataOneFake.customer_data.address_detail}}
+                                              {{ dataOneFake.customer_data.address_detail  == null ? '- - - ' : dataOneFake.customer_data.address_detail}}
                                           </li>
                                       </ul>
                                   </div>
@@ -126,7 +126,7 @@
                                       <ul>
                                           <li class="mb-4 fs-5">
                                               <span class="text-secondary fw-bolder">Email</span>
-                                              {{ dataOneFake.customer_data.email  == "" ? '- - - ' : dataOneFake.customer_data.email}}
+                                              {{ dataOneFake.customer_data.email  == null ? '- - - ' : dataOneFake.customer_data.email}}
                                           </li>
                                       </ul>
                                   </div>
@@ -160,8 +160,8 @@
                                             <td>{{ value.variation_data.sku }}</td>
                                             <td>{{ value.variation_data.variation_name }}</td>
                                             <td>{{ value.quantity }}</td>
-                                            <td>{{ value.variation_data.price_export }}</td>
-                                            <td>{{ value.variation_data.price_export * value.quantity }}</td>
+                                            <td>{{ value.discount }}</td>
+                                            <td>{{ value.discount * value.quantity }}</td>
                                             </tr>
 
                                             <tr>
@@ -185,7 +185,7 @@
                                               <td></td>
                                               <td></td>
                                               <td></td>
-                                              <td>Chiết khấu ({{  dataOneFake.discount }} {{ dataOneFake.discount_type == 0 ? 'đ' : '%'  }})</td>
+                                              <td>Chiết khấu ({{  dataOneFake.discount }}{{ dataOneFake.discount_type == 0 ? 'đ' : '%'  }})</td>
                                               <td>{{  dataOneFake.discount }}</td>
                                             </tr>
                                             <tr>
@@ -194,7 +194,7 @@
                                               <td></td>
                                               <td></td>
                                               <td>Khách phải trả</td>
-                                              <td>{{ dataOneFake.amount_refund }}</td>
+                                              <td>{{ dataOneFake.total_price }}</td>
 
                                               
                                             </tr>
@@ -236,17 +236,15 @@
                                             <th>#</th>
                                             <th>Phương thức</th>
                                             <th>Số tiền thanh toán</th>
-                                            <th>Trạng thái</th>
                                             <th>Thời gian</th>
                                             <th>Mã tham chiếu</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr *ngFor="let value of dataOneFake.payment">
-                                            <td>{{ value.id }}</td>
+                                            <td>{{ value.paymentable_id }}</td>
                                             <td>{{ value.payment_method == 0 ? 'Tiền mặt' : (value.payment_method == 1 ? 'Chuyển khoản' : 'Ghi nợ') }}</td>
                                             <td>{{ value.amount }}</td>
-                                            <td>Chưa có data</td>
                                             <td>{{ value.payment_at }}</td>
                                             <td>{{ value.reference_code == null ? '- - -' : value.reference_code }}</td>
                                             </tr>
