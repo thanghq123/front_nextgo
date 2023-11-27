@@ -7,24 +7,25 @@ import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class PrintService extends CRUDServiceService<Print>  {
+export class PrintService extends CRUDServiceService<Print> {
   private readonly domain_name: String;
-  constructor(
-    http: HttpClient,
-    dataService: HandleDataService
- ) {
-   super(http, dataService);
-   this.apiUrl = this.dataService.getUrl('printed_forms');
-   this.domain_name = environment.domain_name;
- }
- createData(data: any): Observable<any> {
-  return this.http.post(
-    `${this.apiUrl}/store`,
-    this.dataService.handleData(data)
-  );
-  
-}
-
+  constructor(http: HttpClient, dataService: HandleDataService) {
+    super(http, dataService);
+    this.apiUrl = this.dataService.getUrl('printed_forms');
+    this.domain_name = environment.domain_name;
+  }
+  createData(data: any): Observable<any> {
+    return this.http.post(
+      `${this.apiUrl}/store`,
+      this.dataService.handleData(data)
+    );
+  }
+  returnForm(id: number){
+    return this.http.post<any>(
+      `${this.apiUrl}/return`,
+      this.dataService.handleData(id)
+    );
+  }
 }

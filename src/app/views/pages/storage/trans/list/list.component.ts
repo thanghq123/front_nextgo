@@ -1,51 +1,29 @@
-import { AfterViewInit, Component, OnInit, TemplateRef } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { DataTable } from 'simple-datatables';
 import { Observable,of } from 'rxjs';
 import Swal from 'sweetalert2';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-
 import { StorageImport } from 'src/app/interface/storage/storage-import';
 import { StorageImportService } from 'src/app/service/storage/storage-import.service';
 
 @Component({
-  selector: 'app-detail',
-  templateUrl: './detail.component.html',
-  styleUrls: ['./detail.component.scss']
+  selector: 'app-list',
+  templateUrl: './list.component.html',
+  styleUrls: ['./list.component.scss']
 })
-export class DetailComponent implements OnInit {
+export class ListComponent implements OnInit, AfterViewInit {
   isLoading = false;
-  inventoryStorageList: Observable<any>;
+  listStorageTrans: Observable<any>;
 
-  constructor(
-    private _storageService: StorageImportService,
-    private modalService: NgbModal
-  ) {
-    this.inventoryStorageList = new Observable();
+  constructor(private _storageService: StorageImportService) {
+    this.listStorageTrans = new Observable();
   }
 
   ngOnInit(): void {
     this.refreshData();
   }
 
-  openLgModal(content: TemplateRef<any>) {
-    console.log(123);
-
-    this.modalService.open(content, {size: 'lg'}).result.then((result) => {
-      console.log("Modal closed" + result);
-    }).catch((res) => {});
-  }
-  // openLgModal(lgModal: any) {
-  //   console.log('Button clicked!');
-
-  //   // Các đoạn mã xử lý mở modal ở đây (nếu có)
-  // }
-
-  calculator(number1: number, number2: number){
-    return number1 * number2;
-  }
-
   ngAfterViewInit(): void {
-    this.inventoryStorageList.subscribe(() => {
+    this.listStorageTrans.subscribe(() => {
       setTimeout(() => {
         const db = new DataTable('#dataTableExample');
         setTimeout(() => {
@@ -113,14 +91,14 @@ export class DetailComponent implements OnInit {
 
   refreshData(): void{
     this.isLoading = true;
-    this._storageService.getAllInventory(null).subscribe({
+    this._storageService.getAllTrans().subscribe({
       next: (res: any) => {
         // console.log(res.status);
         if(res.status == true){
-          this.inventoryStorageList = of(res.payload) ;
+          this.listStorageTrans = of(res.payload) ;
           this.isLoading = false;
           console.log(res.payload);
-          this.inventoryStorageList.subscribe(
+          this.listStorageTrans.subscribe(
             (res)=> {
               setTimeout(() => {
                 const db = new DataTable('#dataTableExample');
@@ -138,6 +116,18 @@ export class DetailComponent implements OnInit {
         Swal.fire('Lỗi!', 'Có lỗi xảy ra. Vui lòng liên hệ QTV.', 'error');
       }
     })
+  }
+
+  status(key: number): any{
+    // const result = [];
+    if(key == 0){
+       return ['Hủy đơn', 'bg-danger'];
+    }else if(key == 1){
+      return ['Chờ xác nhận', 'bg-primary'];
+    }else if(key == 2){
+      return ['Hoàn thành', 'bg-success']
+    }
+
   }
 
 }

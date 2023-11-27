@@ -1,61 +1,41 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
-import { Router, ParamMap } from '@angular/router';
-import {
-  debounceTime,
-  switchMap,
-  distinctUntilChanged,
-  map,
-} from 'rxjs/operators';
-import { Observable, Subject, of } from 'rxjs';
-import { ChangeDetectionStrategy } from '@angular/core';
+import { Router } from '@angular/router';
+import { Observable, Subject, debounceTime, map, of } from 'rxjs';
 
-import { SuppliersService } from 'src/app/service/suppliers/suppliers.service';
 import { LocationsService } from 'src/app/service/locations/locations.service';
-import { Product } from 'src/app/interface/product/product';
 import { SearchProductService } from 'src/app/service/searchProduct/search-product.service';
 import { StorageImportService } from 'src/app/service/storage/storage-import.service';
-import { StorageImport } from 'src/app/interface/storage/storage-import';
+
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-create',
   templateUrl: './create.component.html',
-  styleUrls: ['./create.component.scss'],
+  styleUrls: ['./create.component.scss']
 })
 export class CreateComponent implements OnInit {
-  listSupplier: any = [];
-  listLocation: any = [];
-  listProduct: any[] = [];
-  products: any[] = [];
-  input: any = {};
-  editRowID: any = '';
-  price: any;
-  quantity: any;
   isLoading = false;
-  totalMoney: number;
-  storageImportForm = new FormGroup({
+  storageTransForm = new FormGroup({
     reason: new FormControl('', Validators.required),
     note: new FormControl(''),
-    partner_id: new FormControl('', Validators.required),
+    inventory_id_out: new FormControl('', Validators.required),
     inventory_id: new FormControl('', Validators.required),
-    price: new FormControl(''),
     quantity: new FormControl(''),
   });
   inputSerach = new FormGroup({
     input: new FormControl(''),
   });
+  input: any = {};
+  products: any[] = [];
+  editRowID: any = '';
+  listLocation: any = [];
+  listProduct: any[] = [];
   constructor(
-    private _supplier: SuppliersService,
     private _location: LocationsService,
+    private _product: SearchProductService,
     private _storage: StorageImportService,
     private router: Router,
-    private _product: SearchProductService
   ) {
-    this._supplier.GetData().subscribe((res: any) => {
-      this.listSupplier = res.payload;
-      console.log(this.listSupplier);
-    });
     this._product.GetData().subscribe((res: any) => {
       this.listProduct = res.payload;
       console.log(this.listProduct);
@@ -65,13 +45,12 @@ export class CreateComponent implements OnInit {
       this.listLocation = res.payload;
       // console.log(this.listLocation);
     });
+   }
+
+  ngOnInit(): void {
   }
   Edit(val: any) {
     this.editRowID = val;
-  }
-  ngOnInit(): void {
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
   }
   search = (text$: Observable<string>) =>
     text$.pipe(
@@ -89,7 +68,6 @@ export class CreateComponent implements OnInit {
       )
     );
   formatter = (x: { product_name_variation: string }) => x.product_name_variation;
-
   searchProduct() {
     if (this.input != '' && this.input.id != undefined) {
       // Kiểm tra xem sản phẩm vừa nhập có trùng với sản phẩm nào trong this.products không
@@ -100,13 +78,14 @@ export class CreateComponent implements OnInit {
       if (!existingProduct) {
         const data = {
           id: this.input.id,
+          sku: this.input.sku,
           name: this.input.product_name_variation,
           variation_id: this.input.id,
+          inventory: this.input.variation_quantities != '' ? this.input.variation_quantities[0].quantity : 0,
           batch_id: 1,
           price: this.input.price_import,
           price_type: 0,
           quantity: 0,
-          result: 0,
         };
         this.products.push(data);
         this.inputSerach.reset();
@@ -117,20 +96,6 @@ export class CreateComponent implements OnInit {
       console.log(this.products);
     }
   }
-
-  calculateTotal(index1: number, index2: number): number {
-    return index1 * index2;
-  }
-  calculateTotalPrice(): number {
-    let total = 0;
-    for (let i = 0; i < this.products.length; i++) {
-      total += this.products[i].price * this.products[i].quantity;
-    }
-    return total;
-  }
-  removeProduct(index: number): void {
-    this.products.splice(index, 1);
-  }
   resultTotal(e: any) {
     this.updateQuantity(
       this.products,
@@ -138,9 +103,6 @@ export class CreateComponent implements OnInit {
       +e.target.value,
       e.target.name
     );
-    this.totalMoney = this.products.reduce((total: number, current: any) => {
-      return total + current.result;
-    }, 0);
   }
   updateQuantity(array: any, id: number, newQuantity: any, name: string) {
     console.log(name);
@@ -152,40 +114,42 @@ export class CreateComponent implements OnInit {
         array[i][typeUpdate] = newQuantity;
         array[i].result = newQuantity * array[i][resultType];
         console.log(array[i]);
-
         break;
       }
     }
   }
 
-  onSubmit() {
-    // If confirmed, delete the category
-    if (this.storageImportForm.valid && this.products.length > 0) {
-      const datasend = {
-        reason: this.storageImportForm.value.reason,
-        inventory_id: this.storageImportForm.value.inventory_id,
-        partner_id: this.storageImportForm.value.partner_id,
+  removeProduct(index: number): void {
+    this.products.splice(index, 1);
+  }
+  onSubmit(): void{
+    if (this.storageTransForm.valid && this.products.length > 0) {
+      const dataSend = {
+        reason: this.storageTransForm.value.reason,
+        inventory_id_in: this.storageTransForm.value.inventory_id,
+        inventory_id_out: this.storageTransForm.value.inventory_id_out,
+        partner_id: 1,
         partner_type: 0,
-        trans_type: 0,
-        note: this.storageImportForm.value.note,
-        status: 1,
+        // trans_type: 2,
+        note: this.storageTransForm.value.note,
+        status: 2,
         created_by: 1,
         inventory_transaction_details: JSON.parse(
           JSON.stringify(this.products)
         ),
-      };
-      console.log(datasend);
-      this._storage.createData(datasend).subscribe(
+      }
+      console.log(dataSend);
+      this._storage.createTrans(dataSend).subscribe(
         (response: any) => {
           if (response.status == true) {
-            this.storageImportForm.reset();
+            this.storageTransForm.reset();
             Swal.fire({
               toast: true,
               position: 'top-end',
               showConfirmButton: false,
               timer: 3000,
               title: 'Thành công!',
-              text: 'Thêm đơn nhập thành công',
+              text: 'Thêm đơn chuyển thành công',
               icon: 'success',
               timerProgressBar: true,
               didOpen: (toast) => {
@@ -194,7 +158,7 @@ export class CreateComponent implements OnInit {
               },
             });
             this.router.navigate([
-              `../storage/import/detail/${response.payload}`,
+              `../storage/trans/detail/${response.payload}`,
             ]);
           } else {
             console.log(response);
@@ -213,9 +177,11 @@ export class CreateComponent implements OnInit {
           Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
         }
       );
-    } else {
+
+    }else {
       alert('Sản phẩm không được để trống');
     }
+
   }
   showNextMessage(errorMessages: any) {
     if (errorMessages.length > 0) {
@@ -239,4 +205,5 @@ export class CreateComponent implements OnInit {
       });
     }
   }
+
 }

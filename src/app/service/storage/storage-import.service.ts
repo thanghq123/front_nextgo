@@ -42,6 +42,32 @@ export class StorageImportService extends CRUDServiceService<any> {
     );
   }
 
+  //trans
+  getAllTrans() {
+    return this.http.post(`${this.apiUrl}` + '/trans', this.handleData());
+  }
+  createTrans(data: any): Observable<any> {
+    return this.http.post(
+      `${this.apiUrl}/trans/store`,
+      this.dataService.handleData(data)
+    );
+  }
+
+  //
+  getAllInventory(data: any){
+    if(data == null){
+      return this.http.post(
+        this.dataService.getUrl('get-variation'),
+        this.dataService.handleData(data)
+      );
+    }else{
+      return this.http.post(
+        this.dataService.getUrl(`get-variation/${data}`),
+        this.dataService.handleData(data)
+      );
+    }
+  }
+
   handleData(data: any = {}) {
     return {
       domain_name: this.domain_name,

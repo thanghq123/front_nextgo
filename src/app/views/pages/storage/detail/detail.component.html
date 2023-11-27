@@ -32,29 +32,21 @@
                 <th>HÀNH ĐỘNG</th>
               </tr>
             </thead>
-            <!-- <tbody>
-              <tr *ngFor="let value of listStorageImport | async">
-                <td><a [routerLink]="['../detail', value.inventory_transaction_id]">{{ value.inventory_transaction_id }}</a></td>
-                <td>{{ value.partner_name }}</td>
-                <td>{{ value.inventory_name }}</td>
-                <td style="text-align: center">{{ value.created_by }}</td>
-                <td style="text-align: center">
-                  <span class="badge {{
-                      status(value.status)[1]
-                    }}">{{
-                      status(value.status)[0]
-                    }}</span>
-                </td>
-                <td>{{ value.created_at }}</td>
-                <td>{{ value.updated_at }}</td>
-                <td>
-                  <a *ngIf="value.status === 1" [routerLink]="['../detail', value.inventory_transaction_id]" class="btn btn-success mx-2">Chi tiết</a>
-                  <button data-id="{{ value.id }}" class="btn btn-danger">
-                    Chi tiết
-                  </button>
+            <tbody>
+              <tr *ngFor="let value of inventoryStorageList | async">
+                <td>{{value.product_name_variation}}</td>
+                <td>{{ value.created_at | date:'dd/MM/yyyy' }}</td>
+                <td>{{ value.barcode }}</td>
+                <td>{{ value.sku }}</td>
+                <td>{{ value.price_import }}</td>
+                <td>{{ value.variation_quantities != '' ? value.variation_quantities[0].quantity : 0 }}</td>
+                <td *ngIf="value.variation_quantities != '' ">{{calculator(value.price_import, value.variation_quantities[0].quantity) | currency : "VNĐ " : "symbol" : "1.0-0"}}</td>
+                <td *ngIf="value.variation_quantities == '' ">0</td>
+                <td >
+
                 </td>
               </tr>
-            </tbody> -->
+            </tbody>
             <tfoot>
               <tr>
                 <th></th>
@@ -73,3 +65,20 @@
     </div>
   </div>
 </div>
+<!-- Button trigger lg modal -->
+<input type="button" class="btn btn-primary" (click)="openLgModal(lgModal)" value="abc">
+                  <ng-template #lgModal let-modal>
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                      <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <p>Modal body</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" (click)="modal.close('by: close button')">Close</button>
+                      <button type="button" class="btn btn-primary" (click)="modal.close('by: save button')">Save changes</button>
+                    </div>
+                  </ng-template>
+<!-- Modal -->
+
