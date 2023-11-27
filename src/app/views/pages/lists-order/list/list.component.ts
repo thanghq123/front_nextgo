@@ -189,7 +189,6 @@ export class ListComponent implements OnInit {
         // console.log(res.status);
         if(res.status == true){
           this.fakeData = of(res.payload.data) ;
-          // console.log(this.listBrands);
           this.isLoading = false;
           this.fakeData.subscribe(
             (res)=> {

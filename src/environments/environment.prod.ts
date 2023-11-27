@@ -1,4 +1,4 @@
-const urlRoot = 'http://datn.test';
+const urlRoot = 'https://mrbinh.link';
 export const environment = {
   production: true,
 apiTennatv1 : `${urlRoot}/tenant/api/v1/`,
