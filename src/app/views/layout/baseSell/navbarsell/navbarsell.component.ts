@@ -193,7 +193,7 @@ isFullScreen: boolean = false;
     
   }
   AddOder(){
-    console.log(this.tabOder);
+    console.log(this.payment);
     
     this.DatalayoutService.triggerEvent('addTabOder',{tabOder : this.tabOder,modalDataAdd : this.modalPrice});
   }

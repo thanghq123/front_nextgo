@@ -1,12 +1,15 @@
-import {NgModule} from '@angular/core';
-import {Routes, RouterModule} from '@angular/router';
-import {BaseComponent} from './views/layout/base/base.component';
-import {AuthGuard} from './core/guard/auth.guard';
-import {ErrorPageComponent} from './views/pages/error-page/error-page.component';
-import {NavbarSellComponent} from './views/layout/baseSell/navbar-sell.component';
-import {BaseSpecialComponent} from './views/layout/base-special/base-special.component';
-import {EditComponent} from './views/pages/print/edit/edit.component';
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+import { BaseComponent } from './views/layout/base/base.component';
+import { AuthGuard } from './core/guard/auth.guard';
+import { ErrorPageComponent } from './views/pages/error-page/error-page.component';
+import { NavbarSellComponent } from './views/layout/baseSell/navbar-sell.component';
+import { BaseSpecialComponent } from './views/layout/base-special/base-special.component';
+import { EditComponent } from './views/pages/print/edit/edit.component';
+import { DetailComponent } from './views/pages/lists-order/detail/detail.component';
 import {AuthComponent} from "./views/layout/auth/auth.component";
+
+
 
 const routes: Routes = [
   {
@@ -45,6 +48,13 @@ const routes: Routes = [
         loadChildren: () =>
           import('./views/pages/group-customers/group-customers.module').then(
             (m) => m.GroupCustomersModule
+          ),
+      },
+      {
+        path: 'ListOrders',
+        loadChildren: () =>
+          import('./views/pages/lists-order/lists-order.module').then(
+            (m) => m.ListsOrderModule
           ),
       },
       {
@@ -196,29 +206,28 @@ const routes: Routes = [
       // { path: '**', redirectTo: 'dashboard', pathMatch: 'full' }
     ],
   },
-  {
-    path: '',
-    component: NavbarSellComponent,
-    canActivate: [AuthGuard],
-    children: [
-      {
-        path: 'shop',
-        loadChildren: () =>
-          import('./views/pages/shop/shop.module').then((m) => m.ShopModule),
-      }
-    ]
-  },
-  {
-    path: '',
-    // component: BaseSpecialComponent,
-    canActivate: [AuthGuard],
-    children: [
-      {
-        path: 'print/edit',
-        component: EditComponent
-      }
-    ]
-  },
+  { path: '', 
+  component: NavbarSellComponent,
+   canActivate: [AuthGuard] ,
+   children: [
+    {
+      path: 'shop',
+      loadChildren: () =>
+        import('./views/pages/shop/shop.module').then((m) => m.ShopModule),
+    }
+  ]},
+  { path: '',
+  // component: BaseSpecialComponent,
+   canActivate: [AuthGuard] ,
+   children: [
+    {
+      path: 'print/edit',
+      component : EditComponent
+    },{
+      path: 'ListOrders/detail/:id',
+      component : DetailComponent
+    }
+  ]},
   {
     path: 'error',
     component: ErrorPageComponent,
