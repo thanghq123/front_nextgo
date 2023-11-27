@@ -8,6 +8,7 @@ import { Subject } from 'rxjs';
 import { LocationsService } from 'src/app/service/locations/locations.service';
 import { AresService } from 'src/app/service/ares/ares.service';
 import { environment } from 'src/environments/environment';
+import {ConfigService} from "../../../../service/config/config.service";
 
 @Component({
   selector: 'app-edit',
@@ -47,9 +48,10 @@ export class EditComponent implements OnInit {
     private _locaService: LocationsService,
     private AresService: AresService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private configService: ConfigService,
   ) {
-    this.domain_name = environment.domain_name;
+    this.domain_name = this.configService.domain_name;
   }
 
   ngOnInit(): void {

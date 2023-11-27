@@ -20,7 +20,7 @@
                 Không để trống tên danh mục
               </div>
             </div>
-            <button type="submit" [disabled]="categoryForm.invalid" class="btn btn-primary me-2">Cập nhật</button>
+            <button type="submit" [disabled]="categoryForm.invalid || !isFormChanged()" class="btn btn-primary me-2">Cập nhật</button>
             <button class="btn btn-secondary" routerLink="/categories/list">Trở về</button>
           </form>
         </div>

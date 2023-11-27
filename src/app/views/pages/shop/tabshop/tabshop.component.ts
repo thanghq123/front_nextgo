@@ -206,7 +206,7 @@ export class TabshopComponent implements OnInit {
       switch (event.name) {
         case 'addTabOder':
           if (this.dataCurrent.length < 4) {
-            const { modalDataAdd,tabOder } = event.data;
+            const { modalDataAdd } = event.data;
             this.totalMoney = 0;
             this.dataCurrent.push({
               ListProductCart: [],
@@ -220,8 +220,7 @@ export class TabshopComponent implements OnInit {
               radio: 1,
               cash: 0,
             });
-            console.log(this.dataBtnPayment);
-            
+
             this.dataBtnPayment.push([
               {
                 payment_method: 0,
@@ -1235,11 +1234,8 @@ export class TabshopComponent implements OnInit {
               }
             ),
           };
-          let arrayFormdata : any;
-          let dataBatchesFrom : any;
           var currentDate = new Date(); 
-        var currentDateTime = currentDate.toLocaleString();  
-       
+        var currentDateTime = currentDate.toISOString();  
           let obj = {
             Ten_Cua_hang : 'Hậu đặng',
             Ten_Chi_Nhanh : 'Hoa Quả',
@@ -1248,7 +1244,7 @@ export class TabshopComponent implements OnInit {
             Nguoi_Phu_Trach : 'Hậu đặng',
 
             Ngay_Tao : currentDateTime,
-            Ma_Don_Hang : null,
+            Ma_Don_Hang : 1,
             Chiet_khau_Phien_Ban : '10%',
             Thue_Phien_Ban : '10%',
             Tong_Tien_Hang : this.priceBill,
@@ -1295,7 +1291,6 @@ export class TabshopComponent implements OnInit {
                 const nowDate = new Date(now);
                 const nextYearDate = new Date(nextYear);
                 const { id: idOrder } = data.payload;
-                obj.Ma_Don_Hang = idOrder;
                 const { id, type, name,tel } = this.people.find(
                   (person: any) => person.id === this.selectedSearchPersonId
                 );
@@ -1372,7 +1367,7 @@ export class TabshopComponent implements OnInit {
                   type: 0,
                   status: 1,
                 };
-             
+
                 console.log(objDebts);
                 if (this.tabDefault == 0) {
                   console.log(dataDebtsApi);
@@ -1402,12 +1397,17 @@ export class TabshopComponent implements OnInit {
                             },
                           });
                           this.modalService.open(this.myModal).result.then((result) => {
-                            this.replaceKeysWithData(obj);
-                            const newWindow = this.TabwindowsService.openWindow('about:blank','NewWindow', 800, 600);
-                            newWindow?.document.write(`<html><head><title>Website quản lý bán hàng cho doanh nghiệp NextGo</title></head><body>${this.formPrintf.form}</body></html>`);
-                            newWindow?.document.close();
-                            newWindow?.print();
-                          }).catch((res) => {});
+                              console.log(result);
+                              console.log(this.formPrintf);
+                              const obj = {
+                                Ten_Cua_hang : 'Hậu đặng'
+                              };
+                              this.replaceKeysWithData(obj);
+                              const newWindow = this.TabwindowsService.openWindow('https://example.com', 'NewWindow', 200, 100);
+                              if (newWindow) {
+                                console.log('an');
+                              }
+                          }).catch((res) => {});;
                           // setTimeout(() => {
                           //   window.location.reload();
                           // }, 1000);
@@ -1473,7 +1473,7 @@ export class TabshopComponent implements OnInit {
                             newWindow?.document.close();
                             newWindow?.print();
                            
-                        }).catch((res) => {});
+                        }).catch((res) => {});;
                           // setTimeout(() => {
                           //   window.location.reload();
                           // }, 1000);
@@ -1525,7 +1525,26 @@ export class TabshopComponent implements OnInit {
                   this.productItemsBatches[this.tabDefault] = [];
                   this.modalData[this.tabDefault] = [];
 
-                  
+                  localStorage.setItem(
+                    'tabOrder',
+                    JSON.stringify(this.dataCurrent)
+                  );
+                  localStorage.setItem(
+                    'dataBill',
+                    JSON.stringify(this.dataBill)
+                  );
+                  localStorage.setItem(
+                    'TabModal',
+                    JSON.stringify(this.modalData)
+                  );
+                  localStorage.setItem(
+                    'dataPayment',
+                    JSON.stringify(this.dataBtnPayment)
+                  );
+                  localStorage.setItem(
+                    'dataBatches',
+                    JSON.stringify(this.productItemsBatches)
+                  );
                 } else {
                   if (dataPayementApi && dataDebtsApi) {
                     objDebts.amount_debt = dataDebtsApi.pricePayment;
@@ -1555,22 +1574,9 @@ export class TabshopComponent implements OnInit {
                               toast.addEventListener('mouseleave', Swal.resumeTimer);
                             },
                           });
-
-                          this.modalService.open(this.myModal).result.then((result) => {
-                            console.log(result);
-                         
-                            console.log(obj);
-                            
-                            this.replaceKeysWithData(obj);
-                            const newWindow = this.TabwindowsService.openWindow('about:blank','NewWindow', 800, 600);
-                            newWindow?.document.write(`<html><head><title>Website quản lý bán hàng cho doanh nghiệp NextGo</title></head><body>${this.formPrintf.form}</body></html>`);
-                            newWindow?.document.close();
-                            newWindow?.print();
-                           
-                        }).catch((res) => {});
-                          // setTimeout(() => {
-                          //   window.location.reload();
-                          // },1000)
+                          setTimeout(() => {
+                            window.location.reload();
+                          },1000)
                         }
                       }
                     );
@@ -1617,27 +1623,13 @@ export class TabshopComponent implements OnInit {
                               );
                             },
                           });
-
-                          this.modalService.open(this.myModal).result.then((result) => {
-                            console.log(result);
-                         
-                            console.log(obj);
-                            
-                            this.replaceKeysWithData(obj);
-                            const newWindow = this.TabwindowsService.openWindow('about:blank','NewWindow', 800, 600);
-                            newWindow?.document.write(`<html><head><title>Website quản lý bán hàng cho doanh nghiệp NextGo</title></head><body>${this.formPrintf.form}</body></html>`);
-                            newWindow?.document.close();
-                            newWindow?.print();
-                           
-                        }).catch((res) => {});
-                          // setTimeout(() => {
-                          //   window.location.reload();
-                          // }, 1000);
+                          setTimeout(() => {
+                            window.location.reload();
+                          }, 1000);
                         }
                       }
                     );
                   }
-
 
                   this.dataCurrent.splice(this.tabDefault, 1);
                   this.dataBill.splice(this.tabDefault, 1);
@@ -1659,39 +1651,36 @@ export class TabshopComponent implements OnInit {
                   } else {
                     this.selectedSearchPersonId = '';
                   }
-                 
+
+                  localStorage.setItem(
+                    'tabOrder',
+                    JSON.stringify(this.dataCurrent)
+                  );
+                  localStorage.setItem(
+                    'dataBill',
+                    JSON.stringify(this.dataBill)
+                  );
+                  localStorage.setItem(
+                    'TabModal',
+                    JSON.stringify(this.modalData)
+                  );
+                  localStorage.setItem(
+                    'dataPayment',
+                    JSON.stringify(this.dataBtnPayment)
+                  );
+                  localStorage.setItem(
+                    'dataBatches',
+                    JSON.stringify(this.productItemsBatches)
+                  );
+                  this.DatalayoutService.changeData({
+                    tabCurrent: this.tabDefault,
+                  });
+                  localStorage.setItem(
+                    'TabCurrentIndex',
+                    JSON.stringify(this.tabDefault)
+                  );
                 }
-                arrayFormdata = this.dataBtnPayment;
-                dataBatchesFrom = this.productItemsBatches;
-                localStorage.setItem(
-                  'tabOrder',
-                  JSON.stringify(this.dataCurrent)
-                );
-                localStorage.setItem(
-                  'dataBill',
-                  JSON.stringify(this.dataBill)
-                );
-                localStorage.setItem(
-                  'TabModal',
-                  JSON.stringify(this.modalData)
-                );
-                localStorage.setItem(
-                  'dataPayment',
-                  JSON.stringify(this.dataBtnPayment)
-                );
-                localStorage.setItem(
-                  'dataBatches',
-                  JSON.stringify(this.productItemsBatches)
-                );
-                this.DatalayoutService.changeData({
-                  tabCurrent: this.tabDefault,
-                });
-                localStorage.setItem(
-                  'TabCurrentIndex',
-                  JSON.stringify(this.tabDefault)
-                );
-                this.dataBtnPayment = arrayFormdata;
-                this.productItemsBatches = dataBatchesFrom;
+                console.log(this.dataBill);
               }
             });
           } else {
@@ -1713,7 +1702,6 @@ export class TabshopComponent implements OnInit {
         }
       })
       .catch((res) => {});
-      
   }
   replaceKeysWithData(objectData : any = {}) {
     

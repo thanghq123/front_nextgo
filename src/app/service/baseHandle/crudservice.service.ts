@@ -8,6 +8,7 @@ import {HandleDataService} from './handle-data.service';
 })
 export abstract class CRUDServiceService<T> {
   protected apiUrl: string;
+  protected publicUrl: string;
 
   constructor(
     protected http: HttpClient,

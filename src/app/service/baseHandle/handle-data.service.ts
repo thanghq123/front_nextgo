@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {environment} from 'src/environments/environment';
+import {ConfigService} from "../config/config.service";
 
 @Injectable({
   providedIn: 'root',
@@ -7,12 +8,19 @@ import {environment} from 'src/environments/environment';
 export class HandleDataService {
   private readonly domain_name: String;
 
-  constructor() {
-    this.domain_name = environment.domain_name;
+  constructor(
+    private configService: ConfigService,
+  ) {
+    this.configService.updateValues();
+    this.domain_name = this.configService.domain_name;
   }
 
   getUrl(serviceTennat: string): string {
     return environment.apiTennatv1 + serviceTennat;
+  }
+
+  getPulicUrl(serviceTennat: string): string {
+    return environment.apiPublicv1 + serviceTennat;
   }
 
   handleData(data: any = {}, location_id: null|number = null) {
