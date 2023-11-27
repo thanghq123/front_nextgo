@@ -24,7 +24,6 @@ export class EditCategoriesComponent implements OnInit {
       const id = queryParams.get('id');
       if (id !== null) {
         this.id = id;
-
         this.categories.GetOneRecord(id).subscribe(
           (data) => {
             this.categoryForm.patchValue(data.payload);
@@ -39,6 +38,9 @@ export class EditCategoriesComponent implements OnInit {
     });
   }
 
+  isFormChanged() {
+    return this.categoryForm.value.name !== this.originalData.name;
+  }
   onSubmit() {
     if (this.categoryForm.valid) {
       const dataToSend = {

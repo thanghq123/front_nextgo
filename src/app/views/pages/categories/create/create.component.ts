@@ -72,7 +72,6 @@ export class CreateComponent implements OnInit {
             Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
           }
         );
-      
     } else {
       alert('Không để trống');
     }
