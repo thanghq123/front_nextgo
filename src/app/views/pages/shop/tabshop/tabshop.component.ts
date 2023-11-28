@@ -1284,7 +1284,7 @@ export class TabshopComponent implements OnInit {
           if (this.selectedSearchPersonId != '') {
             console.log('đã vào đây');
 
-            this.OrderService.create(dataSend, environment.location_id).subscribe((data: any) => {
+            this.OrderService.create(dataSend).subscribe((data: any) => {
               // console.log(data.payload.id);
               console.log(data);
               
