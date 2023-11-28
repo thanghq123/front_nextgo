@@ -21,12 +21,12 @@ export abstract class CRUDServiceService<T> {
     return this.http.post<T[]>(`${this.apiUrl}`, this.dataService.handleData());
   }
 
-  create(data: T, location_id: null|number = null) {
+  create(data: T) {
     const headers = new HttpHeaders();
     console.log(this.dataService.handleData(data));
     return this.http.post<T>(
       `${this.apiUrl}/store`,
-      this.dataService.handleData(data, location_id),
+      this.dataService.handleData(data),
       {headers}
     );
   }
