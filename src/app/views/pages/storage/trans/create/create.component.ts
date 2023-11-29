@@ -159,6 +159,7 @@ export class CreateComponent implements OnInit {
             });
             this.router.navigate([
               `../storage/trans/detail/${response.payload}`,
+              // `../storage/trans/list`
             ]);
           } else {
             console.log(response);

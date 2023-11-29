@@ -1,7 +1,9 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, TemplateRef } from '@angular/core';
 import { DataTable } from 'simple-datatables';
 import { Observable,of } from 'rxjs';
 import Swal from 'sweetalert2';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
 import { StorageImport } from 'src/app/interface/storage/storage-import';
 import { StorageImportService } from 'src/app/service/storage/storage-import.service';
 
@@ -10,21 +12,27 @@ import { StorageImportService } from 'src/app/service/storage/storage-import.ser
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss']
 })
-export class ListComponent implements OnInit, AfterViewInit {
+export class ListComponent implements OnInit {
   isLoading = false;
-  listStorageImport: Observable<any>;
+  inventoryStorageList: Observable<any>;
 
+  constructor(
+    private _storageService: StorageImportService,
 
-  constructor(private _storageService: StorageImportService) {
-    this.listStorageImport = new Observable();
+  ) {
+    this.inventoryStorageList = new Observable();
   }
 
   ngOnInit(): void {
     this.refreshData();
   }
 
+  calculator(number1: number, number2: number){
+    return number1 * number2;
+  }
+
   ngAfterViewInit(): void {
-    this.listStorageImport.subscribe(() => {
+    this.inventoryStorageList.subscribe(() => {
       setTimeout(() => {
         const db = new DataTable('#dataTableExample');
         setTimeout(() => {
@@ -92,17 +100,14 @@ export class ListComponent implements OnInit, AfterViewInit {
 
   refreshData(): void{
     this.isLoading = true;
-    const data ={
-      trans_type: 0,
-    }
-    this._storageService.getAll(data).subscribe({
+    this._storageService.getAllInventory(null).subscribe({
       next: (res: any) => {
         // console.log(res.status);
         if(res.status == true){
-          this.listStorageImport = of(res.payload.data) ;
+          this.inventoryStorageList = of(res.payload) ;
           this.isLoading = false;
           console.log(res.payload);
-          this.listStorageImport.subscribe(
+          this.inventoryStorageList.subscribe(
             (res)=> {
               setTimeout(() => {
                 const db = new DataTable('#dataTableExample');
@@ -120,18 +125,6 @@ export class ListComponent implements OnInit, AfterViewInit {
         Swal.fire('Lỗi!', 'Có lỗi xảy ra. Vui lòng liên hệ QTV.', 'error');
       }
     })
-  }
-
-  status(key: number): any{
-    // const result = [];
-    if(key == 0){
-       return ['Hủy đơn', 'bg-danger'];
-    }else if(key == 1){
-      return ['Chờ xác nhận', 'bg-primary'];
-    }else if(key == 2){
-      return ['Hoàn thành', 'bg-success']
-    }
-
   }
 
 }

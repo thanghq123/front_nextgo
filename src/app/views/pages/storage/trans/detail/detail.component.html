@@ -35,7 +35,7 @@
               <span class="text-danger">(*)</span>
             </label>
             <input type="text" class="form-control" id="exampleInputUsername1" formControlName="reason"
-              autocomplete="off" placeholder="Nhập lý do nhập" />
+              autocomplete="off" placeholder="Nhập lý do nhập" readonly/>
           </div>
           <!-- <div class="mb-3">
             <label for="exampleInputUsername1" class="form-label">
@@ -48,28 +48,12 @@
             <label for="exampleFormControlTextarea1" class="form-label">
               Ghi chú
             </label>
-            <textarea class="form-control" id="exampleFormControlTextarea1" formControlName="note" placeholder="Nhập ghi chú" rows="5"></textarea>
+            <textarea class="form-control" id="exampleFormControlTextarea1" formControlName="note" placeholder="Nhập ghi chú" rows="5" readonly></textarea>
           </div>
 
           <br />
           <h6 class="card-title">Thông tin chuyển kho</h6>
           <div class="row">
-            <div class="col-sm-6">
-              <div class="mb-3">
-                <label for="exampleInputUsername1" class="form-label">
-                  Chi nhánh xuất
-                  <span class="text-danger">(*)</span>
-                </label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleInputUsername1"
-                  formControlName="inventory_name"
-                  autocomplete="off"
-                  [readonly]="true"
-                />
-              </div>
-            </div>
             <!-- Col -->
             <div class="col-sm-6">
               <div class="mb-3">
@@ -77,21 +61,11 @@
                   Kho xuất
                   <span class="text-danger">(*)</span>
                 </label>
-                <input type="text" id="">
+                <input type="text" class="form-control" id="exampleInputUsername1" formControlName="inventory_name_out"
+              autocomplete="off" placeholder="Nhập lý do nhập" readonly/>
               </div>
             </div>
             <!-- Col -->
-          </div>
-          <div class="row">
-            <div class="col-sm-6">
-              <div class="mb-3">
-                <label for="exampleInputUsername1" class="form-label">
-                  Chi nhánh nhập
-                  <span class="text-danger">(*)</span>
-                </label>
-                <input type="text" id="">
-              </div>
-            </div>
             <!-- Col -->
             <div class="col-sm-6">
               <div class="mb-3">
@@ -99,12 +73,11 @@
                   Kho nhập
                   <span class="text-danger">(*)</span>
                 </label>
-                <input type="text" id="">
+                <input type="text" class="form-control" id="exampleInputUsername1" formControlName="inventory_name"
+              autocomplete="off" placeholder="Nhập lý do nhập" readonly/>
               </div>
             </div>
-            <!-- Col -->
           </div>
-
           <br />
           <h6 class="card-title">Danh sách sản phẩm</h6>
           <div class="mb-3">
@@ -117,55 +90,29 @@
                       <tr>
                         <th>SKU</th>
                         <th>Phiên bản sản phẩm</th>
-                        <th>Tồn kho</th>
-                        <th>Số lượng</th>
+                        <th>SỐ LƯỢNG</th>
                         <th>Đơn vị</th>
-                        <th></th>
+
                       </tr>
                     </thead>
-                    <!-- <tbody>
-                      <ng-container *ngIf="products && products.length">
-                        <tr *ngFor="let value of products; let i = index">
+                    <tbody>
+                      <ng-container *ngIf="listStorage && listStorage.length">
+                        <tr *ngFor="let value of listStorage; let i = index">
                           <th>{{ value.sku }}</th>
-                          <td (click)="Edit(i)">{{ value.name }}</td>
-                          <td (click)="Edit(i)">
-                            {{ value.inventory }}
-                          </td>
-                          <td *ngIf="i === editRowID">
-                            <input
-                              type="number"
-                              data-id="{{value.id}}"
-                              name="quantity"
-                              formControlName="quantity"
-                              [ngModel]="products[i].quantity"
-                              (input)="resultTotal($event)"
-                              class="form-control"
-                              id="exampleInputText1"
-                              placeholder="Nhập số lượng"
-                            />
-                          </td>
-                          <td *ngIf="i !== editRowID" (click)="Edit(i)">
-                            {{ value.quantity }}
+                          <td>{{ value.variation_name }}</td>
+                          <td>
+                           {{ value.quantity}}
                           </td>
                           <td>Đơn vị</td>
-
-                          <th>
-                            <button
-                              (click)="removeProduct(i)"
-                              class="btn btn-danger"
-                            >
-                              Xóa
-                            </button>
-                          </th>
                         </tr>
                         <tr>
-                          <th style="color: red">TỔNG TIỀN</th>
+                          <th style="color: red">Số mặt hàng</th>
                           <td colspan="5" style="text-align: right">
-
+                            {{listStorage.length}}
                           </td>
                         </tr>
                       </ng-container>
-                    </tbody> -->
+                    </tbody>
                   </table>
                 </div>
               </div>
@@ -179,7 +126,7 @@
           >
             Xác nhận
           </button>
-          <button
+          <!-- <button
             *ngIf="status === 1"
             type="button"
             (click)="cancel()"
@@ -195,7 +142,7 @@
             class="btn btn-primary me-2"
           >
             In mã vạch
-          </button>
+          </button> -->
           <button class="btn btn-secondary" routerLink="/storage/trans/list">
             Trở về
           </button>

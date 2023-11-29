@@ -18,8 +18,8 @@ export class DetailComponent implements OnInit {
   storageTransForm = new FormGroup({
     reason: new FormControl(''),
     note: new FormControl(''),
-    inventory_id_out: new FormControl(''),
-    inventory_id: new FormControl(''),
+    inventory_name_out: new FormControl(''),
+    inventory_name: new FormControl(''),
     quantity: new FormControl(''),
   });
 
@@ -65,6 +65,7 @@ export class DetailComponent implements OnInit {
       }
     });
   }
+  
 
   onSubmit() {
     Swal.fire({
