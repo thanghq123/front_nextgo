@@ -22,6 +22,8 @@ import {PaginatorModule} from "primeng/paginator";
 import {ReactiveFormsModule} from "@angular/forms";
 import { LoginByDomainNameComponent } from './views/pages/auth/login/by-staff/login-by-domain-name/login-by-domain-name.component';
 import { CreateComponent } from './views/pages/tenant/create/create.component';
+import { SettingComponent } from './views/pages/setting/setting.component';
+import { ConfigComponent } from './views/pages/config/config.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -29,6 +31,8 @@ import { CreateComponent } from './views/pages/tenant/create/create.component';
     ListTenantComponent,
     LoginByDomainNameComponent,
     CreateComponent,
+    SettingComponent,
+    ConfigComponent,
   ],
   imports: [
     BrowserModule,

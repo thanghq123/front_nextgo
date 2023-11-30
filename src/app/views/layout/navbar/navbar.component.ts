@@ -2,6 +2,9 @@ import {Component, OnInit, ViewChild, ElementRef, Inject, Renderer2} from '@angu
 import {DOCUMENT} from '@angular/common';
 import {Router} from '@angular/router';
 import {LocalStorageService} from "../../../service/localStorage/localStorage.service";
+import {LocationsService} from "../../../service/locations/locations.service";
+import {Locations} from "../../../interface/locations/locations";
+import {SettingService} from "../../../service/setting/setting.service";
 
 @Component({
   selector: 'app-navbar',
@@ -10,16 +13,29 @@ import {LocalStorageService} from "../../../service/localStorage/localStorage.se
 })
 export class NavbarComponent implements OnInit {
   public user: any;
+  public locations: Locations[] = [];
+  public activeLocation: Locations | undefined;
+
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private renderer: Renderer2,
     private router: Router,
-    private localStorageService: LocalStorageService
+    private localStorageService: LocalStorageService,
+    private locationService: LocationsService,
+    private settingService: SettingService,
   ) {
   }
 
   ngOnInit(): void {
     this.user = this.localStorageService.get('user');
+    this.locationService.GetData().subscribe(
+      (response: any) => {
+        if (response.status) {
+          this.locations = response.payload;
+          this.activeLocation = this.locations.find((location) => location.id == this.settingService.location?.id);
+        }
+      }
+    );
   }
 
   /**
@@ -48,15 +64,28 @@ export class NavbarComponent implements OnInit {
 
     this.localStorageService.remove('user');
 
-    this.localStorageService.remove('location_id');
+    this.localStorageService.remove('location');
 
-    this.localStorageService.remove('inventory_id');
+    this.localStorageService.remove('inventory');
 
-    this.localStorageService.remove('domain_name');
+    this.localStorageService.remove('tenant');
 
     if (!this.localStorageService.get('isLoggedin')) {
       this.router.navigate(['/auth/login']);
     }
+  }
+
+  setActiveLocation(location: Locations) {
+    const {
+      inventory,
+      ...activeLocation
+    } = location;
+    this.localStorageService.set('location', activeLocation);
+    this.localStorageService.set('inventory', inventory);
+    this.activeLocation = location;
+    setTimeout(() => {
+      window.location.reload();
+    }, 200);
   }
 
 }
