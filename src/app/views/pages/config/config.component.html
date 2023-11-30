@@ -1,4 +1,7 @@
-<div>
+<form
+  [formGroup]="configForm"
+  (ngSubmit)="onSubmit()"
+>
   <div class="row">
     <div class="col-12">
       <div class="row">
@@ -7,7 +10,7 @@
             <h4 class="font-weight-bold">THÔNG TIN DOANH NGHIỆP</h4>
             <div class="page-title-right">
               <ol class="breadcrumb m-0">
-                <li class="breadcrumb-item"><a href="/setting" target="_self" class="">Cấu hình</a></li>
+                <li class="breadcrumb-item"><a routerLink="/setting" target="_self" class="">Cấu hình</a></li>
                 <li class="breadcrumb-item active"><span aria-current="location">Thông tin doanh nghiệp</span></li>
               </ol>
             </div>
@@ -29,8 +32,20 @@
               <fieldset class="form-group"><!---->
                 <div>
                   <label>Tên cửa hàng <sup class="text-danger"> * </sup></label>
-                  <input type="text" placeholder="Nhập tên cửa hàng" class="form-control is-valid">
-                  <div class="invalid-feedback"></div>
+                  <input
+                    type="text"
+                    placeholder="Nhập tên cửa hàng"
+                    class="form-control"
+                    formControlName="business_name">
+                  <div
+                    *ngIf="configForm.controls.business_name.invalid && configForm.controls.business_name.touched"
+                    class="alert alert-danger mt-2"
+                  >
+                    Không để trống tên cửa hàng
+                  </div>
+                  <div *ngIf="errorMessages.business_name" class="alert alert-danger mt-2">
+                    {{ errorMessages.business_name }}
+                  </div>
                 </div>
               </fieldset>
             </div>
@@ -43,10 +58,20 @@
                     <!---->
                     <div>
                       <label>Số điện thoại</label>
-                      <input type="text" placeholder="Số điện thoại" class="form-control">
-                      <!---->
-                      <!---->
-                      <!---->
+                      <input
+                        type="text"
+                        placeholder="Số điện thoại"
+                        class="form-control"
+                        formControlName="tel">
+                      <div
+                        *ngIf="configForm.controls.tel.invalid && configForm.controls.tel.touched"
+                        class="alert alert-danger mt-2"
+                      >
+                        Không để trống tên cửa hàng
+                      </div>
+                      <div *ngIf="errorMessages.tel" class="alert alert-danger mt-2">
+                        {{ errorMessages.tel }}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -60,10 +85,8 @@
                           type="text"
                           disabled="disabled"
                           placeholder="Địa chỉ email" readonly="readonly"
+                          value="{{ config?.email }}"
                           class="form-control">
-                        <!---->
-                        <!---->
-                        <!---->
                       </div>
                     </div>
                   </div>
@@ -78,11 +101,25 @@
                 <div class="col-md-6 col-12">
                   <fieldset id="input-group-budiness" class="form-group">
                     <!---->
-                    <div><label>Lĩnh vực kinh doanh</label>
-                      <select name="" id="" class="form-select"></select>
-                      <!---->
-                      <!---->
-                      <!---->
+                    <div><label>Lĩnh vực kinh doanh <sup class="text-danger">*</sup></label>
+                      <ng-select
+                        [searchable]="true"
+                        formControlName="business_field_code"
+                        placeholder="Chọn lĩnh vực kinh doanh"
+                      >
+                        <ng-option *ngFor="let item of businessFields" [value]="item.code">
+                          {{ item.name }}
+                        </ng-option>
+                      </ng-select>
+                      <div
+                        *ngIf="configForm.controls.business_field_code.invalid && configForm.controls.business_field_code.touched"
+                        class="alert alert-danger mt-2"
+                      >
+                        Vui lòng chọn lĩnh vực kinh doanh
+                      </div>
+                      <div *ngIf="errorMessages.business_field_code" class="alert alert-danger mt-2">
+                        {{ errorMessages.business_field_code }}
+                      </div>
                     </div>
                   </fieldset>
                 </div>
@@ -90,18 +127,18 @@
                   <fieldset id="input-group-type" class="form-group">
                     <!---->
                     <div><label>Loại doanh nghiệp</label>
-                      <select name="" id="" class="form-select"></select>
-                      <!---->
-                      <!---->
-                      <!---->
+                      <ng-select
+                        [searchable]="true"
+                        formControlName="business_type"
+                        placeholder="Chọn loại doanh nghiệp"
+                      >
+                        <ng-option *ngFor="let item of businessTypes" [value]="item.value">
+                          {{ item.name }}
+                        </ng-option>
+                      </ng-select>
                     </div>
                   </fieldset>
                 </div>
-                <div class="col-md-8 col-12"></div>
-                <div class="col-md-4 col-12"></div>
-                <div class="col-md-4 col-12"></div>
-                <div class="col-md-8 col-12"></div>
-                <div class="col-12"></div>
               </div>
             </div>
           </div>
@@ -109,27 +146,41 @@
             <div class="col-12">
               <fieldset class="form-group">
                 <!---->
-                <div><span><label>Số đăng kí kinh doanh </label><input id="formrow-number-register-input" type="text"
-                                                                       placeholder="Nhập số đăng kí kinh doanh"
-                                                                       class="form-control"><div
-                  class="invalid-feedback">  </div></span>
-                  <!---->
-                  <!---->
-                  <!---->
+                <div>
+                  <label>Số đăng kí kinh doanh </label>
+                  <input
+                    id="formrow-number-register-input"
+                    type="text"
+                    placeholder="Nhập số đăng kí kinh doanh"
+                    class="form-control"
+                    formControlName="business_registration"
+                  >
                 </div>
               </fieldset>
             </div>
           </div>
           <div class="row">
             <div class="col-md-6 col-12"><label>Ngày cấp</label>
-              <input type="date" name="" id="" class="form-control">
+              <input
+                type="date"
+                name=""
+                id=""
+                class="form-control"
+                formControlName="license_date"
+              >
             </div>
             <div class="col-md-6 col-12">
               <div role="group" class="form-group">
                 <!---->
-                <div><span><label>Nơi cấp </label><input id="formrow-firstname-input" type="text" placeholder="Nơi cấp"
-                                                         class="form-control"><div
-                  class="invalid-feedback">  </div></span>
+                <div><span><label>Nơi cấp </label>
+                  <input
+                    id="formrow-firstname-input"
+                    type="text"
+                    placeholder="Nơi cấp"
+                    class="form-control"
+                    formControlName="license_address"
+                  >
+                </span>
                   <!---->
                   <!---->
                   <!---->
@@ -154,13 +205,19 @@
             <div class="col-12">
               <div id="input-group-1" role="group" class="form-group">
                 <!---->
-                <div><label>Tỉnh/Thành phố</label>
-                  <select name="" id="" class="form-select"></select>
-                  <!---->
-                  <!---->
-                  <!---->
-                  <!---->
-                </div>
+                <label for="exampleInputUsername1" class="form-label">
+                  Tỉnh thành phố
+                </label>
+                <ng-select
+                  [searchable]="true"
+                  (change)="onProvinceChange()"
+                  formControlName="province_code"
+                  placeholder="Chọn Tỉnh"
+                >
+                  <ng-option *ngFor="let item of provinces" [value]="item.id">
+                    {{ item.name }}
+                  </ng-option>
+                </ng-select>
               </div>
             </div>
           </div>
@@ -169,11 +226,16 @@
               <div id="input-group-1" role="group" class="form-group">
                 <!---->
                 <div><label>Quận/Huyện</label>
-                  <select name="" id="" class="form-select"></select>
-                  <!---->
-                  <!---->
-                  <!---->
-                  <!---->
+                  <ng-select
+                    [searchable]="true"
+                    (change)="onDistrictChange()"
+                    formControlName="district_code"
+                    placeholder="Chọn Quận/Huyện"
+                  >
+                    <ng-option *ngFor="let item of districts" [value]="item.id">
+                      {{ item.name }}
+                    </ng-option>
+                  </ng-select>
                 </div>
               </div>
             </div>
@@ -181,11 +243,15 @@
               <div id="input-group-1" role="group" class="form-group">
                 <!---->
                 <div><label>Phường/Xã</label>
-                  <select name="" id="" class="form-select"></select>
-                  <!---->
-                  <!---->
-                  <!---->
-                  <!---->
+                  <ng-select
+                    [searchable]="true"
+                    formControlName="ward_code"
+                    placeholder="Chọn Xã"
+                  >
+                    <ng-option *ngFor="let item of wards" [value]="item.id">
+                      {{ item.name }}
+                    </ng-option>
+                  </ng-select>
                 </div>
               </div>
             </div>
@@ -194,12 +260,23 @@
             <div class="col-12">
               <div role="group" class="form-group">
                 <!---->
-                <div><span><label>Địa chỉ cụ thể<sup class="text-danger"> * </sup></label><textarea
-                  id="formrow-address-input" name="textarea" placeholder="Nhập địa chỉ" rows="3" wrap="soft"
-                  class="form-control form-control is-valid"></textarea><div class="invalid-feedback">  </div></span>
-                  <!---->
-                  <!---->
-                  <!---->
+                <div><label>Địa chỉ cụ thể<sup class="text-danger"> * </sup></label>
+                  <textarea
+                    class="form-control"
+                    id="exampleFormControlTextarea1"
+                    placeholder="Nhập địa chỉ"
+                    formControlName="address_detail"
+                    rows="5"
+                  ></textarea>
+                  <div
+                    *ngIf="configForm.controls.address_detail.invalid && configForm.controls.address_detail.touched"
+                    class="alert alert-danger mt-2"
+                  >
+                    Không để trống địa chỉ
+                  </div>
+                  <div *ngIf="errorMessages.address_detail" class="alert alert-danger mt-2">
+                    {{ errorMessages.address_detail }}
+                  </div>
                 </div>
               </div>
             </div>
@@ -221,13 +298,19 @@
           <div class="row">
             <div class="col-lg-12 row">
               <label class="col-form-label col-lg-3 font-size-14 font-weight-bold">Địa chỉ đăng nhập</label>
-              <div class="col-lg-9"><span>: https://nextgo.vn/s/datn-fpt-2</span></div>
+              <div class="col-lg-9"><span>: https://nextgo.vn/s/{{ tenant.name }}</span></div>
             </div>
           </div>
           <div class="row">
             <div class="col-lg-12 row">
               <label class="col-form-label col-lg-3 font-size-14 font-weight-bold">Ngày tạo</label>
-              <div class="col-lg-9"><span>: 20/11/2023 </span></div>
+              <div class="col-lg-9"><span>: {{ handleDate(tenant.created_at) }} </span></div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-12 row">
+              <label class="col-form-label col-lg-3 font-size-14 font-weight-bold">Ngày hết hạn</label>
+              <div class="col-lg-9"><span>: {{ handleDate(tenant.due_at) }} </span></div>
             </div>
           </div>
         </div>
@@ -244,4 +327,4 @@
       </div>
     </div>
   </div>
-</div>
+</form>

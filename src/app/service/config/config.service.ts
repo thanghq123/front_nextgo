@@ -18,4 +18,8 @@ export class ConfigService extends CRUDServiceService<Config> {
     super(http, dataService);
     this.apiUrl = this.dataService.getUrl('config');
   }
+
+  getConfig() {
+    return this.http.post(`${this.apiUrl}/show`, this.dataService.handleData());
+  }
 }
