@@ -441,6 +441,11 @@ export class EditComponent implements OnInit {
       confirmButtonText: 'Có, tiến hành!',
     }).then((result) => {
       if (result.isConfirmed) {
+        // this._printService.returnForm(1).subscribe(
+        //   (res) => {
+
+        //   }
+        // )
         this.oldForm = this.defaultForm;
         Swal.fire({
           toast: true,

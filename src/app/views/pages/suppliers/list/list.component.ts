@@ -12,7 +12,7 @@ import Swal from 'sweetalert2';
 export class ListComponent implements OnInit {
 
   Customers: Observable<Suppliers[]>;
-  
+
   constructor(private SuppliersService: SuppliersService) {
     this.Customers = new Observable();
   }
@@ -88,7 +88,6 @@ export class ListComponent implements OnInit {
       (response : any) => {
         console.log(response);
         if(response.status == true){
-          this.Customers =of(response.payload);
           this.Customers.subscribe((categories) => {
             setTimeout(() => {
                 const dataTable = new DataTable('#dataTableExample');
@@ -104,7 +103,7 @@ export class ListComponent implements OnInit {
         Swal.fire('Lỗi!', 'Có lỗi xảy ra khi xóa danh mục.', 'error');
       }
     );
-    
+
   }
 
 

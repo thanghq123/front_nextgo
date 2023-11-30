@@ -37,7 +37,6 @@ export class DebtsService extends CRUDServiceService<Debts> {
  handleData(data: any = {}) {
   return {
     domain_name: this.domain_name,
-    location: 1,
     ...data,
   };
 }
