@@ -18,8 +18,8 @@ export class StorageImportService extends CRUDServiceService<any> {
     this.domain_name = this.configService.domain_name;
   }
 
-  getAll() {
-    return this.http.post(`${this.apiUrl}` + '/import', this.handleData());
+  getAll(data: any) {
+    return this.http.post(`${this.apiUrl}` + '/import', this.handleData(data));
   }
 
   getOne(id: string): Observable<any> {
@@ -42,6 +42,47 @@ export class StorageImportService extends CRUDServiceService<any> {
       this.dataService.handleData()
     );
   }
+
+  //trans
+  getAllTrans() {
+    return this.http.post(`${this.apiUrl}` + '/trans', this.handleData());
+  }
+  createTrans(data: any): Observable<any> {
+    return this.http.post(
+      `${this.apiUrl}/trans/store`,
+      this.dataService.handleData(data)
+    );
+  }
+
+  //
+  getAllInventory(data: any){
+    if(data == null){
+      return this.http.post(
+        this.dataService.getUrl('storage/get-variation'),
+        this.dataService.handleData(data)
+      );
+    }else{
+      return this.http.post(
+        this.dataService.getUrl(`storage/get-variation/${data}`),
+        this.dataService.handleData(data)
+      );
+    }
+  }
+  getAllVariation(data: any){
+    return this.http.post(
+      `${this.apiUrl}/get-variation-inventory`,
+      this.dataService.handleData(data)
+    );
+  }
+
+  //update quantity variation
+  updateQuantity(data: any, inventory_id: number): Observable<any> {
+    return this.http.post(
+      `${this.apiUrl}/update-quantity/${inventory_id}`,
+      this.dataService.handleData(data)
+    );
+  }
+
 
   handleData(data: any = {}) {
     return {

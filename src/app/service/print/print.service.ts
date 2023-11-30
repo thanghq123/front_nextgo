@@ -8,11 +8,11 @@ import {Observable} from 'rxjs';
 import {ConfigService} from "../config/config.service";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PrintService extends CRUDServiceService<Print> {
   private readonly domain_name: String;
-
+  
   constructor(
     http: HttpClient,
     dataService: HandleDataService,
@@ -28,7 +28,11 @@ export class PrintService extends CRUDServiceService<Print> {
       `${this.apiUrl}/store`,
       this.dataService.handleData(data)
     );
-
   }
-
+  returnForm(id: number){
+    return this.http.post<any>(
+      `${this.apiUrl}/return`,
+      this.dataService.handleData(id)
+    );
+  }
 }
