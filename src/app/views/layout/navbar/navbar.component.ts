@@ -2,6 +2,8 @@ import {Component, OnInit, ViewChild, ElementRef, Inject, Renderer2} from '@angu
 import {DOCUMENT} from '@angular/common';
 import {Router} from '@angular/router';
 import {LocalStorageService} from "../../../service/localStorage/localStorage.service";
+import {LocationsService} from "../../../service/locations/locations.service";
+import {Locations} from "../../../interface/locations/locations";
 
 @Component({
   selector: 'app-navbar',
@@ -10,16 +12,27 @@ import {LocalStorageService} from "../../../service/localStorage/localStorage.se
 })
 export class NavbarComponent implements OnInit {
   public user: any;
+  public locations: Locations[] = [];
+  public activeLocation: Locations | undefined;
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private renderer: Renderer2,
     private router: Router,
-    private localStorageService: LocalStorageService
+    private localStorageService: LocalStorageService,
+    private locationService: LocationsService,
   ) {
   }
 
   ngOnInit(): void {
     this.user = this.localStorageService.get('user');
+    this.locationService.GetData().subscribe(
+      (response: any) => {
+        if (response.status) {
+          this.locations = response.payload;
+          this.activeLocation = this.locations.find((location) => location.id === this.localStorageService.get('location_id'));
+        }
+      }
+    );
   }
 
   /**
@@ -57,6 +70,15 @@ export class NavbarComponent implements OnInit {
     if (!this.localStorageService.get('isLoggedin')) {
       this.router.navigate(['/auth/login']);
     }
+  }
+
+  setActiveLocation(location: Locations) {
+    this.localStorageService.set('location_id', location.id);
+    this.localStorageService.set('inventory_id', location.inventory.id);
+    this.activeLocation = location;
+    setTimeout(() => {
+      window.location.reload();
+    }, 200);
   }
 
 }

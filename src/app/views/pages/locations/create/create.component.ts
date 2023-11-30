@@ -13,7 +13,7 @@ import { Subject } from 'rxjs';
 import { LocationsService } from 'src/app/service/locations/locations.service';
 import { AresService } from 'src/app/service/ares/ares.service';
 import { environment } from 'src/environments/environment';
-import {ConfigService} from "../../../../service/config/config.service";
+import {SettingService} from "../../../../service/setting/setting.service";
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
@@ -58,9 +58,9 @@ export class CreateComponent implements OnInit {
     private _locaService: LocationsService,
     private AresService: AresService,
     private router: Router,
-    private configService: ConfigService,
+    private settingService: SettingService,
   ) {
-    this.domain_name = this.configService.domain_name;
+    this.domain_name = this.settingService.domain_name;
   }
 
   ngOnInit(): void {
@@ -218,7 +218,7 @@ export class CreateComponent implements OnInit {
                 toast.addEventListener('mouseleave', Swal.resumeTimer);
               },
             });
-            this.router.navigate(['../locations/list']);
+            this.router.navigate(['../setting/locations']);
           } else {
             console.log(response);
             const errorMessages = [];

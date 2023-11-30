@@ -5,17 +5,17 @@ import { CRUDServiceService } from '../baseHandle/crudservice.service';
 import { StorageImport } from 'src/app/interface/storage/storage-import';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
-import {ConfigService} from "../config/config.service";
+import {SettingService} from "../setting/setting.service";
 
 @Injectable({
   providedIn: 'root',
 })
 export class StorageImportService extends CRUDServiceService<any> {
   private readonly domain_name: String;
-  constructor(http: HttpClient, dataService: HandleDataService, private configService: ConfigService,) {
+  constructor(http: HttpClient, dataService: HandleDataService, private settingService: SettingService,) {
     super(http, dataService);
     this.apiUrl = this.dataService.getUrl('storage');
-    this.domain_name = this.configService.domain_name;
+    this.domain_name = this.settingService.domain_name;
   }
 
   getAll() {

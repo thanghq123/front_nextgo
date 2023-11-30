@@ -8,7 +8,7 @@ import { Subject } from 'rxjs';
 import { LocationsService } from 'src/app/service/locations/locations.service';
 import { AresService } from 'src/app/service/ares/ares.service';
 import { environment } from 'src/environments/environment';
-import {ConfigService} from "../../../../service/config/config.service";
+import {SettingService} from "../../../../service/setting/setting.service";
 
 @Component({
   selector: 'app-edit',
@@ -49,9 +49,9 @@ export class EditComponent implements OnInit {
     private AresService: AresService,
     private router: Router,
     private route: ActivatedRoute,
-    private configService: ConfigService,
+    private settingService: SettingService,
   ) {
-    this.domain_name = this.configService.domain_name;
+    this.domain_name = this.settingService.domain_name;
   }
 
   ngOnInit(): void {
@@ -130,7 +130,7 @@ export class EditComponent implements OnInit {
           }
         );
       } else {
-        this.router.navigate(['../locations/list']);
+        this.router.navigate(["../../locations"]);
       }
     });
   }
@@ -234,7 +234,7 @@ export class EditComponent implements OnInit {
         (response: any) => {
           if (response.status == true) {
             this.locationsForm.reset();
-            this.showSuccessMessage('locations');
+            this.showSuccessMessage('setting/locations');
           } else {
             console.log(response);
             const errorMessages = [];
