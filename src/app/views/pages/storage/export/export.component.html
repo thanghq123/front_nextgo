@@ -23,7 +23,7 @@
             <thead>
               <tr>
                 <th>MÃ PHIẾU</th>
-                <th>KHO XUẤT</th>
+                <th>KHO NHẬP</th>
                 <th>NGƯỜI TẠO</th>
                 <th>TRẠNG THÁI ĐƠN</th>
                 <th>THỜI GIAN TẠO</th>
@@ -32,11 +32,11 @@
               </tr>
             </thead>
             <tbody>
-              <!-- <tr *ngFor="let value of listStorageImport | async">
+              <tr *ngFor="let value of listStorageExport | async">
                 <td><a [routerLink]="['../detail', value.inventory_transaction_id]">{{ value.inventory_transaction_id }}</a></td>
-                <td>{{ value.partner_name }}</td>
                 <td>{{ value.inventory_name }}</td>
-                <td style="text-align: center">{{ value.created_by }}</td>
+                <td>{{ value.created_by }}</td>
+                <!-- <td style="text-align: center"></td> -->
                 <td style="text-align: center">
                   <span class="badge {{
                       status(value.status)[1]
@@ -47,9 +47,9 @@
                 <td>{{ value.created_at }}</td>
                 <td>{{ value.updated_at }}</td>
                 <td>
-                  <a *ngIf="value.status === 1" [routerLink]="['../detail', value.inventory_transaction_id]" class="btn btn-success mx-2">Chi tiết</a>
+                  <button data-id="{{value.inventory_transaction_id}}" class="btn btn-success">Xác nhận</button>
                 </td>
-              </tr> -->
+              </tr>
             </tbody>
             <tfoot>
               <tr>
