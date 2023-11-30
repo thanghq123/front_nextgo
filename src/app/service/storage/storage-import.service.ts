@@ -15,7 +15,7 @@ export class StorageImportService extends CRUDServiceService<any> {
   constructor(http: HttpClient, dataService: HandleDataService, private settingService: SettingService,) {
     super(http, dataService);
     this.apiUrl = this.dataService.getUrl('storage');
-    this.domain_name = this.settingService.domain_name;
+    this.domain_name = this.settingService.tenant?.name;
   }
 
   getAll() {

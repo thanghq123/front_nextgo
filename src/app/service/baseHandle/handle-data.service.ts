@@ -12,7 +12,7 @@ export class HandleDataService {
     private settingService: SettingService,
   ) {
     this.settingService.updateValues();
-    this.domain_name = this.settingService.domain_name;
+    this.domain_name = this.settingService.tenant?.name;
   }
 
   getUrl(serviceTennat: string): string {
@@ -37,7 +37,7 @@ export class HandleDataService {
   handle(data: any) {
     return {
       domain_name: this.domain_name,
-      location_id: this.settingService.location_id ?? null,
+      location_id: this.settingService.location?.id ?? null,
       ...data,
     };
   }

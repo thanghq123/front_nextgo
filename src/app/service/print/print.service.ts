@@ -20,7 +20,7 @@ export class PrintService extends CRUDServiceService<Print> {
   ) {
     super(http, dataService);
     this.apiUrl = this.dataService.getUrl('printed_forms');
-    this.domain_name = this.settingService.domain_name;
+    this.domain_name = this.settingService.tenant?.name;
   }
 
   createData(data: any): Observable<any> {

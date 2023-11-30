@@ -9,8 +9,8 @@ export class ListProductsService {
   private apiUrlProducts : string = environment.apiTennatv1;
   constructor(private http: HttpClient, private settingService: SettingService) { }
   getProducts() {
-    return this.http.post(`${this.apiUrlProducts}get-product`,{ domain_name: this.settingService.domain_name,
-    location_id: this.settingService.location_id, inventory_id: this.settingService.inventory_id });
+    return this.http.post(`${this.apiUrlProducts}get-product`,{ domain_name: this.settingService.tenant?.name,
+    location_id: this.settingService.location?.id, inventory_id: this.settingService.inventory?.id });
   }
 
 }

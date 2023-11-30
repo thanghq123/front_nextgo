@@ -60,7 +60,7 @@ export class CreateComponent implements OnInit {
     private router: Router,
     private settingService: SettingService,
   ) {
-    this.domain_name = this.settingService.domain_name;
+    this.domain_name = this.settingService.tenant?.name;
   }
 
   ngOnInit(): void {

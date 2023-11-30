@@ -51,7 +51,7 @@ export class EditComponent implements OnInit {
     private route: ActivatedRoute,
     private settingService: SettingService,
   ) {
-    this.domain_name = this.settingService.domain_name;
+    this.domain_name = this.settingService.tenant?.name;
   }
 
   ngOnInit(): void {

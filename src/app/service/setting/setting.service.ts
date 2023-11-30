@@ -6,9 +6,9 @@ import {LocalStorageService} from "../localStorage/localStorage.service";
 })
 export class SettingService {
 
-  private _domain_name: string;
-  private _location_id: number;
-  private _inventory_id: number;
+  private _tenant: any | null;
+  private _location: any | null;
+  private _inventory: any | null;
 
   constructor(
     private localStorageService: LocalStorageService,
@@ -17,20 +17,20 @@ export class SettingService {
   }
 
   updateValues() {
-    this._domain_name = this.localStorageService.get('domain_name') ?? 'tenant1';
-    this._location_id = Number(this.localStorageService.get('location_id') ?? '1');
-    this._inventory_id = Number(this.localStorageService.get('inventory_id') ?? '1');
+    this._tenant = this.localStorageService.get('tenant') ?? {name: 'tenant1'};
+    this._location = this.localStorageService.get('location') ?? {id: 1};
+    this._inventory = this.localStorageService.get('inventory') ?? {id: 1};
   }
 
-  get domain_name() {
-    return this._domain_name;
+  get tenant() {
+    return this._tenant;
   }
 
-  get location_id() {
-    return this._location_id;
+  get location() {
+    return this._location;
   }
 
-  get inventory_id() {
-    return this._inventory_id;
+  get inventory() {
+    return this._inventory;
   }
 }

@@ -14,7 +14,7 @@ export class PaymentService extends CRUDServiceService<any> {
   constructor(http: HttpClient, dataService: HandleDataService, private settingService: SettingService,) {
     super(http, dataService);
     this.apiUrl = this.dataService.getUrl('payment');
-    this.domain_name = this.settingService.domain_name;
+    this.domain_name = this.settingService.tenant?.name;
   }
 
   createDebtPayment(data : any): Observable<any> {

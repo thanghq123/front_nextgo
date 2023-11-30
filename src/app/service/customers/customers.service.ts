@@ -22,7 +22,7 @@ export class CustomersService extends CRUDServiceService<Customers> {
   ) {
     super(http, dataService);
     this.apiUrl = this.dataService.getUrl('customers');
-    this.domain_name = this.settingService.domain_name;
+    this.domain_name = this.settingService.tenant?.name;
   }
 
 

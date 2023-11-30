@@ -20,7 +20,7 @@ export class DebtsService extends CRUDServiceService<Debts> {
  ) {
    super(http, dataService);
    this.apiUrl = this.dataService.getUrl('debt');
-   this.domain_name = this.settingService.domain_name;
+   this.domain_name = this.settingService.tenant?.name;
  }
 
  createDebts(data : any){
