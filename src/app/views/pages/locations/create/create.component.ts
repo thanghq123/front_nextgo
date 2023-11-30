@@ -13,6 +13,7 @@ import { Subject } from 'rxjs';
 import { LocationsService } from 'src/app/service/locations/locations.service';
 import { AresService } from 'src/app/service/ares/ares.service';
 import { environment } from 'src/environments/environment';
+import {ConfigService} from "../../../../service/config/config.service";
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
@@ -56,9 +57,10 @@ export class CreateComponent implements OnInit {
     private formBuilder: FormBuilder,
     private _locaService: LocationsService,
     private AresService: AresService,
-    private router: Router
+    private router: Router,
+    private configService: ConfigService,
   ) {
-    this.domain_name = environment.domain_name;
+    this.domain_name = this.configService.domain_name;
   }
 
   ngOnInit(): void {
@@ -172,8 +174,8 @@ export class CreateComponent implements OnInit {
 
   onSubmit() {
     if (this.locationsForm.valid) {
-      const nameDistrict = this.district.find(item => item.id == this.codeDistrict).name;
-      const nameWard = this.ward.find(item => item.id == this.codeWard).name;
+      const nameDistrict = this.district.find(item => item.id == this.codeDistrict)?.name ??'';
+      const nameWard = this.ward.find(item => item.id == this.codeWard)?.name ?? '';
       // console.log(this.district);
 
       const formData = new FormData();
@@ -190,10 +192,10 @@ export class CreateComponent implements OnInit {
       formData.append('tel', String(locationsData.tel));
       formData.append('status', String(locationsData.status));
       formData.append('is_main', String(locationsData.is_main));
-      formData.append('address_detail', String(locationsData.address_detail + ', ' + nameWard + ', ' + nameDistrict + ', ' +  this.provinces[this.codeProvince].name ));
+      formData.append('address_detail', String(locationsData.address_detail + ', ' + nameWard + ', ' + nameDistrict + ', ' +  (this.provinces[this.codeProvince]?.name ?? '') ));
       formData.append('created_by', '1');
-      formData.append('province_code', String(locationsData.province_code));
-      formData.append('district_code', String(locationsData.district_code));
+      formData.append('province_code', String(locationsData.province_code ?? ''));
+      formData.append('district_code', String(locationsData.district_code ?? ''));
       formData.append('ward_code', String(locationsData.ward_code));
       formData.append('description', String(locationsData.description));
       console.log(formData.get('address_detail'));

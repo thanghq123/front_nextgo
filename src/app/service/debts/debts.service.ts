@@ -5,6 +5,7 @@ import { CRUDServiceService } from '../baseHandle/crudservice.service';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 import { Debts } from './../../interface/debts/debts';
+import {ConfigService} from "../config/config.service";
 
 @Injectable({
   providedIn: 'root'
@@ -14,11 +15,12 @@ export class DebtsService extends CRUDServiceService<Debts> {
 
   constructor(
     http: HttpClient,
-    dataService: HandleDataService
+    dataService: HandleDataService,
+    private configService: ConfigService
  ) {
    super(http, dataService);
    this.apiUrl = this.dataService.getUrl('debt');
-   this.domain_name = environment.domain_name;
+   this.domain_name = this.configService.domain_name;
  }
 
  createDebts(data : any){

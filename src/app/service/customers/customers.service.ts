@@ -1,21 +1,28 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { HandleDataService } from '../baseHandle/handle-data.service';
-import { CRUDServiceService } from '../baseHandle/crudservice.service';
-import { Customers } from 'src/app/interface/customers/customers';
-import { environment } from 'src/environments/environment';
-import { Observable } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {HandleDataService} from '../baseHandle/handle-data.service';
+import {CRUDServiceService} from '../baseHandle/crudservice.service';
+import {Customers} from 'src/app/interface/customers/customers';
+import {environment} from 'src/environments/environment';
+import {Observable} from 'rxjs';
+import {ConfigService} from "../config/config.service";
+
 @Injectable({
   providedIn: 'root',
 })
 export class CustomersService extends CRUDServiceService<Customers> {
 
   private readonly domain_name: String;
-  private apiUrlProducts : string = environment.apiTennatv1;
-  constructor(http: HttpClient, dataService: HandleDataService) {
+  private apiUrlProducts: string = environment.apiTennatv1;
+
+  constructor(
+    http: HttpClient,
+    dataService: HandleDataService,
+    private configService: ConfigService,
+  ) {
     super(http, dataService);
     this.apiUrl = this.dataService.getUrl('customers');
-    this.domain_name = environment.domain_name;
+    this.domain_name = this.configService.domain_name;
   }
 
 

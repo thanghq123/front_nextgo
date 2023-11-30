@@ -6,11 +6,23 @@ import { ErrorPageComponent } from './views/pages/error-page/error-page.componen
 import { NavbarSellComponent } from './views/layout/baseSell/navbar-sell.component';
 import { BaseSpecialComponent } from './views/layout/base-special/base-special.component';
 import { EditComponent } from './views/pages/print/edit/edit.component';
+import { DetailComponent } from './views/pages/lists-order/detail/detail.component';
+import {AuthComponent} from "./views/layout/auth/auth.component";
+
+
+
 const routes: Routes = [
   {
     path: 'auth',
+    component: AuthComponent,
     loadChildren: () =>
-      import('./views/pages/auth/auth.module').then((m) => m.AuthModule),
+      import('./views/pages/auth/auth.module').then((m) => m.AuthModule)
+  },
+  {
+    path: 'tenant',
+    component: AuthComponent,
+    loadChildren: () =>
+      import('./views/pages/tenant/tenant.module').then((m) => m.TenantModule),
   },
   {
     path: '',
@@ -36,6 +48,13 @@ const routes: Routes = [
         loadChildren: () =>
           import('./views/pages/group-customers/group-customers.module').then(
             (m) => m.GroupCustomersModule
+          ),
+      },
+      {
+        path: 'ListOrders',
+        loadChildren: () =>
+          import('./views/pages/lists-order/lists-order.module').then(
+            (m) => m.ListsOrderModule
           ),
       },
       {
@@ -162,7 +181,7 @@ const routes: Routes = [
         loadChildren: () =>
           import(
             './views/pages/advanced-form-elements/advanced-form-elements.module'
-          ).then((m) => m.AdvancedFormElementsModule),
+            ).then((m) => m.AdvancedFormElementsModule),
       },
       {
         path: 'charts-graphs',
@@ -190,11 +209,11 @@ const routes: Routes = [
             (m) => m.GeneralModule
           ),
       },
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      {path: '', redirectTo: 'dashboard', pathMatch: 'full'},
       // { path: '**', redirectTo: 'dashboard', pathMatch: 'full' }
     ],
   },
-  { path: '',
+  { path: '', 
   component: NavbarSellComponent,
    canActivate: [AuthGuard] ,
    children: [
@@ -211,6 +230,9 @@ const routes: Routes = [
     {
       path: 'print/edit',
       component : EditComponent
+    },{
+      path: 'ListOrders/detail/:id',
+      component : DetailComponent
     }
   ]},
   {
@@ -226,11 +248,12 @@ const routes: Routes = [
     path: 'error/:type',
     component: ErrorPageComponent,
   },
-  { path: '**', redirectTo: 'error', pathMatch: 'full' },
+  {path: '**', redirectTo: 'error', pathMatch: 'full'},
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { scrollPositionRestoration: 'top' })],
+  imports: [RouterModule.forRoot(routes, {scrollPositionRestoration: 'top'})],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule {
+}

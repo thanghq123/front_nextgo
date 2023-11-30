@@ -9,6 +9,10 @@ import { ListProductsService } from 'src/app/service/listProduct/list-products.s
 import { OrderService } from 'src/app/service/order/order.service';
 import { PaymentService } from 'src/app/service/payment/payment.service';
 import { DebtsService } from 'src/app/service/debts/debts.service';
+import {environment} from "../../../../../environments/environment";
+import { ViewChild } from '@angular/core'
+import { PrintService } from 'src/app/service/print/print.service';
+import { TabwindowsService } from 'src/app/service/window/tabwindows.service';
 @Component({
   selector: 'app-tabshop',
   templateUrl: './tabshop.component.html',
@@ -79,6 +83,10 @@ export class TabshopComponent implements OnInit {
   selectedPeopleBatches: any;
   productItemsBatches: any;
   idbatches: number;
+
+  modelRadioPrintf : number = 1;
+  formPrintf :  any;
+  dataObject: any = {}; 
   constructor(
     private modalService: NgbModal,
     private DatalayoutService: DatalayoutService,
@@ -86,11 +94,16 @@ export class TabshopComponent implements OnInit {
     private ListProductsService: ListProductsService,
     private OrderService: OrderService,
     private PaymentService: PaymentService,
-    private DebtsService: DebtsService
+    private DebtsService: DebtsService,
+    private PrintService : PrintService,
+    private TabwindowsService : TabwindowsService
   ) {}
-
+  @ViewChild('printf') myModal : any;
   ngOnInit(): void {
     console.log(this.ListProducts);
+    this.PrintService.GetOneRecord('1').subscribe((data : any) => {
+      this.formPrintf =  data.payload;
+    })
     this.ListProductsService.getProducts().subscribe((data: any) => {
       this.ListProducts = Object.values(data.payload);
       console.log(data.payload);
@@ -399,9 +412,11 @@ export class TabshopComponent implements OnInit {
       }
     });
 
-    this.CustomersService.GetData().subscribe((response: any) => {
+    this.CustomersService.getCustomer().subscribe((response: any) => {
       // console.log(response.payload.data);
       this.people = response.payload;
+      console.log(response);
+      
       console.log(response);
       if (response.payload.length > 0) {
         this.people.forEach((person: any) => {
@@ -611,6 +626,12 @@ export class TabshopComponent implements OnInit {
       })
       .catch((res) => {});
   }
+
+  // openBasicModalPrintf(content: TemplateRef<any>){
+  //   this.modalService.open(content, {}).result.then((result) => {
+  //     this.basicModalCloseResult = "Modal closed" + result
+  //   }).catch((res) => {});
+  // }
 
   // Xóa sản phẩm khỏi cart
   removeItemCart(id: number) {
@@ -1215,15 +1236,58 @@ export class TabshopComponent implements OnInit {
               }
             ),
           };
-          console.log(this.tabDefault);
-          console.log(this.selectedSearchPersonId != '');
+          var currentDate = new Date(); 
+          let dataformBtn : any;
+          let dataformBatches : any;
+          let productCart : any;
+        var currentDateTime = currentDate.toLocaleString();  
+     
+          let obj = {
+            Ten_Cua_hang : 'Hậu đặng',
+            Ten_Chi_Nhanh : 'Hoa Quả',
+            Dia_Chi_Chi_Nhanh : 'Nam định',
+            Dien_Thoai_Chi_Nhanh : '0353786736',
+            Nguoi_Phu_Trach : 'Hậu đặng',
 
+            Ngay_Tao : currentDateTime,
+            Ma_Don_Hang : null,
+            Chiet_khau_Phien_Ban : '10%',
+            Thue_Phien_Ban : '10%',
+            Tong_Tien_Hang : this.priceBill,
+            Tong_Chiet_Khau_San_Pham : '10%',
+            Chiet_Khau_Don_Hang : this.DiscountBill,
+            Tong_Thue : this.singleTax,
+            Phi_Khac : 0,
+            Tong_Can_Thanh_Toan : this.priceBill,
+            Khach_Thanh_Toan : this.pricePayment,
+            Tien_No : this.paymentPrice,
+            Tien_Tra : this.changeBill,
+            Ten_Khach_Hang : 'Khách ngoại lai',
+            Dien_Thoai_Khach : '---',
+            Listproducts :  this.listProductCart[this.tabDefault].map(
+              (item: any, index: number) => {
+                return {
+                  ...item,
+                  batches_focus: this.productItemsBatches[this.tabDefault].find(
+                    (itemBatches: any) => itemBatches.id == item.id
+                  ),
+                  priceModal: this.modalData[this.tabDefault].find(
+                    (itemmodal: any) => itemmodal.id == item.id
+                  ),
+                };
+              }
+            )
+          };
+
+          console.log(obj);
+          
           if (this.selectedSearchPersonId != '') {
             console.log('đã vào đây');
 
             this.OrderService.create(dataSend).subscribe((data: any) => {
               // console.log(data.payload.id);
-
+              console.log(data);
+              
               if (data.status) {
                 // Lấy thời gian hiện tại
                 const now = new Date();
@@ -1236,10 +1300,13 @@ export class TabshopComponent implements OnInit {
                 const nowDate = new Date(now);
                 const nextYearDate = new Date(nextYear);
                 const { id: idOrder } = data.payload;
-                const { id, type, name } = this.people.find(
+                const { id, customer_type, name,tel } = this.people.find(
                   (person: any) => person.id === this.selectedSearchPersonId
                 );
-
+                console.log(this.people);
+                obj.Ma_Don_Hang = idOrder;
+                obj.Ten_Khach_Hang = name;
+                obj.Dien_Thoai_Khach = tel;
                 const dataResult = this.dataBtnPayment[this.tabDefault].map(
                   (item: any) => {
                     if (item.payment_method == 0 || item.payment_method == 1) {
@@ -1298,7 +1365,7 @@ export class TabshopComponent implements OnInit {
                 );
                 const objDebts = {
                   partner_id: id,
-                  partner_type: type,
+                  partner_type: customer_type,
                   debit_at: nowDate,
                   due_at: nextYearDate,
                   name,
@@ -1311,11 +1378,10 @@ export class TabshopComponent implements OnInit {
                   type: 0,
                   status: 1,
                 };
-
+            
                 console.log(objDebts);
                 if (this.tabDefault == 0) {
                   console.log(dataDebtsApi);
-
                   if (dataPayementApi && dataDebtsApi) {
                     objDebts.amount_debt = dataDebtsApi.pricePayment;
                     this.DebtsService.createDebts(objDebts).subscribe(
@@ -1341,9 +1407,21 @@ export class TabshopComponent implements OnInit {
                               );
                             },
                           });
-                          setTimeout(() => {
-                            window.location.reload();
-                          }, 1000);
+                          this.modalService.open(this.myModal).result.then((result) => {
+                            console.log(result);
+                         
+                            console.log(obj);
+                            
+                            this.replaceKeysWithData(obj);
+                            const newWindow = this.TabwindowsService.openWindow('about:blank','NewWindow', 800, 600);
+                            newWindow?.document.write(`<html><head><title>Website quản lý bán hàng cho doanh nghiệp NextGo</title></head><body>${this.formPrintf.form}</body></html>`);
+                            newWindow?.document.close();
+                            newWindow?.print();
+                           
+                        }).catch((res) => {});
+                          // setTimeout(() => {
+                          //   window.location.reload();
+                          // }, 1000);
                         }
                       }
                     );
@@ -1374,6 +1452,7 @@ export class TabshopComponent implements OnInit {
                     });
                     this.DebtsService.createDebts(objDebts).subscribe(
                       (data: any) => {
+                        console.log(data);
                         if (data.status) {
                           Swal.fire({
                             toast: true,
@@ -1395,9 +1474,21 @@ export class TabshopComponent implements OnInit {
                               );
                             },
                           });
-                          setTimeout(() => {
-                            window.location.reload();
-                          }, 1000);
+                          this.modalService.open(this.myModal).result.then((result) => {
+                            console.log(result);
+                         
+                            console.log(obj);
+                            
+                            this.replaceKeysWithData(obj);
+                            const newWindow = this.TabwindowsService.openWindow('about:blank','NewWindow', 800, 600);
+                            newWindow?.document.write(`<html><head><title>Website quản lý bán hàng cho doanh nghiệp NextGo</title></head><body>${this.formPrintf.form}</body></html>`);
+                            newWindow?.document.close();
+                            newWindow?.print();
+                           
+                        }).catch((res) => {});
+                          // setTimeout(() => {
+                          //   window.location.reload();
+                          // }, 1000);
                         }
                       }
                     );
@@ -1446,6 +1537,10 @@ export class TabshopComponent implements OnInit {
                   this.productItemsBatches[this.tabDefault] = [];
                   this.modalData[this.tabDefault] = [];
 
+                  dataformBtn = this.dataBtnPayment;
+                  dataformBatches = this.productItemsBatches;
+                  productCart = this.listProductCart;
+      
                   localStorage.setItem(
                     'tabOrder',
                     JSON.stringify(this.dataCurrent)
@@ -1466,10 +1561,14 @@ export class TabshopComponent implements OnInit {
                     'dataBatches',
                     JSON.stringify(this.productItemsBatches)
                   );
+                  this.dataBtnPayment = dataformBtn;
+                  this.productItemsBatches = dataformBatches;
+                  this.listProductCart = productCart;
                 } else {
+                  console.log(this.modalData);
                   if (dataPayementApi && dataDebtsApi) {
                     objDebts.amount_debt = dataDebtsApi.pricePayment;
-                    
+
                     this.PaymentService.createPayment(dataResult).subscribe(
                       (data: any) => {
                         console.log(data);
@@ -1495,9 +1594,22 @@ export class TabshopComponent implements OnInit {
                               toast.addEventListener('mouseleave', Swal.resumeTimer);
                             },
                           });
-                          setTimeout(() => {
-                            window.location.reload();
-                          },1000)
+
+                          this.modalService.open(this.myModal).result.then((result) => {
+                            console.log(result);
+                         
+                            console.log(obj);
+                            
+                            this.replaceKeysWithData(obj);
+                            const newWindow = this.TabwindowsService.openWindow('about:blank','NewWindow', 800, 600);
+                            newWindow?.document.write(`<html><head><title>Website quản lý bán hàng cho doanh nghiệp NextGo</title></head><body>${this.formPrintf.form}</body></html>`);
+                            newWindow?.document.close();
+                            newWindow?.print();
+                           
+                        }).catch((res) => {});
+                          // setTimeout(() => {
+                          //   window.location.reload();
+                          // },1000)
                         }
                       }
                     );
@@ -1544,14 +1656,27 @@ export class TabshopComponent implements OnInit {
                               );
                             },
                           });
-                          setTimeout(() => {
-                            window.location.reload();
-                          }, 1000);
+
+                          this.modalService.open(this.myModal).result.then((result) => {
+                            console.log(result);
+                         
+                            console.log(obj);
+                            
+                            this.replaceKeysWithData(obj);
+                            const newWindow = this.TabwindowsService.openWindow('about:blank','NewWindow', 800, 600);
+                            newWindow?.document.write(`<html><head><title>Website quản lý bán hàng cho doanh nghiệp NextGo</title></head><body>${this.formPrintf.form}</body></html>`);
+                            newWindow?.document.close();
+                            newWindow?.print();
+                           
+                        }).catch((res) => {});
+                          // setTimeout(() => {
+                          //   window.location.reload();
+                          // }, 1000);
                         }
                       }
                     );
                   }
-
+                
                   this.dataCurrent.splice(this.tabDefault, 1);
                   this.dataBill.splice(this.tabDefault, 1);
                   this.dataBtnPayment.splice(this.tabDefault, 1);
@@ -1563,6 +1688,7 @@ export class TabshopComponent implements OnInit {
                   this.taxBill = this.dataBill[this.tabDefault].service;
                   this.modelRadioBill = this.dataBill[this.tabDefault].radio;
                   this.priceBill = this.dataBill[this.tabDefault].totalPrice;
+                 
                   if (
                     Object.keys(this.dataCurrent[this.tabDefault].infoOrder)
                       .length > 0
@@ -1572,7 +1698,12 @@ export class TabshopComponent implements OnInit {
                   } else {
                     this.selectedSearchPersonId = '';
                   }
-
+               
+                  dataformBtn = this.dataBtnPayment;
+                  dataformBatches = this.productItemsBatches;
+                  productCart = this.listProductCart;
+                 
+                  console.log(this.modalData);
                   localStorage.setItem(
                     'tabOrder',
                     JSON.stringify(this.dataCurrent)
@@ -1596,14 +1727,26 @@ export class TabshopComponent implements OnInit {
                   this.DatalayoutService.changeData({
                     tabCurrent: this.tabDefault,
                   });
+               
                   localStorage.setItem(
                     'TabCurrentIndex',
                     JSON.stringify(this.tabDefault)
                   );
                 }
-                console.log(this.dataBill);
+                // console.log(dataformBtn);
+             
+                this.listProductCart = productCart;
+             
+                
+                    this.dataBtnPayment = dataformBtn;
+                     this.productItemsBatches = dataformBatches;
+                    // console.log(this.dataBtnPayment);
               }
             });
+            console.log(this.dataBtnPayment);
+            
+      
+                  
           } else {
             Swal.fire({
               toast: true,
@@ -1624,7 +1767,31 @@ export class TabshopComponent implements OnInit {
       })
       .catch((res) => {});
   }
-
+  replaceKeysWithData(objectData : any = {}) {
+    console.log(objectData.Listproducts);
+    for (const key in objectData) {
+      if (key === 'Listproducts' && objectData.hasOwnProperty(key)) {
+        const productListHtml = objectData.Listproducts.map((detail: any, index: number) => {
+          const placeholders = ['display_name', 'priceModal', 'quanity', 'result'];
+          const productHtml = placeholders.map(property => {
+            if (property === 'priceModal') {
+              return `<td>${detail[property].result}</td>`;
+            } else {
+              return `<td>${detail[property]}</td>`;
+            }
+          }).join('');
+          return `<tr>${productHtml}</tr>`;
+        }).join('');
+        this.formPrintf.form = this.formPrintf.form.replace('{Listproducts}', productListHtml);
+      } else {
+        console.log(2);
+        const placeholder = `{${key}}`;
+        const value = objectData[key];
+        this.formPrintf.form = this.formPrintf.form.replace(new RegExp(placeholder, 'g'), value);
+      }
+    }
+    
+  }
   limitInputTax(event: any) {
     if (+event.target.value > 100) {
       event.target.value = 100;

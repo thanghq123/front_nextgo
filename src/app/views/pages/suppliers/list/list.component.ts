@@ -86,15 +86,11 @@ export class ListComponent implements OnInit {
   refreshCategories(): void {
    this.SuppliersService.GetData().subscribe(
       (response : any) => {
+        console.log(response);
         if(response.status == true){
-          this.Customers =of(response.payload);
-          console.log(this.Customers);
-
           this.Customers.subscribe((categories) => {
             setTimeout(() => {
                 const dataTable = new DataTable('#dataTableExample');
-                // Here, use the 'categories' data to populate your DataTable
-                // ...
                 dataTable.on('datatable.init', () => {
                     this.addDeleteEventHandlers();
                 });
