@@ -23,7 +23,7 @@ export class HandleDataService {
     return environment.apiPublicv1 + serviceTennat;
   }
 
-  handleData(data: any = {}, location_id: null|number = null) {
+  handleData(data: any = {}) {
     if (typeof data !== 'object' || Array.isArray(data)) {
       data = {id: data};
     }
@@ -37,7 +37,7 @@ export class HandleDataService {
   handle(data: any) {
     return {
       domain_name: this.domain_name,
-      location: 1,
+      location_id: 1,
       ...data,
     };
   }
