@@ -100,6 +100,13 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'storage/export',
+        loadChildren: () =>
+          import('./views/pages/storage/export/export.module').then(
+            (m) => m.ExportModule
+          ),
+      },
+      {
         path: 'storage/detail',
         loadChildren: () =>
           import('./views/pages/storage/detail/detail.module').then(

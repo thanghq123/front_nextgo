@@ -77,10 +77,10 @@ export const MENU: MenuItem[] = [
         label: 'Nhập kho',
         link: '/storage/import',
       },
-      // {
-      //   label: 'Xuất kho',
-      //   link: '/suppliers/list'
-      // },
+      {
+        label: 'Xuất kho',
+        link: '/storage/export'
+      },
       {
         label: 'Chuyển kho',
         link: '/storage/trans'

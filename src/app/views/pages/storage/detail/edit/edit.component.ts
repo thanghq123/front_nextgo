@@ -16,7 +16,7 @@ export class EditComponent implements OnInit {
   id: string;
   isLoading = false;
   detailForm = new FormGroup({
-    reason: new FormControl(''),
+    reason: new FormControl('', Validators.required),
     product_name: new FormControl(''),
     variation_name: new FormControl(''),
     quantity: new FormControl(''),
@@ -69,6 +69,7 @@ export class EditComponent implements OnInit {
             console.log(data);
             this.variation = data.payload;
             this.detailForm.patchValue(data.payload);
+            this.isLoading = false;
           },
           (error) => {
             Swal.fire('Lỗi!', 'Có lỗi xảy ra dữ liệu.', 'error');
@@ -117,9 +118,31 @@ export class EditComponent implements OnInit {
 
   onSubmit(): void {
     if(this.detailForm.valid){
+      let quantity_old = Number(this.detailForm.value.quantity)
+      const reason = Number(this.detailForm.value.reason);
+      let quantity_edit = 0;
+      if (reason === 1) {
+        quantity_edit = (this.adjust);
+      }
+      else if (reason === 2) {
+        quantity_edit = (this.adjust);
+      }
+      else if (reason === 3) {
+        quantity_edit =  this.adjust - quantity_old;
+      }
+      else if (reason === 4) {
+        quantity_edit = -(this.adjust);
+      }
+      else if (reason === 5) {
+        quantity_edit = -(this.adjust);
+      }
+      else if (reason === 6) {
+        quantity_edit = -(this.adjust);
+      }
+
       const dataSend = {
         variation_id: this.variation.variation_id,
-        quantity: this.adjust,
+        quantity: quantity_edit,
         batch_id: this.variation.batch_id
       }
       console.log(dataSend);

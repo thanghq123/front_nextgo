@@ -67,6 +67,12 @@ export class StorageImportService extends CRUDServiceService<any> {
       );
     }
   }
+  getAllVariation(data: any){
+    return this.http.post(
+      `${this.apiUrl}/get-variation-inventory`,
+      this.dataService.handleData(data)
+    );
+  }
 
   //update quantity variation
   updateQuantity(data: any, inventory_id: number): Observable<any> {

@@ -1,48 +1,60 @@
 import { AfterViewInit, Component, OnInit, TemplateRef } from '@angular/core';
 import { DataTable } from 'simple-datatables';
-import { Observable,of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import Swal from 'sweetalert2';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { StorageImport } from 'src/app/interface/storage/storage-import';
 import { StorageImportService } from 'src/app/service/storage/storage-import.service';
+import { LocationsService } from 'src/app/service/locations/locations.service';
 
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
-  styleUrls: ['./list.component.scss']
+  styleUrls: ['./list.component.scss'],
 })
 export class ListComponent implements OnInit {
   isLoading = false;
   inventoryStorageList: Observable<any>;
-
+  inventory: any[] = [];
+  codeInventory: number;
   constructor(
     private _storageService: StorageImportService,
-
+    private _locationService: LocationsService
   ) {
     this.inventoryStorageList = new Observable();
   }
 
   ngOnInit(): void {
-    this.refreshData();
+    this.refreshData(null);
+    this._locationService.GetData().subscribe({
+      next: (res: any) => {
+        if (res.status == true) {
+          this.inventory = res.payload;
+          console.log(this.inventory);
+        }
+      },
+    });
+  }
+  onInventory() {
+    if(this.codeInventory){
+      // console.log(this.codeInventory);
+      this.refreshData(this.codeInventory);
+    }
   }
 
-  calculator(number1: number, number2: number){
+  calculator(number1: number, number2: number) {
     return number1 * number2;
   }
 
   ngAfterViewInit(): void {
-    this.inventoryStorageList.subscribe(() => {
-      setTimeout(() => {
-        const db = new DataTable('#dataTableExample');
-        setTimeout(() => {
-          const db = new DataTable('#dataTableExample');
-          db.on('datatable.init', () => {
-            this.addDeleteEventHandlers();
-        });
-        }, 0)
-      }, 0);
-    });
+    const dataTableElement = document.getElementById('dataTableExample');
+    if (dataTableElement) {
+      const db = new DataTable(dataTableElement);
+      db.on('datatable.init', () => {
+        this.addDeleteEventHandlers();
+      });
+    }
   }
 
   addDeleteEventHandlers(): void {
@@ -71,16 +83,16 @@ export class ListComponent implements OnInit {
           (response) => {
             Swal.fire({
               toast: true,
-              position: "top-end",
+              position: 'top-end',
               showConfirmButton: false,
               timer: 1000,
-              title: "Đã xóa!",
-              text: "Đơn vị đã được xóa.",
-              icon: "success",
+              title: 'Đã xóa!',
+              text: 'Đơn vị đã được xóa.',
+              icon: 'success',
               timerProgressBar: true,
               didOpen: (toast) => {
-                toast.addEventListener("mouseenter", Swal.stopTimer);
-                toast.addEventListener("mouseleave", Swal.resumeTimer);
+                toast.addEventListener('mouseenter', Swal.stopTimer);
+                toast.addEventListener('mouseleave', Swal.resumeTimer);
               },
             });
             // Navigate to the list after successful deletion
@@ -89,8 +101,8 @@ export class ListComponent implements OnInit {
             }, 1000);
           },
           (error) => {
-            if(error.success == false){
-              Swal.fire('Lỗi!',`${error.meta.name}`, 'error');
+            if (error.success == false) {
+              Swal.fire('Lỗi!', `${error.meta.name}`, 'error');
             }
           }
         );
@@ -98,33 +110,27 @@ export class ListComponent implements OnInit {
     });
   }
 
-  refreshData(): void{
+  refreshData(id: any): void {
+    console.log(id);
     this.isLoading = true;
-    this._storageService.getAllInventory(null).subscribe({
+    let dataSend = null;
+    if (id != null) {
+      dataSend = {
+        inventory_id: id,
+      };
+    }
+    this._storageService.getAllVariation(dataSend).subscribe({
       next: (res: any) => {
-        // console.log(res.status);
-        if(res.status == true){
-          this.inventoryStorageList = of(res.payload) ;
+        if (res.status == true) {
+          this.inventoryStorageList = of(res.payload.data);
           this.isLoading = false;
           console.log(res.payload);
-          this.inventoryStorageList.subscribe(
-            (res)=> {
-              setTimeout(() => {
-                const db = new DataTable('#dataTableExample');
-                db.on('datatable.init', () => {
-                  this.addDeleteEventHandlers();
-              });
-
-              }, 0)
-            })
-
         }
       },
       error: (err: any) => {
         console.log(err);
         Swal.fire('Lỗi!', 'Có lỗi xảy ra. Vui lòng liên hệ QTV.', 'error');
-      }
-    })
+      },
+    });
   }
-
 }

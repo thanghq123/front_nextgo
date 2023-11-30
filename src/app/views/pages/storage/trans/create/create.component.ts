@@ -11,7 +11,7 @@ import { StorageImportService } from 'src/app/service/storage/storage-import.ser
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
-  styleUrls: ['./create.component.scss']
+  styleUrls: ['./create.component.scss'],
 })
 export class CreateComponent implements OnInit {
   isLoading = false;
@@ -28,26 +28,46 @@ export class CreateComponent implements OnInit {
   input: any = {};
   products: any[] = [];
   editRowID: any = '';
-  listLocation: any = [];
   listProduct: any[] = [];
+
+  //
+  inventory: any[] = [];
+  codeInventoryOut: number;
+  codeInventoryIn: number;
+
   constructor(
     private _location: LocationsService,
     private _product: SearchProductService,
     private _storage: StorageImportService,
-    private router: Router,
+    private router: Router
   ) {
-    this._product.GetData().subscribe((res: any) => {
+    this._storage.getAllInventory(null).subscribe((res: any) => {
       this.listProduct = res.payload;
-      console.log(this.listProduct);
     });
-
     this._location.GetData().subscribe((res: any) => {
-      this.listLocation = res.payload;
+      this.inventory = res.payload;
       // console.log(this.listLocation);
     });
-   }
+  }
 
-  ngOnInit(): void {
+  ngOnInit(): void {}
+  onInventoryOut() {
+    console.log(this.codeInventoryOut);
+    this.products = [];
+    if (this.codeInventoryOut != null) {
+      const dataSend = {
+        inventory_id: this.codeInventoryOut,
+      };
+      this._storage.getAllVariation(dataSend).subscribe((res: any) => {
+        this.listProduct = res.payload.data;
+        console.log(this.listProduct);
+      });
+
+    }else{
+      this._storage.getAllVariation(null).subscribe((res: any) => {
+        this.listProduct = res.payload.data;
+      });
+    }
   }
   Edit(val: any) {
     this.editRowID = val;
@@ -61,13 +81,15 @@ export class CreateComponent implements OnInit {
           : this.listProduct
               .filter(
                 (v) =>
-                  v.product_name_variation.toLowerCase().indexOf(term.toLowerCase()) >
-                  -1
+                  v.product_name_variation
+                    .toLowerCase()
+                    .indexOf(term.toLowerCase()) > -1
               )
               .slice(0, 10)
       )
     );
-  formatter = (x: { product_name_variation: string }) => x.product_name_variation;
+  formatter = (x: { product_name_variation: string }) =>
+    x.product_name_variation;
   searchProduct() {
     if (this.input != '' && this.input.id != undefined) {
       // Kiểm tra xem sản phẩm vừa nhập có trùng với sản phẩm nào trong this.products không
@@ -81,7 +103,10 @@ export class CreateComponent implements OnInit {
           sku: this.input.sku,
           name: this.input.product_name_variation,
           variation_id: this.input.id,
-          inventory: this.input.variation_quantities != '' ? this.input.variation_quantities[0].quantity : 0,
+          inventory:
+            this.input.quantity != ''
+              ? this.input.quantity
+              : 0,
           batch_id: 1,
           price: this.input.price_import,
           price_type: 0,
@@ -122,7 +147,7 @@ export class CreateComponent implements OnInit {
   removeProduct(index: number): void {
     this.products.splice(index, 1);
   }
-  onSubmit(): void{
+  onSubmit(): void {
     if (this.storageTransForm.valid && this.products.length > 0) {
       const dataSend = {
         reason: this.storageTransForm.value.reason,
@@ -137,7 +162,7 @@ export class CreateComponent implements OnInit {
         inventory_transaction_details: JSON.parse(
           JSON.stringify(this.products)
         ),
-      }
+      };
       console.log(dataSend);
       this._storage.createTrans(dataSend).subscribe(
         (response: any) => {
@@ -158,8 +183,8 @@ export class CreateComponent implements OnInit {
               },
             });
             this.router.navigate([
-              `../storage/trans/detail/${response.payload}`,
-              // `../storage/trans/list`
+              // `../storage/trans/detail/${response.payload}`,
+              `../storage/trans/list`,
             ]);
           } else {
             console.log(response);
@@ -178,11 +203,9 @@ export class CreateComponent implements OnInit {
           Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
         }
       );
-
-    }else {
+    } else {
       alert('Sản phẩm không được để trống');
     }
-
   }
   showNextMessage(errorMessages: any) {
     if (errorMessages.length > 0) {
@@ -206,5 +229,4 @@ export class CreateComponent implements OnInit {
       });
     }
   }
-
 }
