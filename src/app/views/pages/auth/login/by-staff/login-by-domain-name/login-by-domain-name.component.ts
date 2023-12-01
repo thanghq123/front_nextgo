@@ -4,7 +4,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {AuthService} from "../../../../../../service/auth/auth.service";
 import {LocalStorageService} from "../../../../../../service/localStorage/localStorage.service";
 import Swal from "sweetalert2";
-import {ConfigService} from "../../../../../../service/config/config.service";
+import {SettingService} from "../../../../../../service/setting/setting.service";
 
 @Component({
   selector: 'app-login-by-domain-name',
@@ -27,8 +27,6 @@ export class LoginByDomainNameComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private authService: AuthService,
-    private localStorageService: LocalStorageService,
-    private configService: ConfigService
   ) {
   }
 

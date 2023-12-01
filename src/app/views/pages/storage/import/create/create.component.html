@@ -164,7 +164,8 @@
                           <td (click)="Edit(i)">{{ value.name }}</td>
                           <td *ngIf="i === editRowID">
                             <input
-                              type="number"
+                              type="text"
+                              mask="separator.2" thousandSeparator=","  autocomplete="off"
                               formControlName="price"
                               [ngModel]="products[i].price"
                               data-id="{{value.id}}"

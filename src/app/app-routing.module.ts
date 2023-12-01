@@ -1,14 +1,13 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { BaseComponent } from './views/layout/base/base.component';
-import { AuthGuard } from './core/guard/auth.guard';
-import { ErrorPageComponent } from './views/pages/error-page/error-page.component';
-import { NavbarSellComponent } from './views/layout/baseSell/navbar-sell.component';
-import { BaseSpecialComponent } from './views/layout/base-special/base-special.component';
-import { EditComponent } from './views/pages/print/edit/edit.component';
-import { DetailComponent } from './views/pages/lists-order/detail/detail.component';
+import {NgModule} from '@angular/core';
+import {Routes, RouterModule} from '@angular/router';
+import {BaseComponent} from './views/layout/base/base.component';
+import {AuthGuard} from './core/guard/auth.guard';
+import {ErrorPageComponent} from './views/pages/error-page/error-page.component';
+import {NavbarSellComponent} from './views/layout/baseSell/navbar-sell.component';
+import {BaseSpecialComponent} from './views/layout/base-special/base-special.component';
+import {EditComponent} from './views/pages/print/edit/edit.component';
+import {DetailComponent} from './views/pages/lists-order/detail/detail.component';
 import {AuthComponent} from "./views/layout/auth/auth.component";
-
 
 
 const routes: Routes = [
@@ -100,22 +99,17 @@ const routes: Routes = [
           ),
       },
       {
-        path: 'locations',
-        loadChildren: () =>
-          import('./views/pages/locations/locations.module').then(
-            (m) => m.LocationsModule
-          ),
-      },
-      {
-        path: 'print',
-        loadChildren: () =>
-          import('./views/pages/print/print.module').then((m) => m.PrintModule),
-      },
-      {
         path: 'storage/import',
         loadChildren: () =>
           import('./views/pages/storage/import/import.module').then(
             (m) => m.ImportModule
+          ),
+      },
+      {
+        path: 'storage/export',
+        loadChildren: () =>
+          import('./views/pages/storage/export/export.module').then(
+            (m) => m.ExportModule
           ),
       },
       {
@@ -202,32 +196,40 @@ const routes: Routes = [
             (m) => m.GeneralModule
           ),
       },
+      {
+        path: 'setting',
+        loadChildren: () =>
+          import('./views/pages/setting/setting.module').then(
+            (m) => m.SettingModule
+          ),
+      },
       {path: '', redirectTo: 'dashboard', pathMatch: 'full'},
       // { path: '**', redirectTo: 'dashboard', pathMatch: 'full' }
     ],
   },
-  { path: '', 
-  component: NavbarSellComponent,
-   canActivate: [AuthGuard] ,
-   children: [
-    {
-      path: 'shop',
-      loadChildren: () =>
-        import('./views/pages/shop/shop.module').then((m) => m.ShopModule),
-    }
-  ]},
-  { path: '',
-  // component: BaseSpecialComponent,
-   canActivate: [AuthGuard] ,
-   children: [
-    {
-      path: 'print/edit',
-      component : EditComponent
-    },{
-      path: 'ListOrders/detail/:id',
-      component : DetailComponent
-    }
-  ]},
+  {
+    path: '',
+    component: NavbarSellComponent,
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: 'shop',
+        loadChildren: () =>
+          import('./views/pages/shop/shop.module').then((m) => m.ShopModule),
+      }
+    ]
+  },
+  {
+    path: '',
+    // component: BaseSpecialComponent,
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: 'ListOrders/detail/:id',
+        component: DetailComponent
+      }
+    ]
+  },
   {
     path: 'error',
     component: ErrorPageComponent,

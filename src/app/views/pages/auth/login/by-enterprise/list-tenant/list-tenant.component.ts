@@ -4,7 +4,7 @@ import {AuthService} from "../../../../../../service/auth/auth.service";
 import {Tenant} from "../../../../../../interface/tenant/tenant";
 import {User} from "../../../../../../interface/user/user";
 import {LocalStorageService} from "../../../../../../service/localStorage/localStorage.service";
-import {ConfigService} from "../../../../../../service/config/config.service";
+import {SettingService} from "../../../../../../service/setting/setting.service";
 import Swal from "sweetalert2";
 import {TenantService} from "../../../../../../service/tenant/tenant.service";
 
@@ -22,7 +22,6 @@ export class ListTenantComponent implements OnInit {
     private route: ActivatedRoute,
     private authService: AuthService,
     private localStorage: LocalStorageService,
-    private configService: ConfigService,
     private tenantService: TenantService
   ) {
   }

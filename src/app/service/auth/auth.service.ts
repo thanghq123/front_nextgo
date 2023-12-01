@@ -76,11 +76,11 @@ export class AuthService extends CRUDServiceService<User> {
 
       this.localStorageService.set('user', payload.user);
 
-      this.localStorageService.set('location_id', payload.location_id);
+      this.localStorageService.set('location', payload.location);
 
-      this.localStorageService.set('inventory_id', payload.inventory_id);
+      this.localStorageService.set('inventory', payload.inventory);
 
-      this.localStorageService.set('domain_name', payload.domain_name);
+      this.localStorageService.set('tenant', payload.tenant);
 
       this.localStorageService.set('isLoggedin', 'true');
 

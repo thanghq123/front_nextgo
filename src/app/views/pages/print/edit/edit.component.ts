@@ -379,7 +379,7 @@ export class EditComponent implements OnInit {
               toast.addEventListener('mouseleave', Swal.resumeTimer);
             },
           });
-          this._router.navigate(['../print']);
+          this._router.navigate(['setting/print']);
         } else {
           console.log(response);
           const errorMessages = [];
@@ -441,6 +441,11 @@ export class EditComponent implements OnInit {
       confirmButtonText: 'Có, tiến hành!',
     }).then((result) => {
       if (result.isConfirmed) {
+        // this._printService.returnForm(1).subscribe(
+        //   (res) => {
+
+        //   }
+        // )
         this.oldForm = this.defaultForm;
         Swal.fire({
           toast: true,
