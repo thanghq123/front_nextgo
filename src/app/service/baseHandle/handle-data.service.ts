@@ -29,7 +29,7 @@ export class HandleDataService {
     }
     return {
       domain_name: this.domain_name,
-      location_id: 1,
+      location: 1,
       ...data,
     };
   }

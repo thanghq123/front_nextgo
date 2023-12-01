@@ -87,6 +87,7 @@ export class TabshopComponent implements OnInit {
   modelRadioPrintf : number = 1;
   formPrintf :  any;
   dataObject: any = {}; 
+  tenant : any;
   constructor(
     private modalService: NgbModal,
     private DatalayoutService: DatalayoutService,
@@ -104,6 +105,13 @@ export class TabshopComponent implements OnInit {
     this.PrintService.GetOneRecord('1').subscribe((data : any) => {
       this.formPrintf =  data.payload;
     })
+
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      this.tenant = JSON.parse(storedUser);
+    } else {
+      console.log('Không có dữ liệu người dùng trong LocalStorage');
+    }
     this.ListProductsService.getProducts().subscribe((data: any) => {
       this.ListProducts = Object.values(data.payload);
       console.log(data.payload);
@@ -1149,6 +1157,8 @@ export class TabshopComponent implements OnInit {
       (item: any) => item.batchs.length > 0
     );
 
+    console.log(this.tenant);
+    
     // console.log(this.listProductCart[this.tabDefault]);
 
     for (let index = 0; index < dataProductCurrent.length; index++) {
@@ -1213,7 +1223,7 @@ export class TabshopComponent implements OnInit {
         if (result) {
           const dataSend = {
             customer_id: this.selectedSearchPersonId,
-            created_by: 1,
+            created_by: this.tenant.id,
             discount: this.DiscountBill,
             discount_type: this.modelRadioBill,
             tax: this.singleTax,
@@ -1221,7 +1231,7 @@ export class TabshopComponent implements OnInit {
             total_product: this.listProductCart[this.tabDefault].length,
             total_price: this.priceBill,
             status: 2,
-            payment_status: 1,
+            payment_status: 2,
             order_details: this.listProductCart[this.tabDefault].map(
               (item: any, index: number) => {
                 return {
@@ -1241,20 +1251,28 @@ export class TabshopComponent implements OnInit {
           let dataformBatches : any;
           let productCart : any;
         var currentDateTime = currentDate.toLocaleString();  
+
+        const taxprice = this.listProductCart[this.tabDefault].reduce(
+          (index: number, item: any) => {
+           const priceFind = this.modalData[this.tabDefault].find(
+                (itemmodal: any) => itemmodal.id == item.id
+              );
+            return index + (priceFind.priceCurrent - priceFind.result)
+          },0
+        )
+        
      
           let obj = {
             Ten_Cua_hang : 'Hậu đặng',
             Ten_Chi_Nhanh : 'Hoa Quả',
             Dia_Chi_Chi_Nhanh : 'Nam định',
-            Dien_Thoai_Chi_Nhanh : '0353786736',
-            Nguoi_Phu_Trach : 'Hậu đặng',
+            Dien_Thoai_Chi_Nhanh : this.tenant.tel == null ? '---' : this.tenant.tel ,
+            Nguoi_Phu_Trach : this.tenant.name,
 
             Ngay_Tao : currentDateTime,
             Ma_Don_Hang : null,
-            Chiet_khau_Phien_Ban : '10%',
-            Thue_Phien_Ban : '10%',
             Tong_Tien_Hang : this.priceBill,
-            Tong_Chiet_Khau_San_Pham : '10%',
+            Tong_Chiet_Khau_San_Pham : `-${taxprice}`,
             Chiet_Khau_Don_Hang : this.DiscountBill,
             Tong_Thue : this.singleTax,
             Phi_Khac : 0,
@@ -1779,8 +1797,12 @@ export class TabshopComponent implements OnInit {
             } else {
               return `<td>${detail[property]}</td>`;
             }
+
           }).join('');
-          return `<tr>${productHtml}</tr>`;
+          
+          const additionalRow = `<td>KM</td><td></td><td></td><td>${detail['priceModal'].priceCurrent - detail['priceModal'].result}</td>`;
+
+          return `<tr>${productHtml}</tr><tr>${additionalRow}</tr>`;
         }).join('');
         this.formPrintf.form = this.formPrintf.form.replace('{Listproducts}', productListHtml);
       } else {
