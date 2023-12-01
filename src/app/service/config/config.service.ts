@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {CRUDServiceService} from "../baseHandle/crudservice.service";
 import {Categories} from "../../interface/categories/categories";
-import {Config} from "../../interface/config/config";
+import { Config } from 'src/app/interface/config/config';
 import {HttpClient} from "@angular/common/http";
 import {HandleDataService} from "../baseHandle/handle-data.service";
 

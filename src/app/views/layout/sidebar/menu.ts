@@ -6,9 +6,59 @@ export const MENU: MenuItem[] = [
     isTitle: true,
   },
   {
-    label: "Bán hàng",
-    icon: 'printer',
-    link: 'shop/tabshop'
+    label: 'Dashboard',
+    icon: 'home',
+    link: 'dashboard',
+  },
+  {
+    label: 'Danh mục',
+    icon: 'home',
+    link: '/categories/list',
+  },
+  {
+    label: 'Thương hiệu',
+    icon: 'target',
+    link: '/brands/list',
+  },
+  {
+    label: 'Đơn vị tính',
+    icon: 'target',
+    link: '/item-units/list',
+  },
+  {
+    label: 'Bảo hành',
+    icon: 'home',
+    link: '/warranties/list',
+  },
+  {
+    label: 'Nhóm khách hàng',
+    icon: 'home',
+    link: '/group_customers/list',
+  },
+  {
+    label: 'Khách hàng',
+    icon: 'home',
+    link: '/customers/list',
+  },
+  {
+    label: 'Nhóm Nhà Cung Cấp',
+    icon: 'home',
+    link: '/group_suppliers/list',
+  },
+  {
+    label: 'Nhà Cung Cấp',
+    icon: 'home',
+    link: '/suppliers/list',
+  },
+  {
+    label: 'Sản phẩm',
+    icon: 'mail',
+    subItems: [
+      {
+        label: 'Danh sách sản phẩm',
+        link: 'products/list',
+      }
+    ],
   },
   {
     label: 'Đơn Hàng',

@@ -86,10 +86,10 @@ export class TabshopComponent implements OnInit {
   productItemsBatches: any;
   idbatches: number;
 
-  modelRadioPrintf: number = 1;
-  formPrintf: any;
-  dataObject: any = {};
-
+  modelRadioPrintf : number = 1;
+  formPrintf :  any;
+  dataObject: any = {}; 
+  tenant : any;
   constructor(
     private modalService: NgbModal,
     private DatalayoutService: DatalayoutService,
@@ -111,6 +111,13 @@ export class TabshopComponent implements OnInit {
     this.PrintService.GetOneRecord('1').subscribe((data: any) => {
       this.formPrintf = data.payload;
     })
+
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      this.tenant = JSON.parse(storedUser);
+    } else {
+      console.log('Không có dữ liệu người dùng trong LocalStorage');
+    }
     this.ListProductsService.getProducts().subscribe((data: any) => {
       this.ListProducts = Object.values(data.payload);
       console.log(data.payload);
@@ -1163,6 +1170,8 @@ export class TabshopComponent implements OnInit {
       (item: any) => item.batchs.length > 0
     );
 
+    console.log(this.tenant);
+    
     // console.log(this.listProductCart[this.tabDefault]);
 
     for (let index = 0; index < dataProductCurrent.length; index++) {
@@ -1224,75 +1233,82 @@ export class TabshopComponent implements OnInit {
     this.modalService
       .open(content, {size: 'lg'})
       .result.then((result) => {
-      if (result) {
-        const dataSend = {
-          customer_id: this.selectedSearchPersonId,
-          created_by: 1,
-          discount: this.DiscountBill,
-          discount_type: this.modelRadioBill,
-          tax: this.singleTax,
-          service_charge: this.taxBill,
-          total_product: this.listProductCart[this.tabDefault].length,
-          total_price: this.priceBill,
-          status: 2,
-          payment_status: 1,
-          order_details: this.listProductCart[this.tabDefault].map(
-            (item: any, index: number) => {
-              return {
-                ...item,
-                batches_focus: this.productItemsBatches[this.tabDefault].find(
-                  (itemBatches: any) => itemBatches.id == item.id
-                ),
-                priceModal: this.modalData[this.tabDefault].find(
-                  (itemmodal: any) => itemmodal.id == item.id
-                ),
-              };
-            }
-          ),
-        };
-        var currentDate = new Date();
-        let dataformBtn: any;
-        let dataformBatches: any;
-        let productCart: any;
-        var currentDateTime = currentDate.toLocaleString();
+        if (result) {
+          const dataSend = {
+            customer_id: this.selectedSearchPersonId,
+            created_by: this.tenant.id,
+            discount: this.DiscountBill,
+            discount_type: this.modelRadioBill,
+            tax: this.singleTax,
+            service_charge: this.taxBill,
+            total_product: this.listProductCart[this.tabDefault].length,
+            total_price: this.priceBill,
+            status: 2,
+            payment_status: 2,
+            order_details: this.listProductCart[this.tabDefault].map(
+              (item: any, index: number) => {
+                return {
+                  ...item,
+                  batches_focus: this.productItemsBatches[this.tabDefault].find(
+                    (itemBatches: any) => itemBatches.id == item.id
+                  ),
+                  priceModal: this.modalData[this.tabDefault].find(
+                    (itemmodal: any) => itemmodal.id == item.id
+                  ),
+                };
+              }
+            ),
+          };
+          var currentDate = new Date(); 
+          let dataformBtn : any;
+          let dataformBatches : any;
+          let productCart : any;
+        var currentDateTime = currentDate.toLocaleString();  
 
-        let obj = {
-          Ten_Cua_hang: 'Hậu đặng',
-          Ten_Chi_Nhanh: 'Hoa Quả',
-          Dia_Chi_Chi_Nhanh: 'Nam định',
-          Dien_Thoai_Chi_Nhanh: '0353786736',
-          Nguoi_Phu_Trach: 'Hậu đặng',
+        const taxprice = this.listProductCart[this.tabDefault].reduce(
+          (index: number, item: any) => {
+           const priceFind = this.modalData[this.tabDefault].find(
+                (itemmodal: any) => itemmodal.id == item.id
+              );
+            return index + (priceFind.priceCurrent - priceFind.result)
+          },0
+        )
+        
+     
+          let obj = {
+            Ten_Cua_hang : 'Hậu đặng',
+            Ten_Chi_Nhanh : 'Hoa Quả',
+            Dia_Chi_Chi_Nhanh : 'Nam định',
+            Dien_Thoai_Chi_Nhanh : this.tenant.tel == null ? '---' : this.tenant.tel ,
+            Nguoi_Phu_Trach : this.tenant.name,
 
-          Ngay_Tao: currentDateTime,
-          Ma_Don_Hang: null,
-          Chiet_khau_Phien_Ban: '10%',
-          Thue_Phien_Ban: '10%',
-          Tong_Tien_Hang: this.priceBill,
-          Tong_Chiet_Khau_San_Pham: '10%',
-          Chiet_Khau_Don_Hang: this.DiscountBill,
-          Tong_Thue: this.singleTax,
-          Phi_Khac: 0,
-          Tong_Can_Thanh_Toan: this.priceBill,
-          Khach_Thanh_Toan: this.pricePayment,
-          Tien_No: this.paymentPrice,
-          Tien_Tra: this.changeBill,
-          Ten_Khach_Hang: 'Khách ngoại lai',
-          Dien_Thoai_Khach: '---',
-          Listproducts: this.listProductCart[this.tabDefault].map(
-            (item: any, index: number) => {
-              return {
-                ...item,
-                batches_focus: this.productItemsBatches[this.tabDefault].find(
-                  (itemBatches: any) => itemBatches.id == item.id
-                ),
-                priceModal: this.modalData[this.tabDefault].find(
-                  (itemmodal: any) => itemmodal.id == item.id
-                ),
-              };
-            }
-          )
-        };
-
+            Ngay_Tao : currentDateTime,
+            Ma_Don_Hang : null,
+            Tong_Tien_Hang : this.priceBill,
+            Tong_Chiet_Khau_San_Pham : `-${taxprice}`,
+            Chiet_Khau_Don_Hang : this.DiscountBill,
+            Tong_Thue : this.singleTax,
+            Phi_Khac : 0,
+            Tong_Can_Thanh_Toan : this.priceBill,
+            Khach_Thanh_Toan : this.pricePayment,
+            Tien_No : this.paymentPrice,
+            Tien_Tra : this.changeBill,
+            Ten_Khach_Hang : 'Khách ngoại lai',
+            Dien_Thoai_Khach : '---',
+            Listproducts :  this.listProductCart[this.tabDefault].map(
+              (item: any, index: number) => {
+                return {
+                  ...item,
+                  batches_focus: this.productItemsBatches[this.tabDefault].find(
+                    (itemBatches: any) => itemBatches.id == item.id
+                  ),
+                  priceModal: this.modalData[this.tabDefault].find(
+                    (itemmodal: any) => itemmodal.id == item.id
+                  ),
+                };
+              }
+            )
+          };
         console.log(obj);
 
         if (this.selectedSearchPersonId != '') {
@@ -1798,8 +1814,12 @@ export class TabshopComponent implements OnInit {
             } else {
               return `<td>${detail[property]}</td>`;
             }
+
           }).join('');
-          return `<tr>${productHtml}</tr>`;
+          
+          const additionalRow = `<td>KM</td><td></td><td></td><td>${detail['priceModal'].priceCurrent - detail['priceModal'].result}</td>`;
+
+          return `<tr>${productHtml}</tr><tr>${additionalRow}</tr>`;
         }).join('');
         this.formPrintf.form = this.formPrintf.form.replace('{Listproducts}', productListHtml);
       } else {
