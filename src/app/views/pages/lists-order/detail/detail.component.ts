@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { OrderService } from 'src/app/service/order/order.service';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+
 import Swal from 'sweetalert2';
 @Component({
   selector: 'app-detail',
@@ -150,7 +151,6 @@ export class DetailComponent implements OnInit {
         this.OrderService.GetOneRecord(id).subscribe(
           (data) => {
             this.dataOneFake = data.payload;
-            console.log(this.dataOneFake);
             this.dataOneFake.amount_in = this.dataOneFake.payment.reduce(
               (total: number, item: any) => {
                 if (item.payment_method === 0 || item.payment_method === 1) {
