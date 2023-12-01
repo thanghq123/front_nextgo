@@ -20,7 +20,7 @@ jobs:
           post: ${{ secrets.PORT }}
           script: |
             pwd
-            cd /www/{{secrets.DOMAIN_PATH }}
+            cd /www/wwwroot/{{secrets.DOMAIN_PATH }}/fe_datn
             pwd
             git pull
             git branch -a
