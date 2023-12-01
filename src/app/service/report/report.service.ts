@@ -15,19 +15,24 @@ export class ReportService extends CRUDServiceService<any> {
   }
 
   general() {
+    
     return this.http.post(
       `${this.apiUrl}/general`,
       {
-        domain_name: this.domain_name
+        domain_name: this.SettingService.tenant.name
       })
     }
 
     income(option: string,start_date : string = '',end_date : string = '') {
+      console.log(
+       ` ${this.apiUrl}/income`
+      );
+      
       return this.http.post(
-        `${this.apiUrl}/general`,
+        `${this.apiUrl}/income`,
         {
-          domain_name: this.domain_name,
-          location : this.SettingService.location,
+          domain_name: this.SettingService.tenant.name,
+          location : this.SettingService.location.id,
           option : option,
           start_date,
           end_date
