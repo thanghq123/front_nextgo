@@ -73,14 +73,7 @@
               </div>
               <div class="col-6 col-md-12 col-xl-7">
                 <div class="mt-md-3 mt-xl-0">
-                  <apx-chart
-                    [series]="growthChartOptions.series"
-                    [chart]="growthChartOptions.chart"
-                    [colors]="growthChartOptions.colors"
-                    [xaxis]="growthChartOptions.xaxis"
-                    [stroke]="growthChartOptions.stroke"
-                    [markers]="growthChartOptions.markers"
-                  ></apx-chart>
+              
                 </div>
               </div>
             </div>
@@ -104,24 +97,15 @@
           </div>
           <div class="col-md-8 d-flex justify-content-md-end">
             <div class="btn-group mb-3 mb-md-0" role="group" aria-label="Basic example">
-              <button type="button" class="btn btn-outline-primary" (click)="getInfoClick(0)">Hôm nay</button>
-              <button type="button" class="btn btn-outline-primary d-none d-md-block" (click)="getInfoClick(1)">Hôm qua</button>
-              <button type="button" class="btn btn-primary" (click)="getInfoClick(2)">7 Ngày trước</button>
-              <button type="button" class="btn btn-outline-primary" (click)="getInfoClick(3)">30 Ngày trước</button>
+              <button type="button" class="btn  {{ focusclick == 0 ? 'btn-primary' : 'btn-outline-primary' }}" (click)="getInfoClick(0)">Hôm nay</button>
+              <button type="button" class="btn {{ focusclick == 1 ? 'btn-primary' : 'btn-outline-primary' }}" (click)="getInfoClick(1)">Hôm qua</button>
+              <button type="button" class="btn {{ focusclick == 2 ? 'btn-primary' : 'btn-outline-primary' }}" (click)="getInfoClick(2)">7 Ngày trước</button>
+              <button type="button" class="btn {{ focusclick == 3 ? 'btn-primary' : 'btn-outline-primary' }}" (click)="getInfoClick(3)">30 Ngày trước</button>
             </div>
           </div>
         </div>
         <div class="flot-wrapper">
-          <apx-chart
-            [series]="revenueChartOptions.series"
-            [chart]="revenueChartOptions.chart"
-            [colors]="revenueChartOptions.colors"
-            [grid]="revenueChartOptions.grid"
-            [xaxis]="revenueChartOptions.xaxis"
-            [yaxis]="revenueChartOptions.yaxis"
-            [markers]="revenueChartOptions.markers"
-            [stroke]="revenueChartOptions.stroke"
-          ></apx-chart>
+          <canvas id="canvas">{{chart}}</canvas>
         </div>
       </div>
     </div>
@@ -135,19 +119,6 @@
         <div class="d-flex justify-content-between align-items-baseline mb-2">
           <h6 class="card-title mb-0">Số đơn hàng thành công</h6>
         </div>
-        <apx-chart
-          [series]="monthlySalesChartOptions.series"
-          [chart]="monthlySalesChartOptions.chart"
-          [colors]="monthlySalesChartOptions.colors"
-          [fill]="monthlySalesChartOptions.fill"
-          [grid]="monthlySalesChartOptions.grid"
-          [xaxis]="monthlySalesChartOptions.xaxis"
-          [yaxis]="monthlySalesChartOptions.yaxis"
-          [legend]="monthlySalesChartOptions.legend"
-          [stroke]="monthlySalesChartOptions.stroke"
-          [dataLabels]="monthlySalesChartOptions.dataLabels"
-          [plotOptions]="monthlySalesChartOptions.plotOptions"
-        ></apx-chart>
       </div> 
     </div>
   </div>
