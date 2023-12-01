@@ -3,16 +3,15 @@ import { HttpClient } from '@angular/common/http';
 import { HandleDataService } from '../baseHandle/handle-data.service';
 import { CRUDServiceService } from '../baseHandle/crudservice.service';
 import { Observable } from 'rxjs';
-import {ConfigService} from "../config/config.service";
+import { SettingService } from '../setting/setting.service';
 @Injectable({
   providedIn: 'root'
 })
 export class ReportService extends CRUDServiceService<any> {
   private readonly domain_name: String;
-  constructor(http: HttpClient, dataService: HandleDataService, private configService: ConfigService,) {
+  constructor(http: HttpClient, dataService: HandleDataService, private SettingService: SettingService,) {
     super(http, dataService);
     this.apiUrl = this.dataService.getUrl('report');
-    this.domain_name = this.configService.domain_name;
   }
 
   general() {
@@ -28,7 +27,7 @@ export class ReportService extends CRUDServiceService<any> {
         `${this.apiUrl}/general`,
         {
           domain_name: this.domain_name,
-          location : this.configService.location_id,
+          location : this.SettingService.location,
           option : option,
           start_date,
           end_date
