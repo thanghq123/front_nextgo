@@ -20,7 +20,7 @@ jobs:
           post: ${{ secrets.PORT }}
           script: |
             pwd
-            cd /www/{{secrets.DOMAIN }}
+            cd /www/{{secrets.DOMAIN_PATH }}
             pwd
             git pull
             git branch -a
