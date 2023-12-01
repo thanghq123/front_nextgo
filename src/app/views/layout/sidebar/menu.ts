@@ -6,6 +6,11 @@ export const MENU: MenuItem[] = [
     isTitle: true,
   },
   {
+    label: "Thống kê",
+    icon: 'printer',
+    link: 'dashboard'
+  },
+  {
     label: "Bán hàng",
     icon: 'printer',
     link: 'shop/tabshop'
