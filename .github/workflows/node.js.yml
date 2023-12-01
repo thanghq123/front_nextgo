@@ -1,0 +1,29 @@
+name: Deploy production
+
+on:
+  push:
+    branches: [ "dev" ]
+  # pull_request:
+  #   branches: [ "dev" ]
+
+jobs:
+ build:
+    name: Deploy to Server
+    runs-on: ubuntu-latest
+    steps:
+      - name: executing remote ssh commands using key
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SSH }}
+          post: ${{ secrets.PORT }}
+          script: |
+            pwd
+            cd /www/{{secrets.DOMAIN }}
+            pwd
+            git pull
+            git branch -a
+            npm i --force
+            npm run build
+            whoami && pwd
