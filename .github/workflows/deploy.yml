@@ -23,5 +23,7 @@ jobs:
             cd /www/wwwroot/app.mrbinh.link/fe_datn
             pwd
             git pull
+            yarn -v
+            npm -v
             yarn install && yarn build
             whoami && pwd
