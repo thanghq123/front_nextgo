@@ -35,7 +35,7 @@
                readonly/>
             </div>
             <div class="col-md-6">
-              <label class="form-label">Lý do:</label>
+              <label class="form-label">Lý do <span class="text-danger">(*)</span></label>
               <ng-select [searchable]="true" formControlName="reason" placeholder="Lựa chọn lý do">
                 <ng-option *ngFor="let item of reason" [value]="item.id">
                   {{ item.name }}
@@ -47,7 +47,7 @@
 
           <div class="row mb-3">
             <div class="col-md-6">
-              <label class="form-label">Điều chỉnh:</label>
+              <label class="form-label">Điều chỉnh <span class="text-danger">(*)</span></label>
               <input type="number" class="form-control" formControlName="adjust" id="exampleInputUsername1" [(ngModel)]="adjust" autocomplete="off"
               placeholder="Nhập số lượng" min="0"/>
             </div>

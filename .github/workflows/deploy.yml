@@ -20,10 +20,10 @@ jobs:
           post: ${{ secrets.PORT }}
           script: |
             pwd
-            cd /www/wwwroot/{{ secrets.DOMAIN_PATH }}/fe_datn
+            cd /www/wwwroot/app.mrbinh.link/fe_datn
             pwd
             git pull
-            git branch -a
-            npm i --force
-            npm run build
+            yarn -v
+            npm -v
+            yarn install && yarn build
             whoami && pwd

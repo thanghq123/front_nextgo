@@ -21,7 +21,7 @@ export const MENU: MenuItem[] = [
     link: 'shop/tabshop'
   },
   {
-    label: 'Đơn Hàng',
+    label: 'Đơn hàng',
     icon: 'shopping-bag',
     subItems: [
       {
@@ -111,17 +111,17 @@ export const MENU: MenuItem[] = [
     ]
   },
   {
-    label: 'Nhà Cung Cấp',
+    label: 'Nhà cung cấp',
     icon: 'box',
     // link: '/group_suppliers/list',
     subItems: [
       {
-        label: 'Nhà Cung Cấp',
+        label: 'Nhà cung cấp',
         // icon: 'home',
         link: '/suppliers/list',
       },
       {
-        label: 'Nhóm Nhà Cung Cấp',
+        label: 'Nhóm nhà cung cấp',
         // icon: 'home',
         link: '/group_suppliers/list',
       }
