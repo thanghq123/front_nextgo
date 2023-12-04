@@ -49,7 +49,7 @@ export class CreateComponent implements OnInit {
   codeProvince: any;
   codeDistrict: any;
   codeWard: any;
-  province: any;
+  province: any[]= [];
   district: any[] = [];
   ward: any[] = [];
 
@@ -77,6 +77,7 @@ export class CreateComponent implements OnInit {
         data.status != 'error'
           ? data.results
           : [{ id: 0, name: `${data.message}` }];
+          this.province = data.results
     });
 
     this.provinceChangeSubject
@@ -176,6 +177,7 @@ export class CreateComponent implements OnInit {
     if (this.locationsForm.valid) {
       const nameDistrict = this.district.find(item => item.id == this.codeDistrict)?.name ??'';
       const nameWard = this.ward.find(item => item.id == this.codeWard)?.name ?? '';
+      const nameProvince = this.province.find(item => item.id == this.codeProvince)?.name;
       // console.log(this.district);
 
       const formData = new FormData();
@@ -192,7 +194,7 @@ export class CreateComponent implements OnInit {
       formData.append('tel', String(locationsData.tel));
       formData.append('status', String(locationsData.status));
       formData.append('is_main', String(locationsData.is_main));
-      formData.append('address_detail', String(locationsData.address_detail + ', ' + nameWard + ', ' + nameDistrict + ', ' +  (this.provinces[this.codeProvince]?.name ?? '') ));
+      formData.append('address_detail', String(locationsData.address_detail + ', ' + nameWard + ', ' + nameDistrict + ', ' +  nameProvince ));
       formData.append('created_by', '1');
       formData.append('province_code', String(locationsData.province_code ?? ''));
       formData.append('district_code', String(locationsData.district_code ?? ''));
