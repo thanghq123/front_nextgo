@@ -61,6 +61,13 @@ export class ReportService extends CRUDServiceService<any> {
       }
 
       payment(option: string,start_date : string = '',end_date : string = ''){
+        console.log({
+          domain_name: this.SettingService.tenant.name,
+          location : this.SettingService.location.id,
+          option : option,
+          start_date,
+          end_date
+        });
         return this.http.post(
           `${this.apiUrl}/payment-methods`,
           {
