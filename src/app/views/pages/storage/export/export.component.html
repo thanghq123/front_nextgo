@@ -33,7 +33,7 @@
             </thead>
             <tbody>
               <tr *ngFor="let value of listStorageExport | async">
-                <td><a [routerLink]="['../detail', value.inventory_transaction_id]">{{ value.inventory_transaction_id }}</a></td>
+                <td>{{ value.inventory_transaction_id }}</td>
                 <td>{{ value.inventory_name }}</td>
                 <td>{{ value.created_by }}</td>
                 <!-- <td style="text-align: center"></td> -->
@@ -46,8 +46,8 @@
                 </td>
                 <td>{{ value.created_at }}</td>
                 <td>{{ value.updated_at }}</td>
-                <td>
-                  <button data-id="{{value.inventory_transaction_id}}" class="btn btn-success">Xác nhận</button>
+                <td *ngIf="value.status != 2">
+                  <button  data-id="{{value.inventory_transaction_id}}" class="btn btn-success">Xác nhận</button>
                 </td>
               </tr>
             </tbody>

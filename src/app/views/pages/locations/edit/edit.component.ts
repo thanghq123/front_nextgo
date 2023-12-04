@@ -84,7 +84,7 @@ export class EditComponent implements OnInit {
             : [{ id: 0, name: `${data.message}` }];
       });
 
-    this.districtChangeSubject
+      this.districtChangeSubject
       .pipe(
         debounceTime(300),
         switchMap((district_code) => this.AresService.getWards(district_code))
@@ -114,8 +114,6 @@ export class EditComponent implements OnInit {
         this._locaService.GetOneRecord(id).subscribe(
           (data) => {
             const locationData = data.payload;
-            // Chuyển đổi giá trị gender sang kiểu number
-            // locationData.gender = String(locationData.gender);
             console.log(locationData);
             locationData.is_main = locationData.is_main == true ? 1 : 0;
             locationData.status = locationData.status == true ? 1 : 0;

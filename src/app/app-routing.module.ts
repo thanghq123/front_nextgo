@@ -163,6 +163,13 @@ const routes: Routes = [
         ]
       },
       {
+        path: 'report-revenue',
+        loadChildren: () =>
+          import('./views/pages/dashboard-all/dashboard-all.module').then(
+            (m) => m.DashboardAllModule
+          ),
+      },
+      {
         path: 'apps',
         loadChildren: () =>
           import('./views/pages/apps/apps.module').then((m) => m.AppsModule),

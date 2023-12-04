@@ -25,7 +25,7 @@ import { StorageImport } from 'src/app/interface/storage/storage-import';
 })
 export class CreateComponent implements OnInit {
   listSupplier: any = [];
-  listLocation: any = [];
+  listLocation: any[] = [];
   listProduct: any[] = [];
   products: any[] = [];
   input: any = {};

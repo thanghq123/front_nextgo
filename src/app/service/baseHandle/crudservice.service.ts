@@ -33,6 +33,13 @@ export abstract class CRUDServiceService<T> {
   GetData(): Observable<any> {
     return this.http.post<T[]>(`${this.apiUrl}`, this.dataService.handleData(), this.header);
   }
+  GetDataPanigate(page: any) {
+    if(page > 1){
+      return this.http.post<T[]>(`${this.apiUrl}?page=${page}`, this.dataService.handleData());
+    }else{
+      return this.http.post<T[]>(`${this.apiUrl}?page=1`, this.dataService.handleData());
+    }
+  }
 
   create(data: T, location_id: any = null): Observable<T> {
 

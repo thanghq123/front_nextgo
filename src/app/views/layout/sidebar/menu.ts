@@ -12,13 +12,18 @@ export const MENU: MenuItem[] = [
     name: 'dashboard',
   },
   {
+    label: "Báo cáo",
+    icon: 'printer',
+    link: 'report-revenue'
+  },
+  {
     label: "Bán hàng",
     icon: 'printer',
     link: 'shop/tabshop',
     name: 'shop',
   },
   {
-    label: 'Đơn Hàng',
+    label: 'Đơn hàng',
     icon: 'shopping-bag',
     name: 'orders',
     subItems: [
@@ -112,18 +117,18 @@ export const MENU: MenuItem[] = [
     ]
   },
   {
-    label: 'Nhà Cung Cấp',
+    label: 'Nhà cung cấp',
     icon: 'box',
     name: 'suppliers',
     // link: '/group_suppliers/list',
     subItems: [
       {
-        label: 'Nhà Cung Cấp',
+        label: 'Nhà cung cấp',
         // icon: 'home',
         link: '/suppliers/list',
       },
       {
-        label: 'Nhóm Nhà Cung Cấp',
+        label: 'Nhóm nhà cung cấp',
         // icon: 'home',
         link: '/group_suppliers/list',
       }

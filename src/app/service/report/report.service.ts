@@ -24,10 +24,6 @@ export class ReportService extends CRUDServiceService<any> {
     }
 
     income(option: string,start_date : string = '',end_date : string = '') {
-      console.log(
-       ` ${this.apiUrl}/income`
-      );
-      
       return this.http.post(
         `${this.apiUrl}/income`,
         {
@@ -37,6 +33,50 @@ export class ReportService extends CRUDServiceService<any> {
           start_date,
           end_date
         })
+      }
+
+      products(option: string,start_date : string = '',end_date : string = ''){
+        return this.http.post(
+          `${this.apiUrl}/products`,
+          {
+            domain_name: this.SettingService.tenant.name,
+            location : this.SettingService.location.id,
+            option : option,
+            start_date,
+            end_date
+          })
+      }
+
+
+      customer(option: string,start_date : string = '',end_date : string = ''){
+        return this.http.post(
+          `${this.apiUrl}/customers`,
+          {
+            domain_name: this.SettingService.tenant.name,
+            location : this.SettingService.location.id,
+            option : option,
+            start_date,
+            end_date
+          })
+      }
+
+      payment(option: string,start_date : string = '',end_date : string = ''){
+        console.log({
+          domain_name: this.SettingService.tenant.name,
+          location : this.SettingService.location.id,
+          option : option,
+          start_date,
+          end_date
+        });
+        return this.http.post(
+          `${this.apiUrl}/payment-methods`,
+          {
+            domain_name: this.SettingService.tenant.name,
+            location : this.SettingService.location.id,
+            option : option,
+            start_date,
+            end_date
+          })
       }
 
   
