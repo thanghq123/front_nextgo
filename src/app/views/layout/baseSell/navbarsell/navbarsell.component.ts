@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DatalayoutService } from 'src/app/service/handleDataComponent/datalayout.service';
 import Swal from 'sweetalert2';
+import { LocalStorageService } from 'src/app/service/localStorage/localStorage.service';
 @Component({
   selector: 'navbar-sell',
   templateUrl: './navbarsell.component.html',
@@ -14,14 +15,17 @@ export class NavbarsellComponent implements OnInit {
   dataBill :  any;
   payment : any;
   modalBatches : any;
+  public user: any;
   docElement: HTMLElement;
 isFullScreen: boolean = false;
   constructor(
     private router : Router,
-    private DatalayoutService : DatalayoutService
+    private DatalayoutService : DatalayoutService,
+    private localStorageService: LocalStorageService,
   ) { }
 
   ngOnInit(): void {
+    this.user = this.localStorageService.get('user');
     this.docElement = document.documentElement;
     let tabOrder = localStorage.getItem('tabOrder');
     let tabCurrentJson = localStorage.getItem('TabCurrentIndex')!;
