@@ -25,6 +25,8 @@ import { CreateComponent } from './views/pages/tenant/create/create.component';
 import { SettingComponent } from './views/pages/setting/setting.component';
 import { ConfigComponent } from './views/pages/config/config.component';
 import { DetailComponent } from './views/pages/lists-order/detail/detail.component';
+import { UserComponent } from './views/pages/user/user.component';
+import {NgxMaskModule} from "ngx-mask";
 @NgModule({
   declarations: [
     AppComponent,
@@ -34,21 +36,22 @@ import { DetailComponent } from './views/pages/lists-order/detail/detail.compone
     CreateComponent,
     SettingComponent,
     ConfigComponent,
-    DetailComponent
+    DetailComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    LayoutModule,
-    HttpClientModule,
-    NgbModule,
-    CommonModule,
-    SortablejsModule.forRoot({animation: 150}),
-    NgSelectModule,
-    PaginatorModule,
-    ReactiveFormsModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        LayoutModule,
+        HttpClientModule,
+        NgbModule,
+        CommonModule,
+        SortablejsModule.forRoot({animation: 150}),
+        NgSelectModule,
+        PaginatorModule,
+        ReactiveFormsModule,
+        NgxMaskModule
+    ],
   providers: [
     AuthGuard,
     {
