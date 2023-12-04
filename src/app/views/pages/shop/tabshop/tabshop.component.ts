@@ -1276,11 +1276,12 @@ export class TabshopComponent implements OnInit {
           },0
         )
         
-     
+          console.log(this.settingService.tenant);
+          
           let obj = {
-            Ten_Cua_hang : 'Hậu đặng',
-            Ten_Chi_Nhanh : 'Hoa Quả',
-            Dia_Chi_Chi_Nhanh : 'Nam định',
+            Ten_Cua_hang : this.settingService.tenant.name,
+            Ten_Chi_Nhanh : this.settingService.tenant.business_name,
+            Dia_Chi_Chi_Nhanh : this.settingService.tenant.address,
             Dien_Thoai_Chi_Nhanh : this.tenant.tel == null ? '---' : this.tenant.tel ,
             Nguoi_Phu_Trach : this.tenant.name,
 
