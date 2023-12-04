@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {DatalayoutService} from 'src/app/service/handleDataComponent/datalayout.service';
 import Swal from 'sweetalert2';
-import { LocalStorageService } from 'src/app/service/localStorage/localStorage.service';
 import {User} from "../../../../interface/user/user";
 import {AuthService} from "../../../../service/auth/auth.service";
 import {LocalStorageService} from "../../../../service/localStorage/localStorage.service";
