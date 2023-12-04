@@ -25,6 +25,7 @@ import { CreateComponent } from './views/pages/tenant/create/create.component';
 import { SettingComponent } from './views/pages/setting/setting.component';
 import { ConfigComponent } from './views/pages/config/config.component';
 import { DetailComponent } from './views/pages/lists-order/detail/detail.component';
+
 @NgModule({
   declarations: [
     AppComponent,
