@@ -16,13 +16,14 @@
       <li class="nav-item" ngbDropdown>
         <a class="nav-link" ngbDropdownToggle id="languageDropdown" role="button">
           <span class="fw-bold ms-1 me-1 d-none d-md-inline-block">{{ activeLocation?.name }}</span>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-               class="feather feather-chevron-down link-arrow" _ngcontent-kmy-c108="" appfeathericon="">
-            <polyline points="6 9 12 15 18 9"></polyline>
-          </svg>
         </a>
-        <div class="me-4">
+        <svg *ngIf="isSuperAdmin" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+             class="feather feather-chevron-down link-arrow" _ngcontent-kmy-c108="" appfeathericon="">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+        <div *ngIf="isSuperAdmin" class="me-4">
           <div ngbDropdownMenu aria-labelledby="languageDropdown">
             <a ngbDropdownItem class="py-2" *ngFor="let location of locations" (click)="setActiveLocation(location)">
               <span class="ms-1"> {{ location.name }} </span>
@@ -42,28 +43,10 @@
             </div>
           </div>
           <ul class="list-unstyled p-1">
-            <!-- <li class="dropdown-item py-2">
-              <a routerLink="/general/profile" class="d-flex text-body ms-0">
-                <i class="feather icon-user me-2 icon-md"></i>
-                <span>Profile</span>
-              </a>
-            </li>
-            <li class="dropdown-item py-2">
-              <a href="" (click)="false" class="d-flex text-body ms-0">
-                <i class="feather icon-edit me-2 icon-md"></i>
-                <span>Edit Profile</span>
-              </a>
-            </li>
-            <li class="dropdown-item py-2">
-              <a href="" (click)="false" class="d-flex text-body ms-0">
-                <i class="feather icon-repeat me-2 icon-md"></i>
-                <span>Switch User</span>
-              </a>
-            </li> -->
             <li class="dropdown-item py-2">
               <a href="" (click)="onLogout($event)" class="d-flex text-body ms-0">
                 <i class="feather icon-log-out me-2 icon-md"></i>
-                <span>Log Out</span>
+                <span>Đăng xuất</span>
               </a>
             </li>
           </ul>

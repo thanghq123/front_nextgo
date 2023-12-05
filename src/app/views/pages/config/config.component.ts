@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, TemplateRef} from '@angular/core';
 import {ConfigService} from "../../../service/config/config.service";
 import {Router} from "@angular/router";
 import {BusinessField} from "../../../interface/business-field/business-field";
@@ -11,6 +11,10 @@ import {AresService} from 'src/app/service/ares/ares.service';
 import {Config} from "../../../interface/config/config";
 import {SettingService} from "../../../service/setting/setting.service";
 import Swal from "sweetalert2";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {AuthService} from "../../../service/auth/auth.service";
+import {PricingService} from "../../../service/pricing/pricing.service";
+import {SubcriptionOrderService} from "../../../service/subcription-order/subcription-order.service";
 
 @Component({
   selector: 'app-config',
@@ -37,7 +41,30 @@ export class ConfigComponent implements OnInit {
 
   tenant: Tenant;
 
+  types = [
+    {
+      value: 0,
+      name: 'Nâng cấp',
+    },
+    {
+      value: 1,
+      name: 'Gia hạn',
+    },
+  ]
+
   config: Config;
+
+  order: {
+    name: string;
+    tel: any;
+    type: number;
+    pricing_id: string;
+  } = {
+    name: '',
+    tel: '',
+    type: 0,
+    pricing_id: '',
+  };
 
   businessTypes = [
     {
@@ -64,19 +91,29 @@ export class ConfigComponent implements OnInit {
     address_detail: new FormControl('', [Validators.required]),
   });
 
+  pricings: any;
+
   constructor(
     private router: Router,
     private configService: ConfigService,
     private businessFieldService: BusinessFieldService,
     private AresService: AresService,
-    private settingService: SettingService
+    private settingService: SettingService,
+    private modalService: NgbModal,
+    private authService: AuthService,
+    private pricingService: PricingService,
+    private subcriptionOrderService: SubcriptionOrderService,
   ) {
     this.tenant = this.settingService.tenant;
+    this.order.name = this.tenant.name;
+    this.order.tel = this.authService.user.tel ?? '';
+    this.order.pricing_id = this.tenant.pricing.id;
   }
 
   ngOnInit(): void {
     this.getConfig();
     this.getBusinessFields();
+    this.getPricing();
 
     this.AresService.getProvinces().subscribe((data: any) => {
       this.provinces =
@@ -125,6 +162,12 @@ export class ConfigComponent implements OnInit {
   getBusinessFields() {
     this.businessFieldService.getBusinessFields().subscribe((response: any) => {
       this.businessFields = response.payload;
+    })
+  }
+
+  getPricing() {
+    this.pricingService.list.subscribe((response: any) => {
+      this.pricings = response.payload;
     })
   }
 
@@ -237,5 +280,97 @@ export class ConfigComponent implements OnInit {
     const dt = dateObj.getDate();
     return `${dt < 10 ? '0' + dt : dt}/${month < 10 ? '0' + month : month}/${year}`;
 
+  }
+
+  openBasicModal(content: TemplateRef<any>) {
+    this.modalService
+      .open(content, {})
+      .result.then((result) => {
+
+      const dataSend = {
+        name: this.order.name,
+        tel: this.order.tel,
+        pricing_id: this.order.pricing_id,
+        type: this.order.type,
+        tenant_id: this.tenant.id,
+      };
+
+      console.log(dataSend);
+
+      if (dataSend.name && dataSend.tel && dataSend.pricing_id && dataSend.type !== null) {
+        this.subcriptionOrderService
+          .create(dataSend)
+          .subscribe((response: any) => {
+            if (response.status) {
+              Swal.fire({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                title: 'Gửi yêu cầu hỗ trợ thành công!',
+                text: 'Nhân viên của NextGo sẽ sớm liên hệ lại với bạn!',
+                icon: 'success',
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.addEventListener('mouseenter', Swal.stopTimer);
+                  toast.addEventListener('mouseleave', Swal.resumeTimer);
+                },
+              });
+
+              this.order = {
+                name: '',
+                tel: '',
+                pricing_id: '',
+                type: 0,
+              };
+              setTimeout(() => {
+                window.location.reload();
+              }, 1200);
+            } else {
+              console.log(response);
+              const errorMessages = [];
+              for (const key in response.meta.errors) {
+                const messages = response.meta.errors[key];
+                for (const message of messages) {
+                  errorMessages.push(`${key}: ${message}`);
+                }
+              }
+              Swal.fire({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                title: 'Có lỗi xảy ra!',
+                text: `${errorMessages}`,
+                icon: 'error',
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.addEventListener('mouseenter', Swal.stopTimer);
+                  toast.addEventListener('mouseleave', Swal.resumeTimer);
+                },
+              });
+            }
+          });
+      } else {
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 3000,
+          title: 'Thất bại!',
+          text: 'Vui lòng nhập đầy đủ thông tin để được hỗ trợ',
+          icon: 'error',
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer);
+            toast.addEventListener('mouseleave', Swal.resumeTimer);
+          },
+        });
+      }
+
+      // this.basicModalCloseResult = 'Modal closed' + result;
+    })
+      .catch((res) => {
+      });
   }
 }

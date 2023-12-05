@@ -8,7 +8,8 @@ export const MENU: MenuItem[] = [
   {
     label: "Thống kê",
     icon: 'printer',
-    link: 'dashboard'
+    link: 'dashboard',
+    name: 'dashboard',
   },
   {
     label: "Báo cáo",
@@ -18,11 +19,13 @@ export const MENU: MenuItem[] = [
   {
     label: "Bán hàng",
     icon: 'printer',
-    link: 'shop/tabshop'
+    link: 'shop/tabshop',
+    name: 'shop',
   },
   {
     label: 'Đơn hàng',
     icon: 'shopping-bag',
+    name: 'orders',
     subItems: [
       {
         label: 'Danh sách đơn hàng',
@@ -33,7 +36,12 @@ export const MENU: MenuItem[] = [
   {
     label: 'Sản phẩm',
     icon: 'tag',
+    name: 'products',
     subItems: [
+      {
+        label: 'Danh sách sản phẩm',
+        link: 'products/list',
+      },
       {
         label: 'Danh mục',
         // icon: 'home',
@@ -54,16 +62,13 @@ export const MENU: MenuItem[] = [
         // icon: 'home',
         link: '/warranties/list',
       },
-      {
-        label: 'Danh sách sản phẩm',
-        link: 'products/list',
-      }
     ],
   },
   // {label: 'Chi nhánh', icon: 'target', link: '/locations/list'},
   {
     label: 'Kho & tồn',
     icon: 'package',
+    name: 'storage',
     subItems: [
       // {
       //   label: 'Quản lý kho',
@@ -96,6 +101,7 @@ export const MENU: MenuItem[] = [
   {
     label: 'Khách hàng',
     icon: 'home',
+    name: 'customers',
     // link: '/group_suppliers/list',
     subItems: [
       {
@@ -113,6 +119,7 @@ export const MENU: MenuItem[] = [
   {
     label: 'Nhà cung cấp',
     icon: 'box',
+    name: 'suppliers',
     // link: '/group_suppliers/list',
     subItems: [
       {
@@ -130,6 +137,7 @@ export const MENU: MenuItem[] = [
   {
     label: 'Sổ công nợ',
     icon: 'target',
+    name: 'debts',
     subItems: [
       {
         label: 'Khoản phải thu',
@@ -143,8 +151,15 @@ export const MENU: MenuItem[] = [
     ]
   },
   {
+    label: 'Tài khoản nhân viên',
+    icon: 'user',
+    link: '/users',
+    name: 'users',
+  },
+  {
     label: 'Cấu hình',
     icon: 'settings',
-    link: '/setting'
+    link: '/setting',
+    name: 'settings',
   },
 ];

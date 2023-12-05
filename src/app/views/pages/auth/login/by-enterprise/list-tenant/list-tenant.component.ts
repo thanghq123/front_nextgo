@@ -17,6 +17,8 @@ export class ListTenantComponent implements OnInit {
 
   public tenants: Tenant[];
 
+  errorMessages: any = [];
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -40,8 +42,8 @@ export class ListTenantComponent implements OnInit {
   }
 
   setUser(tenant_name: string): void {
+    this.errorMessages = [];
     if (this.tenants.find(tenant => tenant.name === tenant_name)) {
-
       this.authService.loginByEnterprise({tenant_name}).subscribe(
         (response: { status: boolean, payload: any, meta: any }) => {
           if (response.status) {
@@ -51,7 +53,7 @@ export class ListTenantComponent implements OnInit {
               msg: string,
               type: "success" | "error"
             } = this.authService.login(response.payload);
-            const returnUrl: "/" | "/auth/login/" = result.status ? '/' : '/auth/login/';
+            const returnUrl: "/dashboard" | "/auth/login/" = result.status ? '/dashboard' : '/auth/login/';
 
             Swal.fire({
               toast: true,
@@ -76,6 +78,24 @@ export class ListTenantComponent implements OnInit {
                 : this.router.navigate([returnUrl]);
             }, 1500);
 
+          } else {
+            this.errorMessages = response.meta;
+            if (this.errorMessages.domain_name) {
+              Swal.fire({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                title: 'Thất bại!',
+                text: this.errorMessages.domain_name,
+                icon: 'error',
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.addEventListener('mouseenter', Swal.stopTimer);
+                  toast.addEventListener('mouseleave', Swal.resumeTimer);
+                },
+              });
+            }
           }
         }
       );

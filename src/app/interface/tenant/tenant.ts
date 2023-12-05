@@ -5,4 +5,5 @@ export interface Tenant {
   created_at: Date,
   updated_at: Date,
   due_at: Date,
+  pricing: any,
 }

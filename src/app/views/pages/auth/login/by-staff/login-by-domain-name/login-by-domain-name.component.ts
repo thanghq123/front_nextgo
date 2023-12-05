@@ -57,7 +57,15 @@ export class LoginByDomainNameComponent implements OnInit {
               msg: string,
               type: "success" | "error"
             } = this.authService.login(response.payload);
-            const returnUrl: "/" | "/auth/login/" = result.status ? '/' : '/auth/login/';
+
+            let returnUrl: string = '/auth/login/';
+
+            if (result.status) {
+              returnUrl = '/dashboard';
+              if (this.authService.role == 'staff') {
+                returnUrl = '/shop/tabshop';
+              }
+            }
 
             Swal.fire({
               toast: true,
