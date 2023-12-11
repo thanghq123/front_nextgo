@@ -178,7 +178,7 @@ export class CreateComponent implements OnInit {
       const nameDistrict = this.district.find(item => item.id == this.codeDistrict)?.name ??'';
       const nameWard = this.ward.find(item => item.id == this.codeWard)?.name ?? '';
       const nameProvince = this.province.find(item => item.id == this.codeProvince)?.name;
-      // console.log(this.district);
+      // console.log(nameProvince);
 
       const formData = new FormData();
 

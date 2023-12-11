@@ -41,7 +41,7 @@ export class CreateComponent implements OnInit {
   codeProvince: any;
   codeDistrict: any;
   codeWard: any;
-  province: any;
+  province: any[] = [];
   district: any[] = [];
   ward: any[] = [];
 
@@ -72,6 +72,7 @@ export class CreateComponent implements OnInit {
         data.status != 'error'
           ? data.results
           : [{ id: 0, name: `${data.message}` }];
+          this.province = data.results
     });
 
     this.provinceChangeSubject
@@ -136,8 +137,11 @@ export class CreateComponent implements OnInit {
 
   onSubmit() {
     if (this.customersForm.valid) {
-      // const nameDistrict = this.district.find(item => item.id == this.codeDistrict).name;
-      // const nameWard = this.ward.find(item => item.id == this.codeWard).name;
+      const nameDistrict = this.district.find(item => item.id == this.codeDistrict)?.name ??'';
+      const nameWard = this.ward.find(item => item.id == this.codeWard)?.name ?? '';
+      const nameProvince = this.province.find(item => item.id == this.codeProvince)?.name ?? '';
+      console.log(nameProvince);
+
       const dataToSend = {
         name: String(this.customersForm.value.name),
         type: Number(this.customersForm.value.type) || 0,
@@ -149,71 +153,69 @@ export class CreateComponent implements OnInit {
         email: String(this.customersForm.value.email) || null,
         tel: String(this.customersForm.value.tel),
         status: Number(this.customersForm.value.status),
-        address_detail: String(this.customersForm.value.address_detail ) || null,
+        address_detail: String(this.customersForm.value.address_detail + ', ' + nameWard + ', ' + nameDistrict + ', ' +  nameProvince ) || null,
         note: String(this.customersForm.value.note) || null,
         ward_code: Number(this.customersForm.value.ward_code) || null,
         created_at: new Date(),
         updated_at: null,
       };
-      // + ', '  +  this.provinces[this.codeProvince].name 
-      // + nameWard + ', ' + nameDistrict + ', '
-      // console.log(nameDistrict, nameWard);
+
 
       console.log(dataToSend);
 
-      this.CustomersService.create(dataToSend).subscribe(
-        (response: any) => {
-          if (response.status == true) {
-            this.customersForm.reset();
-            Swal.fire({
-              toast: true,
-              position: 'top-end',
-              showConfirmButton: false,
-              timer: 3000,
-              title: 'Thành công!',
-              text: 'Thêm khách hàng thành công',
-              icon: 'success',
-              timerProgressBar: true,
-              didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer);
-                toast.addEventListener('mouseleave', Swal.resumeTimer);
-              },
-            });
-            this.router.navigate(['../customers/list']);
-          } else {
-            console.log(response);
-            const errorMessages = [];
-            for (const key in response.meta.errors) {
-              const messages = response.meta.errors[key];
-              for (const message of messages) {
-                errorMessages.push(`${key}: ${message}`);
-              }
-            }
-            this.showNextMessage(errorMessages);
-            // for (const message of errorMessages) {
-            //   Swal.fire({
-            //     toast: true,
-            //     position: 'top-end',
-            //     showConfirmButton: false,
-            //     timer: 3000,
-            //     title: 'Thất bại!',
-            //     text: message,
-            //     icon: 'error',
-            //     timerProgressBar: true,
-            //     didOpen: (toast) => {
-            //       toast.addEventListener('mouseenter', Swal.stopTimer);
-            //       toast.addEventListener('mouseleave', Swal.resumeTimer);
-            //     },
-            //   });
-            // }
+      // this.CustomersService.create(dataToSend).subscribe(
+      //   (response: any) => {
+      //     if (response.status == true) {
+      //       this.customersForm.reset();
+      //       Swal.fire({
+      //         toast: true,
+      //         position: 'top-end',
+      //         showConfirmButton: false,
+      //         timer: 3000,
+      //         title: 'Thành công!',
+      //         text: 'Thêm khách hàng thành công',
+      //         icon: 'success',
+      //         timerProgressBar: true,
+      //         didOpen: (toast) => {
+      //           toast.addEventListener('mouseenter', Swal.stopTimer);
+      //           toast.addEventListener('mouseleave', Swal.resumeTimer);
+      //         },
+      //       });
+      //       this.router.navigate(['../customers/list']);
+      //     } else {
+      //       console.log(response);
+      //       const errorMessages = [];
+      //       for (const key in response.meta.errors) {
+      //         const messages = response.meta.errors[key];
+      //         for (const message of messages) {
+      //           errorMessages.push(`${key}: ${message}`);
+      //         }
+      //       }
+      //       this.showNextMessage(errorMessages);
+      //       // for (const message of errorMessages) {
+      //       //   Swal.fire({
+      //       //     toast: true,
+      //       //     position: 'top-end',
+      //       //     showConfirmButton: false,
+      //       //     timer: 3000,
+      //       //     title: 'Thất bại!',
+      //       //     text: message,
+      //       //     icon: 'error',
+      //       //     timerProgressBar: true,
+      //       //     didOpen: (toast) => {
+      //       //       toast.addEventListener('mouseenter', Swal.stopTimer);
+      //       //       toast.addEventListener('mouseleave', Swal.resumeTimer);
+      //       //     },
+      //       //   });
+      //       // }
 
-          }
-        },
-        (error) => {
-          console.log(error);
-          Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
-        }
-      );
+      //     }
+      //   },
+      //   (error) => {
+      //     console.log(error);
+      //     Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
+      //   }
+      // );
     } else {
       alert('Không để trống');
     }
