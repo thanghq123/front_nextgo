@@ -147,37 +147,44 @@ export class EditComponent implements OnInit {
       }
       console.log(dataSend);
       const inventory_id = this.variation.inventory_id;
-      this._storage.updateQuantity(dataSend, inventory_id).subscribe(
-        (response: any) => {
-          if (response.status == true) {
-            Swal.fire({
-              toast: true,
-              position: 'top-end',
-              showConfirmButton: false,
-              timer: 3000,
-              title: 'Thành công!',
-              text: 'Cập nhật thành công',
-              icon: 'success',
-              timerProgressBar: true,
-              didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer);
-                toast.addEventListener('mouseleave', Swal.resumeTimer);
-              },
-            });
-            this._router.navigate(['/storage/detail/list']);
-          } else {
-            console.log(response);
-            const errorMessages = [];
-            for (const key in response.meta.errors) {
-              const messages = response.meta.errors[key];
-              for (const message of messages) {
-                errorMessages.push(`${message}`);
+      console.log(inventory_id);
+
+      if(inventory_id != '' || inventory_id != undefined){
+        this._storage.updateQuantity(dataSend, inventory_id).subscribe(
+          (response: any) => {
+            if (response.status == true) {
+              Swal.fire({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                title: 'Thành công!',
+                text: 'Cập nhật thành công',
+                icon: 'success',
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.addEventListener('mouseenter', Swal.stopTimer);
+                  toast.addEventListener('mouseleave', Swal.resumeTimer);
+                },
+              });
+              this._router.navigate(['/storage/detail/list']);
+            } else {
+              console.log(response);
+              const errorMessages = [];
+              for (const key in response.meta.errors) {
+                const messages = response.meta.errors[key];
+                for (const message of messages) {
+                  errorMessages.push(`${message}`);
+                }
               }
+              this.showNextMessage(errorMessages);
             }
-            this.showNextMessage(errorMessages);
           }
-        }
-      )
+        )
+      }else{
+        this.showNextMessage(['Có lỗi xảy ra với kho'])
+      }
+
 
     }
   }

@@ -225,9 +225,10 @@ export class CreateComponent implements OnInit {
             console.log(response);
             const errorMessages = [];
             for (const key in response.meta) {
+              // errorMessages.push(`${response.meta}`);
               const messages = response.meta[key];
               for (const message of messages) {
-                errorMessages.push(`${message}`);
+                errorMessages.push(`${key}: ${message}`);
               }
             }
             this.showNextMessage(errorMessages);

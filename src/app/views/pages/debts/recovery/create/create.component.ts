@@ -98,12 +98,12 @@ export class CreateRecoveryComponent implements OnInit {
           } else {
             console.log(response);
             const errorMessages = [];
-            for (const key in response.meta.errors) {
-              const messages = response.meta.errors[key];
-              for (const message of messages) {
-                errorMessages.push(`${key}: ${message}`);
-              }
-            }
+            // for (const key in response.meta) {
+            //   const messages = response.meta;
+              // for (const message of messages) {
+                errorMessages.push(`${response.meta}`);
+              // }
+            // }
             this.showNextMessage(errorMessages);
           }
         },
