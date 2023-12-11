@@ -236,12 +236,13 @@ export class EditComponent implements OnInit {
           } else {
             console.log(response);
             const errorMessages = [];
-            for (const key in response.meta) {
-              const messages = response.meta[key];
-              for (const message of messages) {
-                errorMessages.push(`${message}`);
-              }
-            }
+            errorMessages.push(`${response.meta}`);
+            // for (const key in response.meta) {
+            //   const messages = response.meta[key];
+            //   for (const message of messages) {
+            //     errorMessages.push(`${message}`);
+            //   }
+            // }
             this.showNextMessage(errorMessages);
           }
         },

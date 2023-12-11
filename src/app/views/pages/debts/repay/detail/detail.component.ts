@@ -205,12 +205,13 @@ export class DetailRepayComponent implements OnInit {
               } else {
                 console.log(response);
                 const errorMessages = [];
-                for (const key in response.meta.errors) {
-                  const messages = response.meta.errors[key];
-                  for (const message of messages) {
-                    errorMessages.push(`${key}: ${message}`);
-                  }
-                }
+                errorMessages.push(`${response.meta}`);
+                // for (const key in response.meta.errors) {
+                //   const messages = response.meta.errors[key];
+                //   for (const message of messages) {
+                //     errorMessages.push(`${key}: ${message}`);
+                //   }
+                // }
                 this.showNextMessage(errorMessages);
               }
             });
@@ -261,12 +262,13 @@ export class DetailRepayComponent implements OnInit {
         } else {
           console.log(response);
           const errorMessages = [];
-          for (const key in response.meta.errors) {
-            const messages = response.meta.errors[key];
-            for (const message of messages) {
-              errorMessages.push(`${key}: ${message}`);
-            }
-          }
+          errorMessages.push(`${response.meta}`);
+          // for (const key in response.meta.errors) {
+          //   const messages = response.meta.errors[key];
+          //   for (const message of messages) {
+          //     errorMessages.push(`${key}: ${message}`);
+          //   }
+          // }
           this.showNextMessage(errorMessages);
         }
       });

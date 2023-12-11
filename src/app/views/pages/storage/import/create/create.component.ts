@@ -82,13 +82,15 @@ export class CreateComponent implements OnInit {
           : this.listProduct
               .filter(
                 (v) =>
-                  v.product_name_variation.toLowerCase().indexOf(term.toLowerCase()) >
-                  -1
+                  v.product_name_variation
+                    .toLowerCase()
+                    .indexOf(term.toLowerCase()) > -1
               )
               .slice(0, 10)
       )
     );
-  formatter = (x: { product_name_variation: string }) => x.product_name_variation;
+  formatter = (x: { product_name_variation: string }) =>
+    x.product_name_variation;
 
   searchProduct() {
     if (this.input != '' && this.input.id != undefined) {
@@ -161,6 +163,7 @@ export class CreateComponent implements OnInit {
   onSubmit() {
     // If confirmed, delete the category
     if (this.storageImportForm.valid && this.products.length > 0) {
+      let flag = true;
       const datasend = {
         reason: this.storageImportForm.value.reason,
         inventory_id: this.storageImportForm.value.inventory_id,
@@ -174,47 +177,57 @@ export class CreateComponent implements OnInit {
           JSON.stringify(this.products)
         ),
       };
-      console.log(datasend);
-      this._storage.createData(datasend).subscribe(
-        (response: any) => {
-          if (response.status == true) {
-            this.storageImportForm.reset();
-            Swal.fire({
-              toast: true,
-              position: 'top-end',
-              showConfirmButton: false,
-              timer: 3000,
-              title: 'Thành công!',
-              text: 'Thêm đơn nhập thành công',
-              icon: 'success',
-              timerProgressBar: true,
-              didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer);
-                toast.addEventListener('mouseleave', Swal.resumeTimer);
-              },
-            });
-            this.router.navigate([
-              `../storage/import/detail/${response.payload}`,
-            ]);
-          } else {
-            console.log(response);
-            const errorMessages = [];
-            for (const key in response.meta.errors) {
-              const messages = response.meta.errors[key];
-              for (const message of messages) {
-                errorMessages.push(`${key}: ${message}`);
-              }
-            }
-            this.showNextMessage(errorMessages);
-          }
-        },
-        (error) => {
-          console.log(error);
-          Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
+      this.products.forEach((value) => {
+        // console.log(value);
+        if(value.price == 0 || value.quantity == 0){
+          flag = false;
+          this.showNextMessage(['Giá nhập hoặc số lượng phải lớn hơn 0'])
         }
-      );
+
+      });
+      // console.log(flag);
+      if(flag == true){
+        this._storage.createData(datasend).subscribe(
+          (response: any) => {
+            if (response.status == true) {
+              this.storageImportForm.reset();
+              Swal.fire({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                title: 'Thành công!',
+                text: 'Thêm đơn nhập thành công',
+                icon: 'success',
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.addEventListener('mouseenter', Swal.stopTimer);
+                  toast.addEventListener('mouseleave', Swal.resumeTimer);
+                },
+              });
+              this.router.navigate([
+                `../storage/import/detail/${response.payload}`,
+              ]);
+            } else {
+              console.log(response);
+              const errorMessages = [];
+              for (const key in response.meta.errors) {
+                const messages = response.meta.errors[key];
+                for (const message of messages) {
+                  errorMessages.push(`${key}: ${message}`);
+                }
+              }
+              this.showNextMessage(errorMessages);
+            }
+          },
+          (error) => {
+            console.log(error);
+            Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
+          }
+        );
+      }
     } else {
-      alert('Sản phẩm không được để trống');
+      this.showNextMessage(['Sản phẩm không được để trống!'])
     }
   }
   showNextMessage(errorMessages: any) {
