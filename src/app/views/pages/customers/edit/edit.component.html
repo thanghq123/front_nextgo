@@ -56,7 +56,7 @@
             </div>
             <div class="mb-3">
                 <label for="exampleInputUsername1" class="form-label">Loại Khách hàng</label>
-                <ng-select [searchable]="true" formControlName="type" placeholder="Chọn Kiểu bảo hành">
+                <ng-select [searchable]="true" formControlName="type_customer" placeholder="Chọn Loại khách hàng">
                     <ng-option *ngFor="let item of types" [value]="item.id">{{item.name}}</ng-option>
                 </ng-select>
             </div>
@@ -126,8 +126,7 @@
                     formControlName="note" rows="5"></textarea>
             </div>
 
-            <button type="submit" [disabled]="customersForm.invalid" class="btn btn-primary me-2">Tạo
-                mới</button>
+            <button type="submit" [disabled]="customersForm.invalid" class="btn btn-primary me-2">Cập nhật</button>
             <button class="btn btn-secondary" routerLink="/customers/list">Trở về</button>
         </form>
         </div>

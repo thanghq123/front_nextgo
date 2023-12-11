@@ -26,7 +26,7 @@ export class EditComponent implements OnInit {
   private districtChangeSubject = new Subject<number>();
   customersForm = new FormGroup({
     name: new FormControl('', Validators.required),
-    type: new FormControl(0),
+    type_customer: new FormControl(''),
     dob: new FormControl(''),
     group_customer_id: new FormControl(''),
     province_code: new FormControl(''),
@@ -53,13 +53,15 @@ export class EditComponent implements OnInit {
       { id: 1, name: 'Doanh nghiệp' },
     ];
 
-    
+
     this.status = [
       { id: 0, name: 'Kích hoạt' },
       { id: 1, name: 'Không kích hoạt' },
     ];
     this.GroupCustomersService.GetData().subscribe((data: any) => {
-      this.GroupsCustomers = data.payload;
+      this.GroupsCustomers = data.payload.data;
+      // console.log(data.payload);
+
     });
 
     this.AresService.getProvinces().subscribe((data: any) => {
@@ -130,10 +132,10 @@ export class EditComponent implements OnInit {
     });
 
 
-    
+
   }
 
-  
+
   onProvinceChange(): void {
     this.provinceChangeSubject.next(
       Number(this.customersForm.value.province_code)
@@ -150,7 +152,7 @@ export class EditComponent implements OnInit {
       const dataToSend = {
         ...this.customersForm.value,
         name: String(this.customersForm.value.name),
-        type: Number(this.customersForm.value.type) || null,
+        type: Number(this.customersForm.value.type_customer),
         dob: String(this.customersForm.value.dob) || null,
         group_customer_id: Number(this.customersForm.value.group_customer_id) || null,
         province_code: Number(this.customersForm.value.province_code) || null,
@@ -165,6 +167,8 @@ export class EditComponent implements OnInit {
         updated_at: new Date().toISOString(),
         id: this.id,
       };
+      console.log(dataToSend);
+
 
       this.CustomersService.update(dataToSend).subscribe(
         (response) => {
