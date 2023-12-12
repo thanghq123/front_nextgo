@@ -97,13 +97,17 @@ export class DetailComponent implements OnInit {
               } else {
                 console.log(response);
                 const errorMessages = [];
-                errorMessages.push(`${response.meta}`);
-                // for (const key in response.meta.errors) {
-                //   const messages = response.meta.errors[key];
-                //   for (const message of messages) {
-                //     errorMessages.push(`${message}`);
-                //   }
-                // }
+                if (response.meta && typeof response.meta === 'object') {
+                  for (const key in response.meta.errors) {
+                    // errorMessages.push(`${response.meta}`);
+                    const messages = response.meta.errors[key];
+                    for (const message of messages) {
+                      errorMessages.push(`${key}: ${message}`);
+                    }
+                  }
+                } else {
+                  errorMessages.push(`${response.meta}`);
+                }
                 this.showNextMessage(errorMessages);
               }
             },

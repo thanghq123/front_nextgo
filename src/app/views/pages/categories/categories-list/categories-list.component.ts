@@ -2,8 +2,9 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { DataTable } from 'simple-datatables';
 import { CategoriesService } from 'src/app/service/categories/categories.service';
 import { Categories } from 'src/app/interface/categories/categories';
-import { Observable,of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import Swal from 'sweetalert2';
+import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-categories-list',
@@ -12,6 +13,9 @@ import Swal from 'sweetalert2';
 })
 export class CategoriesListComponent implements OnInit, AfterViewInit {
   ListsCategories: Observable<Categories[]>;
+  currentPage: number = 1;
+  isLoading = false;
+  dataTable: DataTable | null = null;
 
   constructor(private categoriesService: CategoriesService) {
     this.ListsCategories = new Observable();
@@ -22,14 +26,13 @@ export class CategoriesListComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.ListsCategories.subscribe(() => {
-      setTimeout(() => {
-        const dataTable = new DataTable('#dataTableExample');
-        dataTable.on('datatable.init', () => {
-          this.addDeleteEventHandlers();
-        });
-      }, 0);
-    });
+    const dataTableElement = document.getElementById('dataTableExample');
+    if (dataTableElement) {
+      const db = new DataTable(dataTableElement);
+      db.on('datatable.init', () => {
+        this.addDeleteEventHandlers();
+      });
+    }
   }
 
   addDeleteEventHandlers(): void {
@@ -40,6 +43,14 @@ export class CategoriesListComponent implements OnInit, AfterViewInit {
         this.deleteCategory(Number(id));
       });
     });
+  }
+
+  changePage(page: number) {
+    console.log(page);
+
+    const oldPage = page;
+    if (page == oldPage) {
+    }
   }
 
   // ...
@@ -58,14 +69,13 @@ export class CategoriesListComponent implements OnInit, AfterViewInit {
         // If confirmed, delete the category
         this.categoriesService.delete(id).subscribe(
           (response) => {
-
             Swal.fire('Đã xóa!', 'Danh mục của bạn đã được xóa.', 'success');
             // Navigate to the list after successful deletion
             location.reload();
           },
           (error) => {
-            if(error.success == false){
-              Swal.fire('Lỗi!',`${error.meta.name}`, 'error');
+            if (error.success == false) {
+              Swal.fire('Lỗi!', `${error.meta.name}`, 'error');
             }
           }
         );
@@ -74,21 +84,24 @@ export class CategoriesListComponent implements OnInit, AfterViewInit {
   }
 
   refreshCategories(): void {
-   this.categoriesService.GetData().subscribe(
-      (response : any) => {
-        if(response.status == true){
-          this.ListsCategories =of(response.payload.data);
+    this.isLoading = true;
+    this.categoriesService.GetData().subscribe(
+      (response: any) => {
+        if (response.status == true) {
+          this.ListsCategories = of(response.payload.data);
+          this.isLoading = false;
+
           // console.log(this.ListsCategories);
           this.ListsCategories.subscribe((categories) => {
             setTimeout(() => {
-                const dataTable = new DataTable('#dataTableExample');
-                // Here, use the 'categories' data to populate your DataTable
-                // ...
-                dataTable.on('datatable.init', () => {
-                    this.addDeleteEventHandlers();
-                });
+              const dataTable = new DataTable('#dataTableExample');
+              // Here, use the 'categories' data to populate your DataTable
+              // ...
+              dataTable.on('datatable.init', () => {
+                this.addDeleteEventHandlers();
+              });
             }, 0);
-        });
+          });
         }
         // Navigate to the list after successful deletion
       },
@@ -97,6 +110,5 @@ export class CategoriesListComponent implements OnInit, AfterViewInit {
         Swal.fire('Lỗi!', 'Có lỗi xảy ra khi xóa danh mục.', 'error');
       }
     );
-
   }
 }
