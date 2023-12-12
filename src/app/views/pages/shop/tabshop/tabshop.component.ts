@@ -470,59 +470,51 @@ export class TabshopComponent implements OnInit {
     }
   }
 
+  checkDataModalDiscount(e : any){
+    // console.log(+e.target.value);
+    // console.log(this.modelRadioBill);
+    if (this.modelRadioBill === 1) {
+        if(+e.target.value > 100) {
+          this.DiscountBill = 100;
+          e.target.value = 100;
+        }
+    }
+  }
+
   // Tính toán tiền bill
   resultBill(idTab: number) {
-    console.log(this.singleTax);
-    console.log(this.totalMoney, this.DiscountBill, this.totalMoney);
+    console.log("vào bill");
+    
+    // console.log(this.singleTax);
+    // console.log(this.totalMoney, this.DiscountBill, this.totalMoney);
     let priceCurrent = null;
-    if (this.singleTax > 0) {
-      if (this.modelRadioBill === 1) {
-        const total = this.totalMoney * Number(this.DiscountBill);
-        priceCurrent =
-          this.totalMoney -
-          total / 100 +
-          ((this.totalMoney - total / 100) * this.singleTax) / 100 +
-          Number(this.taxBill);
-      } else {
-        const total = this.totalMoney - Number(this.DiscountBill);
-        priceCurrent =
-          total + (total * this.singleTax) / 100 + Number(this.taxBill);
-      }
-      this.priceBill = priceCurrent;
-      // console.log(this.dataBill[idTab]);
-      // console.log(this.dataBill[this.tabDefault]);
-      this.updateBill(this.dataBill, idTab, {
-        discount: this.singleTax,
-        tax: this.DiscountBill,
-        totalPrice: this.priceBill,
-        service: this.taxBill,
-        radio: this.modelRadioBill,
-      });
-    } else {
+    if (this.singleTax < 0) {
       this.singleTax = 0;
-      // if (this.modelRadioBill === 1) {
-      //   const total = this.totalMoney * Number(this.DiscountBill);
-      //   priceCurrent =
-      //     this.totalMoney -
-      //     total / 100 +
-      //     ((this.totalMoney - total / 100) * this.singleTax) / 100 +
-      //     Number(this.taxBill);
-      // } else {
-      //   const total = this.totalMoney - Number(this.DiscountBill);
-      //   priceCurrent =
-      //     total + (total * this.singleTax) / 100 + Number(this.taxBill);
-      // }
-      // this.priceBill = priceCurrent;
-      // // console.log(this.dataBill[idTab]);
-      // // console.log(this.dataBill[this.tabDefault]);
-      // this.updateBill(this.dataBill, idTab, {
-      //   discount: this.singleTax,
-      //   tax: this.DiscountBill,
-      //   totalPrice: this.priceBill,
-      //   service: this.taxBill,
-      //   radio: this.modelRadioBill,
-      // });
+    } 
+
+    if (this.modelRadioBill === 1) {
+      const total = this.totalMoney * Number(this.DiscountBill);
+      priceCurrent =
+        this.totalMoney -
+        total / 100 +
+        ((this.totalMoney - total / 100) * this.singleTax) / 100 +
+        Number(this.taxBill);
+    } else {
+      const total = this.totalMoney - Number(this.DiscountBill);
+      priceCurrent =
+        total + (total * this.singleTax) / 100 + Number(this.taxBill);
     }
+
+    this.priceBill = priceCurrent;
+    // console.log(this.dataBill[idTab]);
+    // console.log(this.dataBill[this.tabDefault]);
+    this.updateBill(this.dataBill, idTab, {
+      discount: this.singleTax,
+      tax: this.DiscountBill,
+      totalPrice: this.priceBill,
+      service: this.taxBill,
+      radio: this.modelRadioBill,
+    });
 
     localStorage.setItem('dataBill', JSON.stringify(this.dataBill));
   }
@@ -624,7 +616,31 @@ export class TabshopComponent implements OnInit {
       .catch((res) => {});
   }
 
-  openBasicModal(content: TemplateRef<any>) {
+
+  openBasicModalDiscount(content: TemplateRef<any>) {
+    this.modalService
+      .open(content, {})
+      .result.then((result) => {
+        console.log(result);
+        if (result) {
+          this.resultBill(this.tabDefault);
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            title: 'Thành công!',
+            text: 'Áp dụng thành công',
+            icon: 'success',
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer);
+              toast.addEventListener('mouseleave', Swal.resumeTimer);
+            },
+          });
+        }})
+      }
+  openBasicModalUserAdd(content: TemplateRef<any>) {
     this.modalService
       .open(content, {})
       .result.then((result) => {
@@ -632,6 +648,7 @@ export class TabshopComponent implements OnInit {
         if (result) {
           this.updateBill(this.dataInfoUser, this.tabDefault, this.dataAdd);
           console.log(this.dataCurrent);
+          
           this.CustomersService.createQuickly(this.dataAdd).subscribe(
             (data: any) => {
               console.log(data);
@@ -653,6 +670,9 @@ export class TabshopComponent implements OnInit {
                   'tabOrder',
                   JSON.stringify(this.dataCurrent)
                 );
+
+                this.dataAdd.name = '';
+                this.dataAdd.tel = '';
               } else {
                 console.log(data);
 
@@ -1292,6 +1312,8 @@ export class TabshopComponent implements OnInit {
       .open(content, { size: 'lg' })
       .result.then((result) => {
         if (result) {
+          console.log(this.priceBill);
+          
           const dataSend = {
             customer_id: this.selectedSearchPersonId,
             created_by: this.tenant.id,
@@ -1537,7 +1559,6 @@ export class TabshopComponent implements OnInit {
                                 newWindow?.print();
                               }
 
-                              window.location.reload();
                             })
                             .catch((res) => {});
                           // setTimeout(() => {
@@ -1618,7 +1639,6 @@ export class TabshopComponent implements OnInit {
                                   newWindow?.document.close();
                                   newWindow?.print();
                                 }
-                                window.location.reload();
                               })
                               .catch((res) => {});
                             // setTimeout(() => {
@@ -1651,7 +1671,6 @@ export class TabshopComponent implements OnInit {
                             newWindow?.document.close();
                             newWindow?.print();
                           }
-                          window.location.reload();
                         })
                         .catch((res) => {});
                     }
@@ -1787,7 +1806,6 @@ export class TabshopComponent implements OnInit {
                               newWindow?.document.close();
                               newWindow?.print();
                               }
-                              window.location.reload();
                             })
                             .catch((res) => {});
                           // setTimeout(() => {
@@ -1914,7 +1932,6 @@ export class TabshopComponent implements OnInit {
                           newWindow?.document.close();
                           newWindow?.print();
                           }
-                          window.location.reload();
                         })
                         .catch((res) => {});
                     }
@@ -1983,6 +2000,15 @@ export class TabshopComponent implements OnInit {
                 this.dataBtnPayment = dataformBtn;
                 this.productItemsBatches = dataformBatches;
                 // console.log(this.dataBtnPayment);
+              }else {
+                const errorMessages = [];
+                for (const key in data.meta.errors) {
+                  const messages = data.meta.errors[key];
+                  for (const message of messages) {
+                    errorMessages.push(`${key}: ${message}`);
+                  }
+                }
+                this.showNextMessage(errorMessages);
               }
             });
             console.log(this.dataBtnPayment);
@@ -2097,6 +2123,8 @@ export class TabshopComponent implements OnInit {
         0
       );
       this.resultBill(this.tabDefault);
+      console.log("test" + this.tabDefault);
+      
       localStorage.setItem('tabOrder', JSON.stringify(this.dataCurrent));
     }
   }
