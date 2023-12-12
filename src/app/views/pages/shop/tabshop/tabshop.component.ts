@@ -789,6 +789,13 @@ export class TabshopComponent implements OnInit {
     }
   }
 
+  checkDataModalNumber(e: any) {
+    console.log(e.target.value);
+    if (this.checkValueInput(e.target.value) == false) {
+      e.target.value = '0';
+    }
+  }
+
   removeLeadingZeros(inputData: string) {
     // Kiểm tra xem chuỗi có bắt đầu bằng số 0 hay không
     if (inputData.startsWith('0')) {
