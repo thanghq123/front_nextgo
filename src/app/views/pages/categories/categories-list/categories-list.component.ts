@@ -71,7 +71,7 @@ export class CategoriesListComponent implements OnInit, AfterViewInit {
           (response) => {
             Swal.fire('Đã xóa!', 'Danh mục của bạn đã được xóa.', 'success');
             // Navigate to the list after successful deletion
-            this.refreshCategories();
+            location.reload();
           },
           (error) => {
             if (error.success == false) {

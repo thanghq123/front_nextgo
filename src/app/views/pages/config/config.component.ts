@@ -18,8 +18,8 @@ import {SubcriptionOrderService} from "../../../service/subcription-order/subcri
 
 @Component({
   selector: 'app-config',
-  templateUrl: './config.component.html',
-  styleUrls: ['./config.component.scss']
+  templateUrl: 'config.component.html',
+  styleUrls: ['config.component.scss']
 })
 export class ConfigComponent implements OnInit {
 
