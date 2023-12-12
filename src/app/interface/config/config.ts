@@ -3,7 +3,7 @@ export interface Config {
   business_type: string | null;
   business_name: string;
   tel?: string;
-  email?: string | null;
+  email?: string ;
   business_field_code?: string;
   business_field_type?: number | string;
   business_registration?: string;
