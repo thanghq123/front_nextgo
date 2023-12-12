@@ -28,7 +28,7 @@ export class EditComponent implements OnInit {
   customersForm = new FormGroup({
     name: new FormControl('', Validators.required),
     type: new FormControl(1),
-    group_supplier_id: new FormControl(''),
+    group_customer_id: new FormControl(''),
     province_code: new FormControl(''),
     district_code: new FormControl(''),
     ward_code: new FormControl(''),
@@ -52,7 +52,7 @@ export class EditComponent implements OnInit {
       { id: 1, name: 'Doanh nghiệp' },
     ];
 
-    
+
     this.status = [
       { id: 0, name: 'Kích hoạt' },
       { id: 1, name: 'Không kích hoạt' },
@@ -114,6 +114,14 @@ export class EditComponent implements OnInit {
             const customerData = data.payload;
             // Chuyển đổi giá trị gender sang kiểu number
             customerData.gender = String(customerData.gender);
+            if(customerData.status == false){
+              customerData.status = 0;
+            }else{
+              customerData.status = 1;
+            }
+
+            console.log(customerData);
+
             this.customersForm.patchValue(customerData);
             this.onProvinceChange();
             this.onDistrictChange();
@@ -129,10 +137,10 @@ export class EditComponent implements OnInit {
     });
 
 
-    
+
   }
 
-  
+
   onProvinceChange(): void {
     this.provinceChangeSubject.next(
       Number(this.customersForm.value.province_code)
@@ -150,7 +158,7 @@ export class EditComponent implements OnInit {
         ...this.customersForm.value,
         name: String(this.customersForm.value.name),
         type: Number(this.customersForm.value.type) || null,
-        group_customer_id: Number(this.customersForm.value.group_supplier_id) || null,
+        group_customer_id: Number(this.customersForm.value.group_customer_id) || null,
         province_code: Number(this.customersForm.value.province_code) || null,
         district_code: Number(this.customersForm.value.district_code) || null,
         email: String(this.customersForm.value.email) || null,

@@ -117,6 +117,12 @@ export class EditComponent implements OnInit {
             const customerData = data.payload;
             // Chuyển đổi giá trị gender sang kiểu number
             customerData.gender = String(customerData.gender);
+            if(customerData.status == false){
+              customerData.status = 0;
+            }else{
+              customerData.status = 1;
+            }
+
             this.customersForm.patchValue(customerData);
             this.onProvinceChange();
             this.onDistrictChange();
@@ -192,11 +198,16 @@ export class EditComponent implements OnInit {
           } else {
             console.log(response);
             const errorMessages = [];
-            for (const key in response.meta.errors) {
-              const messages = response.meta.errors[key];
-              for (const message of messages) {
-                errorMessages.push(`${key}: ${message}`);
+            if (response.meta && typeof response.meta === 'object') {
+              for (const key in response.meta.errors) {
+                // errorMessages.push(`${response.meta}`);
+                const messages = response.meta.errors[key];
+                for (const message of messages) {
+                  errorMessages.push(`${key}: ${message}`);
+                }
               }
+            } else {
+              errorMessages.push(`${response.meta}`);
             }
             this.showNextMessage(errorMessages);
 

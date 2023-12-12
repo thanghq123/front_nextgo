@@ -58,7 +58,7 @@
 
             <div class="mb-3">
                 <label for="exampleInputUsername1" class="form-label">Nhóm nhà cung cấp</label>
-                <ng-select [searchable]="true" formControlName="group_supplier_id" placeholder="Chọn Nhóm nhà cung cấp">
+                <ng-select [searchable]="true" formControlName="group_customer_id" placeholder="Chọn Nhóm nhà cung cấp">
                     <ng-option *ngFor="let item of GroupsCustomers" [value]="item.id">{{item.name}}</ng-option>
                 </ng-select>
             </div>

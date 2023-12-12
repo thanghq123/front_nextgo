@@ -8,7 +8,7 @@ import { Subject } from 'rxjs';
 import { LocationsService } from 'src/app/service/locations/locations.service';
 import { AresService } from 'src/app/service/ares/ares.service';
 import { environment } from 'src/environments/environment';
-import {SettingService} from "../../../../service/setting/setting.service";
+import { SettingService } from '../../../../service/setting/setting.service';
 
 @Component({
   selector: 'app-edit',
@@ -36,9 +36,9 @@ export class EditComponent implements OnInit {
     imageUpdate: new FormControl(''),
     description: new FormControl(''),
     tel: new FormControl('', [Validators.required]),
-    province_code: new FormControl(''),
-    district_code: new FormControl(''),
-    ward_code: new FormControl(''),
+    province_id: new FormControl(''),
+    district_id: new FormControl(''),
+    commune_id: new FormControl(''),
     address_detail: new FormControl('', [Validators.required]),
     status: new FormControl('', [Validators.required]),
     is_main: new FormControl('', [Validators.required]),
@@ -49,7 +49,7 @@ export class EditComponent implements OnInit {
     private AresService: AresService,
     private router: Router,
     private route: ActivatedRoute,
-    private settingService: SettingService,
+    private settingService: SettingService
   ) {
     this.domain_name = this.settingService.tenant?.name;
   }
@@ -84,7 +84,7 @@ export class EditComponent implements OnInit {
             : [{ id: 0, name: `${data.message}` }];
       });
 
-      this.districtChangeSubject
+    this.districtChangeSubject
       .pipe(
         debounceTime(300),
         switchMap((district_code) => this.AresService.getWards(district_code))
@@ -102,7 +102,7 @@ export class EditComponent implements OnInit {
           this.locationsForm?.get('ward_code')?.updateValueAndValidity();
         } else {
           console.log(this.wards);
-          this.locationsForm.value.ward_code = '';
+          this.locationsForm.value.commune_id = '';
         }
       });
 
@@ -128,20 +128,20 @@ export class EditComponent implements OnInit {
           }
         );
       } else {
-        this.router.navigate(["../../locations"]);
+        this.router.navigate(['../../locations']);
       }
     });
   }
 
   onProvinceChange(): void {
     this.provinceChangeSubject.next(
-      Number(this.locationsForm.value.province_code)
+      Number(this.locationsForm.value.province_id)
     );
   }
 
   onDistrictChange(): void {
     this.districtChangeSubject.next(
-      Number(this.locationsForm.value.district_code)
+      Number(this.locationsForm.value.district_id)
     );
   }
 
@@ -222,9 +222,9 @@ export class EditComponent implements OnInit {
       formData.append('is_main', String(locationsData.is_main));
       formData.append('address_detail', String(locationsData.address_detail));
       formData.append('created_by', '1');
-      formData.append('province_code', String(locationsData.province_code));
-      formData.append('district_code', String(locationsData.district_code));
-      formData.append('ward_code', String(locationsData.ward_code));
+      formData.append('province_code', String(locationsData.province_id));
+      formData.append('district_code', String(locationsData.district_id));
+      formData.append('ward_code', String(locationsData.commune_id));
       formData.append('description', String(locationsData.description));
       // console.log(this.img);
 
@@ -236,13 +236,17 @@ export class EditComponent implements OnInit {
           } else {
             console.log(response);
             const errorMessages = [];
-            errorMessages.push(`${response.meta}`);
-            // for (const key in response.meta) {
-            //   const messages = response.meta[key];
-            //   for (const message of messages) {
-            //     errorMessages.push(`${message}`);
-            //   }
-            // }
+            if (response.meta && typeof response.meta === 'object') {
+              for (const key in response.meta) {
+                // errorMessages.push(`${response.meta}`);
+                const messages = response.meta[key];
+                for (const message of messages) {
+                  errorMessages.push(`${key}: ${message}`);
+                }
+              }
+            } else {
+              errorMessages.push(`${response.meta}`);
+            }
             this.showNextMessage(errorMessages);
           }
         },
@@ -279,7 +283,7 @@ export class EditComponent implements OnInit {
     }
   }
 
-  showSuccessMessage(router: string){
+  showSuccessMessage(router: string) {
     Swal.fire({
       toast: true,
       position: 'top-end',
