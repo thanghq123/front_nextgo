@@ -81,12 +81,12 @@
                       <!---->
                       <div>
                         <label>Địa chỉ email</label>
-                        <input
+                        <!-- <input
                           type="text"
-                          disabled="disabled"
-                          placeholder="Địa chỉ email" readonly="readonly"
-                          value="{{ config.email }}"
-                          class="form-control">
+                          disabled="true"
+                          placeholder="Địa chỉ email"
+                          value="{{ config.email ? config.email : '' }}"
+                          class="form-control"> -->
                       </div>
                     </div>
                   </div>
@@ -208,16 +208,10 @@
                 <label for="exampleInputUsername1" class="form-label">
                   Tỉnh thành phố
                 </label>
-                <ng-select
-                  [searchable]="true"
-                  (change)="onProvinceChange()"
-                  formControlName="province_code"
-                  placeholder="Chọn Tỉnh"
-                >
-                  <ng-option *ngFor="let item of provinces" [value]="item.id">
-                    {{ item.name }}
-                  </ng-option>
-                </ng-select>
+                <ng-select [searchable]="true" (change)="onProvinceChange()" formControlName="province_code"
+                placeholder="Chọn Tỉnh">
+                <ng-option *ngFor="let item of provinces" [value]="item.id">{{item.name}}</ng-option>
+            </ng-select>
               </div>
             </div>
           </div>
@@ -226,16 +220,10 @@
               <div id="input-group-1" role="group" class="form-group">
                 <!---->
                 <div><label>Quận/Huyện</label>
-                  <ng-select
-                    [searchable]="true"
-                    (change)="onDistrictChange()"
-                    formControlName="district_code"
-                    placeholder="Chọn Quận/Huyện"
-                  >
-                    <ng-option *ngFor="let item of districts" [value]="item.id">
-                      {{ item.name }}
-                    </ng-option>
-                  </ng-select>
+                  <ng-select [searchable]="true" (change)="onDistrictChange()" formControlName="district_code"
+                    placeholder="Chọn Tỉnh">
+                    <ng-option *ngFor="let item of districts" [value]="item.id">{{item.name}}</ng-option>
+                </ng-select>
                 </div>
               </div>
             </div>
@@ -243,15 +231,9 @@
               <div id="input-group-1" role="group" class="form-group">
                 <!---->
                 <div><label>Phường/Xã</label>
-                  <ng-select
-                    [searchable]="true"
-                    formControlName="ward_code"
-                    placeholder="Chọn Xã"
-                  >
-                    <ng-option *ngFor="let item of wards" [value]="item.id">
-                      {{ item.name }}
-                    </ng-option>
-                  </ng-select>
+                  <ng-select [searchable]="true" formControlName="ward_code" placeholder="Chọn Xã">
+                    <ng-option *ngFor="let item of wards" [value]="item.id">{{item.name}}</ng-option>
+                </ng-select>
                 </div>
               </div>
             </div>
@@ -300,7 +282,7 @@
               <label class="col-form-label col-lg-3 font-size-14 font-weight-bold">Gói dịch vụ</label>
               <div class="col-lg-9">
                 <span class="d-inline-block" style="min-width: 200px">: {{ tenant.pricing.name }}</span>
-                <button type="button" class="btn btn-secondary ms-5">Thông tin gói</button>
+                <!-- <button type="button" class="btn btn-secondary ms-5">Thông tin gói</button> -->
               </div>
             </div>
           </div>
@@ -339,7 +321,7 @@
     <div class="col-12">
       <div class="footer-custom">
         <div class="d-flex align-items-center justify-content-end px-1">
-          <button type="submit" class="btn btn-primary"> Cập nhật</button>
+          <button type="submit" class="btn btn-primary" [disabled]="configForm.invalid"> Cập nhật</button>
         </div>
       </div>
     </div>
