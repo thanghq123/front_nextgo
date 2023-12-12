@@ -12,7 +12,7 @@ import Swal from 'sweetalert2';
 export class ListComponent implements OnInit {
 
   Customers: Observable<Customers[]>;
-  
+  isLoading = false;
   constructor(private CustomersService: CustomersService) {
     this.Customers = new Observable();
   }
@@ -84,11 +84,12 @@ export class ListComponent implements OnInit {
   }
 
   refreshCategories(): void {
+    this.isLoading = true;
    this.CustomersService.GetData().subscribe(
       (response : any) => {
         if(response.status == true){
           this.Customers =of(response.payload);
-          
+          this.isLoading = false;
           this.Customers.subscribe((categories) => {
             setTimeout(() => {
                 const dataTable = new DataTable('#dataTableExample');
