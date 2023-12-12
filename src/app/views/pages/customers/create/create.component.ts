@@ -163,59 +163,64 @@ export class CreateComponent implements OnInit {
 
       console.log(dataToSend);
 
-      // this.CustomersService.create(dataToSend).subscribe(
-      //   (response: any) => {
-      //     if (response.status == true) {
-      //       this.customersForm.reset();
-      //       Swal.fire({
-      //         toast: true,
-      //         position: 'top-end',
-      //         showConfirmButton: false,
-      //         timer: 3000,
-      //         title: 'Thành công!',
-      //         text: 'Thêm khách hàng thành công',
-      //         icon: 'success',
-      //         timerProgressBar: true,
-      //         didOpen: (toast) => {
-      //           toast.addEventListener('mouseenter', Swal.stopTimer);
-      //           toast.addEventListener('mouseleave', Swal.resumeTimer);
-      //         },
-      //       });
-      //       this.router.navigate(['../customers/list']);
-      //     } else {
-      //       console.log(response);
-      //       const errorMessages = [];
-      //       for (const key in response.meta.errors) {
-      //         const messages = response.meta.errors[key];
-      //         for (const message of messages) {
-      //           errorMessages.push(`${key}: ${message}`);
-      //         }
-      //       }
-      //       this.showNextMessage(errorMessages);
-      //       // for (const message of errorMessages) {
-      //       //   Swal.fire({
-      //       //     toast: true,
-      //       //     position: 'top-end',
-      //       //     showConfirmButton: false,
-      //       //     timer: 3000,
-      //       //     title: 'Thất bại!',
-      //       //     text: message,
-      //       //     icon: 'error',
-      //       //     timerProgressBar: true,
-      //       //     didOpen: (toast) => {
-      //       //       toast.addEventListener('mouseenter', Swal.stopTimer);
-      //       //       toast.addEventListener('mouseleave', Swal.resumeTimer);
-      //       //     },
-      //       //   });
-      //       // }
+      this.CustomersService.create(dataToSend).subscribe(
+        (response: any) => {
+          if (response.status == true) {
+            this.customersForm.reset();
+            Swal.fire({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 3000,
+              title: 'Thành công!',
+              text: 'Thêm khách hàng thành công',
+              icon: 'success',
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer);
+                toast.addEventListener('mouseleave', Swal.resumeTimer);
+              },
+            });
+            this.router.navigate(['../customers/list']);
+          } else {
+            console.log(response);
+            const errorMessages = [];
+            if (response.meta && typeof response.meta === 'object') {
+              for (const key in response.meta.errors) {
+                // errorMessages.push(`${response.meta}`);
+                const messages = response.meta.errors[key];
+                for (const message of messages) {
+                  errorMessages.push(`${key}: ${message}`);
+                }
+              }
+            } else {
+              errorMessages.push(`${response.meta}`);
+            }
+            this.showNextMessage(errorMessages);
+            // for (const message of errorMessages) {
+            //   Swal.fire({
+            //     toast: true,
+            //     position: 'top-end',
+            //     showConfirmButton: false,
+            //     timer: 3000,
+            //     title: 'Thất bại!',
+            //     text: message,
+            //     icon: 'error',
+            //     timerProgressBar: true,
+            //     didOpen: (toast) => {
+            //       toast.addEventListener('mouseenter', Swal.stopTimer);
+            //       toast.addEventListener('mouseleave', Swal.resumeTimer);
+            //     },
+            //   });
+            // }
 
-      //     }
-      //   },
-      //   (error) => {
-      //     console.log(error);
-      //     Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
-      //   }
-      // );
+          }
+        },
+        (error) => {
+          console.log(error);
+          Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
+        }
+      );
     } else {
       alert('Không để trống');
     }

@@ -13,7 +13,7 @@ import { Subject } from 'rxjs';
 import { LocationsService } from 'src/app/service/locations/locations.service';
 import { AresService } from 'src/app/service/ares/ares.service';
 import { environment } from 'src/environments/environment';
-import {SettingService} from "../../../../service/setting/setting.service";
+import { SettingService } from '../../../../service/setting/setting.service';
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
@@ -49,7 +49,7 @@ export class CreateComponent implements OnInit {
   codeProvince: any;
   codeDistrict: any;
   codeWard: any;
-  province: any[]= [];
+  province: any[] = [];
   district: any[] = [];
   ward: any[] = [];
 
@@ -58,7 +58,7 @@ export class CreateComponent implements OnInit {
     private _locaService: LocationsService,
     private AresService: AresService,
     private router: Router,
-    private settingService: SettingService,
+    private settingService: SettingService
   ) {
     this.domain_name = this.settingService.tenant?.name;
   }
@@ -77,7 +77,7 @@ export class CreateComponent implements OnInit {
         data.status != 'error'
           ? data.results
           : [{ id: 0, name: `${data.message}` }];
-          this.province = data.results
+      this.province = data.results;
     });
 
     this.provinceChangeSubject
@@ -92,7 +92,7 @@ export class CreateComponent implements OnInit {
           data.status != 'error'
             ? data.results
             : [{ id: 0, name: `${data.message}` }];
-            this.district = data.results
+        this.district = data.results;
       });
 
     this.districtChangeSubject
@@ -105,7 +105,7 @@ export class CreateComponent implements OnInit {
           data.status != 'error'
             ? data.results
             : { id: 0, name: `${data.message}`, status: false };
-            this.ward = data.results;
+        this.ward = data.results;
         this.isWardDataLoaded = data.status != 'error' ? true : false;
       });
   }
@@ -175,9 +175,13 @@ export class CreateComponent implements OnInit {
 
   onSubmit() {
     if (this.locationsForm.valid) {
-      const nameDistrict = this.district.find(item => item.id == this.codeDistrict)?.name ??'';
-      const nameWard = this.ward.find(item => item.id == this.codeWard)?.name ?? '';
-      const nameProvince = this.province.find(item => item.id == this.codeProvince)?.name;
+      const nameDistrict =
+        this.district.find((item) => item.id == this.codeDistrict)?.name ?? '';
+      const nameWard =
+        this.ward.find((item) => item.id == this.codeWard)?.name ?? '';
+      const nameProvince = this.province.find(
+        (item) => item.id == this.codeProvince
+      )?.name;
       // console.log(nameProvince);
 
       const formData = new FormData();
@@ -187,17 +191,34 @@ export class CreateComponent implements OnInit {
 
       formData.append('domain_name', String(this.domain_name));
       if (this.locationsForm.value.image) {
-      formData.append('image', this.img);
+        formData.append('image', this.img);
       }
       formData.append('name', String(locationsData.name));
       formData.append('email', String(locationsData.email));
       formData.append('tel', String(locationsData.tel));
       formData.append('status', String(locationsData.status));
       formData.append('is_main', String(locationsData.is_main));
-      formData.append('address_detail', String(locationsData.address_detail + ', ' + nameWard + ', ' + nameDistrict + ', ' +  nameProvince ));
+      formData.append(
+        'address_detail',
+        String(
+          locationsData.address_detail +
+            ', ' +
+            nameWard +
+            ', ' +
+            nameDistrict +
+            ', ' +
+            nameProvince
+        )
+      );
       formData.append('created_by', '1');
-      formData.append('province_code', String(locationsData.province_code ?? ''));
-      formData.append('district_code', String(locationsData.district_code ?? ''));
+      formData.append(
+        'province_code',
+        String(locationsData.province_code ?? '')
+      );
+      formData.append(
+        'district_code',
+        String(locationsData.district_code ?? '')
+      );
       formData.append('ward_code', String(locationsData.ward_code));
       formData.append('description', String(locationsData.description));
       console.log(formData.get('address_detail'));
@@ -224,12 +245,16 @@ export class CreateComponent implements OnInit {
           } else {
             console.log(response);
             const errorMessages = [];
-            for (const key in response.meta) {
-              // errorMessages.push(`${response.meta}`);
-              const messages = response.meta[key];
-              for (const message of messages) {
-                errorMessages.push(`${key}: ${message}`);
+            if (response.meta && typeof response.meta === 'object') {
+              for (const key in response.meta) {
+                // errorMessages.push(`${response.meta}`);
+                const messages = response.meta[key];
+                for (const message of messages) {
+                  errorMessages.push(`${key}: ${message}`);
+                }
               }
+            } else {
+              errorMessages.push(`${response.meta}`);
             }
             this.showNextMessage(errorMessages);
           }
