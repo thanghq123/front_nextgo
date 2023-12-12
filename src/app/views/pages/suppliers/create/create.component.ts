@@ -31,7 +31,7 @@ export class CreateComponent implements OnInit {
     district_code: new FormControl(''),
     ward_code: new FormControl(''),
     email: new FormControl(''),
-    tel: new FormControl('', Validators.required),
+    tel: new FormControl('', [Validators.required, Validators.pattern(/^(03|05|07|08|09)+([0-9]{8})$/)]),
     status: new FormControl(1),
     address_detail: new FormControl(''),
     note: new FormControl(''),
@@ -188,7 +188,7 @@ export class CreateComponent implements OnInit {
             //     },
             //   });
             // }
-           
+
           }
         },
         (error) => {
@@ -223,5 +223,5 @@ export class CreateComponent implements OnInit {
       });
     }
   }
-  
+
 }

@@ -35,7 +35,7 @@ export class EditComponent implements OnInit {
     email: new FormControl(''),
     imageUpdate: new FormControl(''),
     description: new FormControl(''),
-    tel: new FormControl('', [Validators.required]),
+    tel: new FormControl('', [Validators.required, Validators.pattern(/^(03|05|07|08|09)+([0-9]{8})$/)]),
     province_id: new FormControl(''),
     district_id: new FormControl(''),
     commune_id: new FormControl(''),

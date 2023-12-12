@@ -17,7 +17,7 @@
                   <span class="visually-hidden">Loading...</span>
                 </div>
               </div>
-                <table *ngIf="!isLoading" id="dataTableExample" class="table">
+                <table *ngIf="!isLoading" id="dataTableExample" class="table table-hover">
                 <thead>
                     <tr>
                     <th>ID</th>
@@ -49,8 +49,8 @@
                     </tr>
                 </tfoot>
                 </table>
-                <ngb-pagination (pageChange)="changePage(currentPage)" [collectionSize]="120" [(page)]="currentPage" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
-                <p>page hiện tại: {{currentPage}}</p>
+                <ngb-pagination  class="d-flex justify-content-end" (pageChange)="pageChange(currentPage)" [collectionSize]="totalPage" [(page)]="currentPage" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
+                <!-- <p>page hiện tại: {{currentPage}}</p> -->
             </div>
             </div>
         </div>

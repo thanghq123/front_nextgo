@@ -1,20 +1,20 @@
-import {Component, OnInit, TemplateRef} from '@angular/core';
-import {ConfigService} from "../../../service/config/config.service";
-import {Router} from "@angular/router";
-import {BusinessField} from "../../../interface/business-field/business-field";
-import {Tenant} from "../../../interface/tenant/tenant";
-import {BusinessFieldService} from "../../../service/business-field/business-field.service";
-import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {debounceTime, switchMap} from "rxjs/operators";
-import {Subject} from "rxjs";
-import {AresService} from 'src/app/service/ares/ares.service';
-import {Config} from "../../../interface/config/config";
-import {SettingService} from "../../../service/setting/setting.service";
-import Swal from "sweetalert2";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {AuthService} from "../../../service/auth/auth.service";
-import {PricingService} from "../../../service/pricing/pricing.service";
-import {SubcriptionOrderService} from "../../../service/subcription-order/subcription-order.service";
+import { Component, OnInit, TemplateRef } from '@angular/core';
+import { ConfigService } from '../../../service/config/config.service';
+import { Router } from '@angular/router';
+import { BusinessField } from '../../../interface/business-field/business-field';
+import { Tenant } from '../../../interface/tenant/tenant';
+import { BusinessFieldService } from '../../../service/business-field/business-field.service';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { debounceTime, switchMap } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { AresService } from 'src/app/service/ares/ares.service';
+import { Config } from '../../../interface/config/config';
+import { SettingService } from '../../../service/setting/setting.service';
+import Swal from 'sweetalert2';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AuthService } from '../../../service/auth/auth.service';
+import { PricingService } from '../../../service/pricing/pricing.service';
+import { SubcriptionOrderService } from '../../../service/subcription-order/subcription-order.service';
 
 @Component({
   selector: 'app-config',
@@ -22,15 +22,11 @@ import {SubcriptionOrderService} from "../../../service/subcription-order/subcri
   styleUrls: ['config.component.scss']
 })
 export class ConfigComponent implements OnInit {
-
   private provinceChangeSubject = new Subject<number>();
-
   private districtChangeSubject = new Subject<number>();
 
   provinces: any = [];
-
   districts: any = [];
-
   wards: any = [];
 
   errorMessages: any = [];
@@ -50,9 +46,9 @@ export class ConfigComponent implements OnInit {
       value: 1,
       name: 'Gia hạn',
     },
-  ]
+  ];
 
-  config: Config;
+  config: any;
 
   order: {
     name: string;
@@ -79,7 +75,10 @@ export class ConfigComponent implements OnInit {
 
   configForm = new FormGroup({
     business_name: new FormControl('', [Validators.required]),
-    tel: new FormControl(''),
+    tel: new FormControl('', [
+      Validators.pattern(/^(03|05|07|08|09)+([0-9]{8})$/),
+    ]),
+    email: new FormControl(''),
     business_field_code: new FormControl('', [Validators.required]),
     business_type: new FormControl(''),
     business_registration: new FormControl(''),
@@ -102,7 +101,7 @@ export class ConfigComponent implements OnInit {
     private modalService: NgbModal,
     private authService: AuthService,
     private pricingService: PricingService,
-    private subcriptionOrderService: SubcriptionOrderService,
+    private subcriptionOrderService: SubcriptionOrderService
   ) {
     this.tenant = this.settingService.tenant;
     this.order.name = this.tenant.name;
@@ -111,15 +110,11 @@ export class ConfigComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getConfig();
-    this.getBusinessFields();
-    this.getPricing();
-
     this.AresService.getProvinces().subscribe((data: any) => {
       this.provinces =
         data.status != 'error'
           ? data.results
-          : [{id: 0, name: `${data.message}`}];
+          : [{ id: 0, name: `${data.message}` }];
     });
 
     this.provinceChangeSubject
@@ -133,7 +128,7 @@ export class ConfigComponent implements OnInit {
         this.districts =
           data.status != 'error'
             ? data.results
-            : [{id: 0, name: `${data.message}`}];
+            : [{ id: 0, name: `${data.message}` }];
       });
 
     this.districtChangeSubject
@@ -145,49 +140,57 @@ export class ConfigComponent implements OnInit {
         this.wards =
           data.status != 'error'
             ? data.results
-            : {id: 0, name: `${data.message}`, status: false};
+            : { id: 0, name: `${data.message}`, status: false };
         this.isWardDataLoaded = data.status != 'error' ? true : false;
         if (this.wards && this.wards.status != false) {
-          this.configForm
-            ?.get('ward_code')
-            ?.setValidators(Validators.required);
+          this.configForm?.get('ward_code')?.setValidators(Validators.required);
           this.configForm?.get('ward_code')?.updateValueAndValidity();
         } else {
           console.log(this.wards);
           this.configForm.value.ward_code = '';
         }
       });
+
+    this.getConfig();
+
+    this.getBusinessFields();
+    this.getPricing();
   }
 
   getBusinessFields() {
     this.businessFieldService.getBusinessFields().subscribe((response: any) => {
       this.businessFields = response.payload;
-    })
+    });
   }
 
   getPricing() {
     this.pricingService.list.subscribe((response: any) => {
       this.pricings = response.payload;
-    })
+    });
   }
 
   getConfig() {
     this.configService.getConfig().subscribe((response: any) => {
       this.config = response.payload;
+      console.log(this.config);
+      this.config.province_code = Number(this.config.province_code);
+      this.config.district_code = Number(this.config.district_code);
+      this.config.ward_code = Number(this.config.ward_code);
       this.configForm.patchValue({
+        ...this.config,
         business_name: this.config.business_name,
         tel: this.config.tel,
+        email: this.config.email,
         business_field_code: this.config.business_field_code,
         business_type: this.config.business_type,
         business_registration: this.config.business_registration,
         license_date: this.config.license_date,
         license_address: this.config.license_address,
-        province_code: this.config.province_code,
-        district_code: this.config.district_code,
-        ward_code: this.config.ward_code,
         address_detail: this.config.address_detail,
-      })
-    })
+      });
+      this.onProvinceChange();
+      this.onDistrictChange();
+    });
   }
 
   onProvinceChange(): void {
@@ -206,11 +209,12 @@ export class ConfigComponent implements OnInit {
     this.errorMessages = [];
 
     if (this.configForm.valid) {
-
       const data = this.configForm.value;
 
-      const businessFieldId = this.businessFields.find((businessField: BusinessField) => businessField.code == data.business_field_code)?.id;
-
+      const businessFieldId = this.businessFields.find(
+        (businessField: BusinessField) =>
+          businessField.code == data.business_field_code
+      )?.id;
 
       const formData = {
         id: String(this.config.id),
@@ -222,11 +226,11 @@ export class ConfigComponent implements OnInit {
         business_registration: data.business_registration ?? null,
         license_date: data.license_date ?? null,
         address_detail: String(data.address_detail),
-        province_code: data.province_code ? String(data.province_code) : '',
-        district_code: data.province_code ? String(data.province_code) : '',
+        province_code: data.province_code ? Number(data.province_code) : '',
+        district_code: data.province_code ? Number(data.province_code) : '',
         license_address: String(data.license_address),
-        ward_code: data.ward_code ? String(data.ward_code) : '',
-      }
+        ward_code: data.ward_code ? Number(data.ward_code) : '',
+      };
 
       this.configService.update(formData).subscribe(
         (response: any) => {
@@ -236,7 +240,7 @@ export class ConfigComponent implements OnInit {
               position: 'top-end',
               showConfirmButton: false,
               timer: 3000,
-              title: "Cập nhật thành công",
+              title: 'Cập nhật thành công',
               icon: 'success',
               timerProgressBar: true,
               didOpen: (toast) => {
@@ -246,28 +250,37 @@ export class ConfigComponent implements OnInit {
             });
             this.router.navigate([`../setting/`]);
           } else {
-            this.errorMessages = response.meta;
-            if (this.errorMessages.domain_name) {
-              Swal.fire({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000,
-                title: 'Thất bại!',
-                text: this.errorMessages.domain_name,
-                icon: 'error',
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                  toast.addEventListener('mouseenter', Swal.stopTimer);
-                  toast.addEventListener('mouseleave', Swal.resumeTimer);
-                },
-              });
+            console.log(response);
+            const errorMessages = [];
+            if (response.meta && typeof response.meta === 'object') {
+              for (const key in response.meta.errors) {
+                // errorMessages.push(`${response.meta}`);
+                const messages = response.meta.errors[key];
+                for (const message of messages) {
+                  errorMessages.push(`${key}: ${message}`);
+                }
+              }
+            } else {
+              errorMessages.push(`${response.meta}`);
             }
+            this.showNextMessage(errorMessages);
           }
         },
         (error) => {
-          console.log(error);
-          Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
+          console.log(error.error.meta);
+          const errorMessages = [];
+          if (error.error.meta && typeof error.error.meta === 'object') {
+            for (const key in error.error.meta.errors) {
+              // errorMessages.push(`${response.meta}`);
+              const messages = error.error.meta.errors[key];
+              for (const message of messages) {
+                errorMessages.push(`${key}: ${message}`);
+              }
+            }
+          } else {
+            errorMessages.push(`${error.error.meta}`);
+          }
+          this.showNextMessage(errorMessages);
         }
       );
     }
@@ -278,99 +291,128 @@ export class ConfigComponent implements OnInit {
     const year = dateObj.getFullYear();
     const month = dateObj.getMonth() + 1;
     const dt = dateObj.getDate();
-    return `${dt < 10 ? '0' + dt : dt}/${month < 10 ? '0' + month : month}/${year}`;
-
-  }
+    return `${dt < 10 ? '0' + dt : dt}/${
+      month < 10 ? '0' + month : month
+    }/${year}`;
+  };
 
   openBasicModal(content: TemplateRef<any>) {
     this.modalService
       .open(content, {})
       .result.then((result) => {
+        console.log(result);
+        if (result == 'by: save button') {
+          const dataSend = {
+            name: this.order.name,
+            tel: this.order.tel,
+            pricing_id: this.order.pricing_id,
+            type: this.order.type,
+            tenant_id: this.tenant.id,
+          };
 
-      const dataSend = {
-        name: this.order.name,
-        tel: this.order.tel,
-        pricing_id: this.order.pricing_id,
-        type: this.order.type,
-        tenant_id: this.tenant.id,
-      };
+          console.log(dataSend);
 
-      console.log(dataSend);
+          if (
+            dataSend.name &&
+            dataSend.tel &&
+            dataSend.pricing_id &&
+            dataSend.type !== null
+          ) {
+            this.subcriptionOrderService
+              .create(dataSend)
+              .subscribe((response: any) => {
+                if (response.status) {
+                  Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    title: 'Gửi yêu cầu hỗ trợ thành công!',
+                    text: 'Nhân viên của NextGo sẽ sớm liên hệ lại với bạn!',
+                    icon: 'success',
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                      toast.addEventListener('mouseenter', Swal.stopTimer);
+                      toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    },
+                  });
 
-      if (dataSend.name && dataSend.tel && dataSend.pricing_id && dataSend.type !== null) {
-        this.subcriptionOrderService
-          .create(dataSend)
-          .subscribe((response: any) => {
-            if (response.status) {
-              Swal.fire({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000,
-                title: 'Gửi yêu cầu hỗ trợ thành công!',
-                text: 'Nhân viên của NextGo sẽ sớm liên hệ lại với bạn!',
-                icon: 'success',
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                  toast.addEventListener('mouseenter', Swal.stopTimer);
-                  toast.addEventListener('mouseleave', Swal.resumeTimer);
-                },
-              });
-
-              this.order = {
-                name: '',
-                tel: '',
-                pricing_id: '',
-                type: 0,
-              };
-              setTimeout(() => {
-                window.location.reload();
-              }, 1200);
-            } else {
-              console.log(response);
-              const errorMessages = [];
-              for (const key in response.meta.errors) {
-                const messages = response.meta.errors[key];
-                for (const message of messages) {
-                  errorMessages.push(`${key}: ${message}`);
+                  this.order = {
+                    name: '',
+                    tel: '',
+                    pricing_id: '',
+                    type: 0,
+                  };
+                  setTimeout(() => {
+                    window.location.reload();
+                  }, 1200);
+                } else {
+                  console.log(response);
+                  const errorMessages = [];
+                  for (const key in response.meta.errors) {
+                    const messages = response.meta.errors[key];
+                    for (const message of messages) {
+                      errorMessages.push(`${key}: ${message}`);
+                    }
+                  }
+                  Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    title: 'Có lỗi xảy ra!',
+                    text: `${errorMessages}`,
+                    icon: 'error',
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                      toast.addEventListener('mouseenter', Swal.stopTimer);
+                      toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    },
+                  });
                 }
-              }
-              Swal.fire({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000,
-                title: 'Có lỗi xảy ra!',
-                text: `${errorMessages}`,
-                icon: 'error',
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                  toast.addEventListener('mouseenter', Swal.stopTimer);
-                  toast.addEventListener('mouseleave', Swal.resumeTimer);
-                },
               });
-            }
-          });
-      } else {
-        Swal.fire({
-          toast: true,
-          position: 'top-end',
-          showConfirmButton: false,
-          timer: 3000,
-          title: 'Thất bại!',
-          text: 'Vui lòng nhập đầy đủ thông tin để được hỗ trợ',
-          icon: 'error',
-          timerProgressBar: true,
-          didOpen: (toast) => {
-            toast.addEventListener('mouseenter', Swal.stopTimer);
-            toast.addEventListener('mouseleave', Swal.resumeTimer);
-          },
-        });
-      }
+          } else {
+            Swal.fire({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 3000,
+              title: 'Thất bại!',
+              text: 'Vui lòng nhập đầy đủ thông tin để được hỗ trợ',
+              icon: 'error',
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer);
+                toast.addEventListener('mouseleave', Swal.resumeTimer);
+              },
+            });
+          }
+        }
 
-      // this.basicModalCloseResult = 'Modal closed' + result;
-    })
-      .catch((res) => {
+        // this.basicModalCloseResult = 'Modal closed' + result;
+      })
+      .catch((res) => {});
+  }
+  showNextMessage(errorMessages: any) {
+    if (errorMessages.length > 0) {
+      const message = errorMessages.shift();
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        title: 'Thất bại!',
+        text: message,
+        icon: 'error',
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.addEventListener('mouseenter', Swal.stopTimer);
+          toast.addEventListener('mouseleave', Swal.resumeTimer);
+        },
+        didClose: () => {
+          this.showNextMessage(errorMessages);
+        },
       });
+    }
   }
 }

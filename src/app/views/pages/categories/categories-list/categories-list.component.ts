@@ -11,29 +11,30 @@ import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './categories-list.component.html',
   styleUrls: ['./categories-list.component.scss'],
 })
-export class CategoriesListComponent implements OnInit, AfterViewInit {
+export class CategoriesListComponent implements OnInit {
   ListsCategories: Observable<Categories[]>;
   currentPage: number = 1;
   isLoading = false;
   dataTable: DataTable | null = null;
+  totalPage: number;
 
   constructor(private categoriesService: CategoriesService) {
     this.ListsCategories = new Observable();
   }
 
   ngOnInit(): void {
-    this.refreshCategories();
+    this.refreshCategories(true);
   }
 
-  ngAfterViewInit(): void {
-    const dataTableElement = document.getElementById('dataTableExample');
-    if (dataTableElement) {
-      const db = new DataTable(dataTableElement);
-      db.on('datatable.init', () => {
-        this.addDeleteEventHandlers();
-      });
-    }
-  }
+  // ngAfterViewInit(): void {
+  // const dataTableElement = document.getElementById('dataTableExample');
+  // if (dataTableElement) {
+  //   const db = new DataTable(dataTableElement);
+  //   db.on('datatable.init', () => {
+  //     this.addDeleteEventHandlers();
+  //   });
+  // }
+  // }
 
   addDeleteEventHandlers(): void {
     const deleteButtons = document.getElementsByClassName('btn-danger');
@@ -71,7 +72,8 @@ export class CategoriesListComponent implements OnInit, AfterViewInit {
           (response) => {
             Swal.fire('Đã xóa!', 'Danh mục của bạn đã được xóa.', 'success');
             // Navigate to the list after successful deletion
-            location.reload();
+            // location.reload();
+            this.refreshCategories(false);
           },
           (error) => {
             if (error.success == false) {
@@ -82,24 +84,41 @@ export class CategoriesListComponent implements OnInit, AfterViewInit {
       }
     });
   }
+  pageChange(page: number) {
+    this.refreshCategories(false);
+  }
 
-  refreshCategories(): void {
+  refreshCategories(status: boolean): void {
     this.isLoading = true;
-    this.categoriesService.GetData().subscribe(
+    this.categoriesService.GetDataPanigate(this.currentPage).subscribe(
       (response: any) => {
         if (response.status == true) {
           this.ListsCategories = of(response.payload.data);
           this.isLoading = false;
+          this.totalPage = response.payload.total;
+          console.log(this.totalPage);
 
-          // console.log(this.ListsCategories);
+          if (this.dataTable) {
+            this.dataTable.destroy();
+          }
+
+          console.log(this.ListsCategories);
           this.ListsCategories.subscribe((categories) => {
             setTimeout(() => {
-              const dataTable = new DataTable('#dataTableExample');
-              // Here, use the 'categories' data to populate your DataTable
-              // ...
-              dataTable.on('datatable.init', () => {
-                this.addDeleteEventHandlers();
-              });
+              let options = {
+                searchable: true,
+              };
+              const dataTableElement =
+                document.getElementById('dataTableExample');
+              // if ((status = true)) {
+                if (dataTableElement) {
+                  const db = new DataTable(dataTableElement, options);
+
+                  db.on('datatable.init', () => {
+                    db.destroy();
+                    this.addDeleteEventHandlers();
+                  });
+                }
             }, 0);
           });
         }
