@@ -638,7 +638,7 @@ export class TabshopComponent implements OnInit {
               if (data.status) {
                 this.people = data.payload;
                 console.log(data.payload);
-                
+
                 if (data.payload.length > 0) {
                   this.people.forEach((person: any) => {
                     person.displayName = `${person.name} - ${person.tel}`;
@@ -763,7 +763,7 @@ export class TabshopComponent implements OnInit {
   checkDataModalTarget(e: any) {
     console.log(e.target.value);
     if (this.checkValueInput(e.target.value) == false) {
-      e.target.value = "0";
+      e.target.value = '0';
     } else {
       e.target.value = this.removeLeadingZeros(e.target.value);
     }
@@ -787,13 +787,6 @@ export class TabshopComponent implements OnInit {
   }
 
   openBasicModalPrice(content: TemplateRef<any>, id: number, index: number) {
-    // this.currentPrice = this.modalData[this.tabDefault][index].result;
-    // console.log(id,index);
-    // console.log(this.modalData);
-
-    // console.log(this.modalData[this.tabDefault][index]);
-    console.log('vào chuẩn rồi nhé');
-
     this.priceFormModal = this.modalData[this.tabDefault][index].priceCurrent;
     this.discount = this.modalData[this.tabDefault][index].discount;
     this.tax = this.modalData[this.tabDefault][index].tax;
@@ -1526,23 +1519,24 @@ export class TabshopComponent implements OnInit {
                           this.modalService
                             .open(this.myModal)
                             .result.then((result) => {
-                              console.log(result);
-
-                              console.log(obj);
-
-                              this.replaceKeysWithData(obj);
-                              const newWindow =
-                                this.TabwindowsService.openWindow(
-                                  'about:blank',
-                                  'NewWindow',
-                                  800,
-                                  600
+                              // console.log(result);
+                              // console.log(obj);
+                              if (result) {
+                                this.replaceKeysWithData(obj);
+                                const newWindow =
+                                  this.TabwindowsService.openWindow(
+                                    'about:blank',
+                                    'NewWindow',
+                                    800,
+                                    600
+                                  );
+                                newWindow?.document.write(
+                                  `<html><head><title>Website quản lý bán hàng cho doanh nghiệp NextGo</title></head><body>${this.formPrintf.form}</body></html>`
                                 );
-                              newWindow?.document.write(
-                                `<html><head><title>Website quản lý bán hàng cho doanh nghiệp NextGo</title></head><body>${this.formPrintf.form}</body></html>`
-                              );
-                              newWindow?.document.close();
-                              newWindow?.print();
+                                newWindow?.document.close();
+                                newWindow?.print();
+                              }
+
                               window.location.reload();
                             })
                             .catch((res) => {});
@@ -1609,20 +1603,22 @@ export class TabshopComponent implements OnInit {
                                 console.log(result);
 
                                 console.log(obj);
-
-                                this.replaceKeysWithData(obj);
-                                const newWindow =
-                                  this.TabwindowsService.openWindow(
-                                    'about:blank',
-                                    'NewWindow',
-                                    800,
-                                    600
+                                if(result){
+                                  this.replaceKeysWithData(obj);
+                                  const newWindow =
+                                    this.TabwindowsService.openWindow(
+                                      'about:blank',
+                                      'NewWindow',
+                                      800,
+                                      600
+                                    );
+                                  newWindow?.document.write(
+                                    `<html><head><title>Website quản lý bán hàng cho doanh nghiệp NextGo</title></head><body>${this.formPrintf.form}</body></html>`
                                   );
-                                newWindow?.document.write(
-                                  `<html><head><title>Website quản lý bán hàng cho doanh nghiệp NextGo</title></head><body>${this.formPrintf.form}</body></html>`
-                                );
-                                newWindow?.document.close();
-                                newWindow?.print();
+                                  newWindow?.document.close();
+                                  newWindow?.print();
+                                }
+                                window.location.reload();
                               })
                               .catch((res) => {});
                             // setTimeout(() => {
@@ -1641,18 +1637,21 @@ export class TabshopComponent implements OnInit {
                       this.modalService
                         .open(this.myModal)
                         .result.then((result) => {
-                          this.replaceKeysWithData(obj);
-                          const newWindow = this.TabwindowsService.openWindow(
-                            'about:blank',
-                            'NewWindow',
-                            800,
-                            600
-                          );
-                          newWindow?.document.write(
-                            `<html><head><title>Website quản lý bán hàng cho doanh nghiệp NextGo</title></head><body>${this.formPrintf.form}</body></html>`
-                          );
-                          newWindow?.document.close();
-                          newWindow?.print();
+                          if(result){
+                            this.replaceKeysWithData(obj);
+                            const newWindow = this.TabwindowsService.openWindow(
+                              'about:blank',
+                              'NewWindow',
+                              800,
+                              600
+                            );
+                            newWindow?.document.write(
+                              `<html><head><title>Website quản lý bán hàng cho doanh nghiệp NextGo</title></head><body>${this.formPrintf.form}</body></html>`
+                            );
+                            newWindow?.document.close();
+                            newWindow?.print();
+                          }
+                          window.location.reload();
                         })
                         .catch((res) => {});
                     }
@@ -1773,7 +1772,8 @@ export class TabshopComponent implements OnInit {
 
                               console.log(obj);
 
-                              this.replaceKeysWithData(obj);
+                              if(result){
+                                this.replaceKeysWithData(obj);
                               const newWindow =
                                 this.TabwindowsService.openWindow(
                                   'about:blank',
@@ -1786,6 +1786,8 @@ export class TabshopComponent implements OnInit {
                               );
                               newWindow?.document.close();
                               newWindow?.print();
+                              }
+                              window.location.reload();
                             })
                             .catch((res) => {});
                           // setTimeout(() => {
@@ -1847,7 +1849,8 @@ export class TabshopComponent implements OnInit {
 
                                 console.log(obj);
 
-                                this.replaceKeysWithData(obj);
+                                if(result){
+                                  this.replaceKeysWithData(obj);
                                 const newWindow =
                                   this.TabwindowsService.openWindow(
                                     'about:blank',
@@ -1860,6 +1863,7 @@ export class TabshopComponent implements OnInit {
                                 );
                                 newWindow?.document.close();
                                 newWindow?.print();
+                                }
                               })
                               .catch((res) => {});
                             // setTimeout(() => {
@@ -1896,7 +1900,8 @@ export class TabshopComponent implements OnInit {
                       this.modalService
                         .open(this.myModal)
                         .result.then((result) => {
-                          this.replaceKeysWithData(obj);
+                          if(result){
+                            this.replaceKeysWithData(obj);
                           const newWindow = this.TabwindowsService.openWindow(
                             'about:blank',
                             'NewWindow',
@@ -1908,6 +1913,8 @@ export class TabshopComponent implements OnInit {
                           );
                           newWindow?.document.close();
                           newWindow?.print();
+                          }
+                          window.location.reload();
                         })
                         .catch((res) => {});
                     }
