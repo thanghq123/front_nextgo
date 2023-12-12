@@ -102,7 +102,7 @@ export class CreateComponent implements OnInit {
           id: this.input.id,
           sku: this.input.sku,
           name: this.input.product_name_variation,
-          variation_id: this.input.id,
+          variation_id: this.input.variation_id,
           inventory:
             this.input.quantity != ''
               ? this.input.quantity
@@ -157,7 +157,7 @@ export class CreateComponent implements OnInit {
         partner_type: null,
         // trans_type: 2,
         note: this.storageTransForm.value.note,
-        status: 2,
+        // status: 2,
         created_by: 1,
         inventory_transaction_details: JSON.parse(
           JSON.stringify(this.products)

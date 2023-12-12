@@ -46,7 +46,7 @@
               <span class="text-danger">(*)</span>
             </label>
             <input type="text" class="form-control" id="exampleInputUsername1" formControlName="tel" autocomplete="off"
-              placeholder="Nhập số điện thoại" />
+              placeholder="Nhập số điện thoại" minlength="10"/>
             <div *ngIf="locationsForm.controls.tel.invalid && locationsForm.controls.tel.touched"
               class="alert alert-danger mt-2">
               Không để trống Số điện thoại
