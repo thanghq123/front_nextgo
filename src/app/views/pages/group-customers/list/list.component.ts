@@ -12,7 +12,7 @@ import Swal from 'sweetalert2';
 export class ListComponent implements OnInit {
 
   groupCustomers: Observable<GroupCustomers[]>;
-  
+  isLoading = false;
   constructor(private GroupCustomersService: GroupCustomersService) {
     this.groupCustomers = new Observable();
   }
@@ -84,6 +84,7 @@ export class ListComponent implements OnInit {
   }
 
   refreshCategories(): void {
+    this.isLoading = true;
    this.GroupCustomersService.GetData().subscribe(
       (response : any) => {
         if(response.status == true){
@@ -98,6 +99,8 @@ export class ListComponent implements OnInit {
                 });
             }, 0);
         });
+
+        this.isLoading = false;
         }
         // Navigate to the list after successful deletion
       },

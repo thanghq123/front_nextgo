@@ -48,7 +48,6 @@
                                 </td>
                                 <td class="text-primary align-middle">{{ item.result | currency:'VND' }}</td>
 
-
                                 <ng-container *ngIf="item.batchs.length > 0; else otherIff">
                                     <td class="align-middle" style="cursor: pointer;" (click)="openLgModalBatches(batches,item.id)">
                                       <i class="feather icon-archive"></i>
@@ -159,7 +158,7 @@
                     <div class="d-flex justify-content-between">
                         <h6 class="card-title">Thêm khách hàng vào đơn</h6>
                         <i style="cursor: pointer;" class="feather text-primary icon-plus-circle icon-md"
-                            (click)="openBasicModal(basicModalAddUser)"></i>
+                            (click)="openBasicModalUserAdd(basicModalAddUser)"></i>
                     </div>
                     <ng-select [items]="people" bindLabel="displayName" bindValue="id" placeholder="TÌM KIẾM KHÁCH HÀNG"
                         [(ngModel)]="selectedSearchPersonId" (change)="peopleEvent()">
@@ -187,7 +186,7 @@
                                 <td class="text-bold-800 align-middle">Chiết khấu ({{ modelRadioBill == 1 ? '%' : 'đ'
                                     }})</td>
                                 <td class="text-bold-800 text-end"><input type="number"
-                                        (click)="openBasicModal(basicModaldiscount)" (input)="checkDataModalTarget($event)" value="{{ DiscountBill }}"
+                                        (click)="openBasicModalDiscount(basicModaldiscount)" (input)="checkDataModalTarget($event)" value="{{ DiscountBill }}"
                                         class="form-control  text-end   border-0 border-bottom"></td>
                             </tr>
                             <tr>
@@ -233,7 +232,7 @@
                 <div class="d-flex align-items-center form-control border-0 border-bottom  mb-2 ">
                     <i class="feather icon-edit-3 title-bill icon-md "></i>
                     <input type="text" class="border-0 ms-2 btn-icon-edit w-100 fw-bold" value="{{ noteBill }}"
-                        [(ngModel)]="noteBill" (input)="noteBillEvent()" placeholder="Thêm ghi chú cho đơn hàng">
+                        [(ngModel)]="noteBill" (input)="noteBillEvent();checkDataModalTarget($event)" placeholder="Thêm ghi chú cho đơn hàng">
                 </div>
                 <button type="button" [disabled]="listProductCart[tabDefault].length == 0" class="btn btn-primary w-100 p-4 fs-4 fw-bold"
                     (click)="openLgModal(basicPay)">Thanh Toán</button>
@@ -352,7 +351,7 @@
         </div>
         <div class="mb-3">
             <label for="phoneNumber" class="form-label">Số điện thoại <span class="text-danger">*</span></label>
-            <input type="text" class="form-control" id="phoneNumber" [(ngModel)]="dataAdd.tel">
+            <input type="text" class="form-control" id="phoneNumber"  (input)="checkDataModalTarget($event)" [(ngModel)]="dataAdd.tel">
         </div>
 
 
@@ -427,7 +426,7 @@
             <label for="Discount" class="form-label">Chiết khấu</label>
             <div class="position-relative">
                 <input type="number" class="form-control p-3" id="Discount" [(ngModel)]="DiscountBill"
-                    (change)="resultBill(tabDefault)" (input)="checkDataModalTarget($event)" placeholder="Email" value="0">
+                   (input)="checkDataModalTarget($event);checkDataModalDiscount($event)" placeholder="Email" value="0">
                 <div class="btn-group position-absolute top-50 end-0 translate-middle-y" role="group"
                     aria-label="Basic radio toggle button group">
                     <input type="radio" class="btn-check" [(ngModel)]="modelRadioBill" [value]="0" name="btnradio"
@@ -513,7 +512,7 @@
                 </tr>
                 <tr>
                     <td class="text-bold-800  p-0  align-middle">{{ paymentPrice > 0 ? 'Còn lại cần thanh toán' : 'Tiền thừa' }}</td>
-                    <td class="text-end  p-0 text-danger d-flex align-items-center"><input type="text" value="{{ paymentPrice > 0 ? paymentPrice : changeBill | currency:'VND':'symbol':'1.0-0':'vi' }}"
+                    <td class="text-end  p-0 text-danger d-flex align-items-center"><input type="text" value="{{ paymentPrice > 0 ? paymentPrice : changeBill }}"
                             class="form-control bg-white text-danger border-0  text-end" style="background-color: #e9ecef !important;" disabled></td>
                 </tr>
             </tbody>

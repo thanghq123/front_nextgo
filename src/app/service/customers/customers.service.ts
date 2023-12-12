@@ -28,13 +28,14 @@ export class CustomersService extends CRUDServiceService<Customers> {
 
   createQuickly(data: any) {
     console.log({
-      domain_name: "tenant1",
-      location: this.settingService.location, statusCreate: 1, ...data
+      domain_name: this.settingService.tenant.name,
+      location: this.settingService.location.id, statusCreate: 1, ...data
     });
 
     return this.http.post(`${this.apiUrlProducts}customers/store`, {
-      domain_name: "tenant1",
-      location: this.settingService.location, statusCreate: 1, ...data
+      domain_name: this.settingService.tenant.name,
+      location: this.settingService.location.id, statusCreate: 1, ...data,
+      type : 0
     });
   }
 
