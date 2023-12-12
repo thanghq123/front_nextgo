@@ -14,7 +14,8 @@ export const MENU: MenuItem[] = [
   {
     label: "Báo cáo",
     icon: 'printer',
-    link: 'report-revenue'
+    link: 'report-revenue',
+    name: 'dashboard',
   },
   {
     label: "Bán hàng",
