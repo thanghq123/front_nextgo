@@ -26,7 +26,7 @@ export class CreateComponent implements OnInit {
   userForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required]),
-    tel: new FormControl('', [Validators.required]),
+    tel: new FormControl('', [Validators.required, Validators.pattern(/^(03|05|07|08|09)+([0-9]{8})$/)]),
     password: new FormControl('', [Validators.required]),
     location_id: new FormControl('', [Validators.required]),
     role_id: new FormControl('', [Validators.required]),
@@ -104,7 +104,7 @@ export class CreateComponent implements OnInit {
                 toast.addEventListener('mouseleave', Swal.resumeTimer);
               },
             });
-            this.router.navigate([`../`]);
+            this.router.navigate([`../users/list`]);
           } else {
             this.errorMessages = response.meta;
             if (this.errorMessages.domain_name) {

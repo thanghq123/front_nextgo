@@ -24,6 +24,7 @@ import { SubcriptionOrderService } from '../../../service/subcription-order/subc
 export class ConfigComponent implements OnInit {
   private provinceChangeSubject = new Subject<number>();
   private districtChangeSubject = new Subject<number>();
+  isLoading = false;
 
   provinces: any = [];
   districts: any = [];
@@ -170,6 +171,7 @@ export class ConfigComponent implements OnInit {
   }
 
   getConfig() {
+    this.isLoading = true;
     this.configService.getConfig().subscribe((response: any) => {
       this.config = response.payload;
       console.log(this.config);
@@ -188,6 +190,7 @@ export class ConfigComponent implements OnInit {
         license_address: this.config.license_address,
         address_detail: this.config.address_detail,
       });
+      this.isLoading = false;
       this.onProvinceChange();
       this.onDistrictChange();
     });

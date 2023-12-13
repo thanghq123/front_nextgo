@@ -16,7 +16,7 @@ export class ListComponent implements OnInit {
 
   roles: Role[] = [];
 
-  users: any;
+  users: any[] = [];
 
   isLoading = false;
 
@@ -33,13 +33,17 @@ export class ListComponent implements OnInit {
     this.isLoading = true;
     this.userService.GetData().subscribe({
       next: (res: any) => {
-        this.users = of(res.payload);
+        this.users = res.payload;
+        // console.log(res.payload);
+
         setTimeout(() => {
         const db = new DataTable('#dataTableExample');
           db.on('datatable.init', () => {
             // this.addDeleteEventHandlers();
           });
         }, 0)
+        this.isLoading = false;
+
 
 
         // this.users.subscribe(

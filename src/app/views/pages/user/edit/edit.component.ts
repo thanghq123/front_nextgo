@@ -14,14 +14,16 @@ import Swal from "sweetalert2";
 })
 export class EditComponent implements OnInit {
 
+  isLoading = false;
+
   errorMessages: any = [];
 
   tenant: Tenant;
 
   userForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
-    email: new FormControl('', [Validators.required]),
-    tel: new FormControl('', [Validators.required]),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    tel: new FormControl('', [Validators.required, Validators.pattern(/^(03|05|07|08|09)+([0-9]{8})$/)]),
     password: new FormControl(''),
     location_id: new FormControl('', [Validators.required]),
     role_id: new FormControl('', [Validators.required]),
@@ -73,16 +75,21 @@ export class EditComponent implements OnInit {
   }
 
   getUser() {
+    this.isLoading = true;
     this.userService.GetOneRecord(this.id).subscribe((response: any) => {
       this.user = response.payload;
+      console.log(response.payload);
+
       this.userForm.patchValue({
+        ...response.payload,
         name: this.user.name,
         tel: this.user.tel,
         email: this.user.email,
-        location_id: this.user.location_id,
+        // location_id: this.user.location_id,
         role_id: this.user.roles[0].id,
         status: this.user.status,
-      })
+      });
+      this.isLoading = false;
     })
   }
 
@@ -120,7 +127,7 @@ export class EditComponent implements OnInit {
                 toast.addEventListener('mouseleave', Swal.resumeTimer);
               },
             });
-            this.router.navigate([`../`]);
+            this.router.navigate([`../users/list`]);
           } else {
             this.errorMessages = response.meta;
             if (this.errorMessages.domain_name) {

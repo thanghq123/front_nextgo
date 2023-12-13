@@ -7,13 +7,13 @@ export const MENU: MenuItem[] = [
   },
   {
     label: "Thống kê",
-    icon: 'printer',
+    icon: 'activity',
     link: 'dashboard',
     name: 'dashboard',
   },
   {
     label: "Báo cáo",
-    icon: 'printer',
+    icon: 'file-text',
     link: 'report-revenue',
     name: 'dashboard',
   },
@@ -45,36 +45,27 @@ export const MENU: MenuItem[] = [
       },
       {
         label: 'Danh mục',
-        // icon: 'home',
         link: '/categories/list',
       },
       {
         label: 'Thương hiệu',
-        // icon: 'target',
         link: '/brands/list',
       },
       {
         label: 'Đơn vị tính',
-        // icon: 'target',
         link: '/item-units/list',
       },
       {
         label: 'Bảo hành',
-        // icon: 'home',
         link: '/warranties/list',
       },
     ],
   },
-  // {label: 'Chi nhánh', icon: 'target', link: '/locations/list'},
   {
     label: 'Kho & tồn',
     icon: 'package',
     name: 'storage',
     subItems: [
-      // {
-      //   label: 'Quản lý kho',
-      //   link: '/suppliers/list'
-      // },
       {
         label: 'Tồn kho',
         link: '/storage/detail'
@@ -93,26 +84,17 @@ export const MENU: MenuItem[] = [
       },
     ],
   },
-  // {
-  //   label: 'Mẫu In',
-  //   icon: 'printer',
-  //   link: '/print'
-  //
-  // },
   {
     label: 'Khách hàng',
     icon: 'home',
     name: 'customers',
-    // link: '/group_suppliers/list',
     subItems: [
       {
         label: 'Khách hàng',
-        // icon: 'home',
         link: '/customers/list',
       },
       {
         label: 'Nhóm khách hàng',
-        // icon: 'home',
         link: '/group_customers/list',
       },
     ]
@@ -121,16 +103,13 @@ export const MENU: MenuItem[] = [
     label: 'Nhà cung cấp',
     icon: 'box',
     name: 'suppliers',
-    // link: '/group_suppliers/list',
     subItems: [
       {
         label: 'Nhà cung cấp',
-        // icon: 'home',
         link: '/suppliers/list',
       },
       {
         label: 'Nhóm nhà cung cấp',
-        // icon: 'home',
         link: '/group_suppliers/list',
       }
     ]
