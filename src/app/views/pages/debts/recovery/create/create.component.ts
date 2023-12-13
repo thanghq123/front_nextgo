@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {FormGroup, FormControl, Validators} from '@angular/forms';
 import Swal from 'sweetalert2';
-import { Router, ParamMap } from '@angular/router';
+import {Router, ParamMap} from '@angular/router';
 import {
   debounceTime,
   switchMap,
@@ -10,9 +10,9 @@ import {
   catchError,
 } from 'rxjs/operators';
 
-import { Observable, Subject } from 'rxjs';
-import { CustomersService } from 'src/app/service/customers/customers.service';
-import { DebtsService } from 'src/app/service/debts/debts.service';
+import {Observable, Subject} from 'rxjs';
+import {CustomersService} from 'src/app/service/customers/customers.service';
+import {DebtsService} from 'src/app/service/debts/debts.service';
 
 @Component({
   selector: 'app-create',
@@ -32,11 +32,13 @@ export class CreateRecoveryComponent implements OnInit {
   });
   listCustomer: any[] = [];
   flag = false;
+
   constructor(
     private _customerService: CustomersService,
     private _debtService: DebtsService,
     private router: Router
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     this._customerService.getCustomer().subscribe((res: any) => {
@@ -44,6 +46,7 @@ export class CreateRecoveryComponent implements OnInit {
       // console.log(this.listCustomer);
     });
   }
+
   searchTerm: any[] = [];
 
   search = (text$: Observable<string>) =>
@@ -53,16 +56,20 @@ export class CreateRecoveryComponent implements OnInit {
         term === ''
           ? []
           : this.listCustomer
-              .filter(
-                (v) => v.name_tel.toLowerCase().indexOf(term.toLowerCase()) > -1
-              )
-              .slice(0, 10)
+            .filter(
+              (v) => v.name_tel.toLowerCase().indexOf(term.toLowerCase()) > -1
+            )
+            .slice(0, 10)
       )
     );
   formatter = (x: { name_tel: string }) => x.name_tel;
 
   onSubmit(): void {
+    const submitBtn = document.querySelector('#submitBtn');
     if (this.recoveryForm.valid) {
+      if (submitBtn) {
+        submitBtn.setAttribute('disabled', 'disabled');
+      }
       const dataSend = {
         partner_id: Number(this.resultModel.id),
         partner_type: Number(this.resultModel.type),
@@ -96,6 +103,9 @@ export class CreateRecoveryComponent implements OnInit {
             });
             this.router.navigate(['debts/recovery/list']);
           } else {
+            if (submitBtn) {
+              submitBtn.removeAttribute('disabled');
+            }
             // console.log(response);
             const errorMessages = [];
             if (response.meta && typeof response.meta === 'object') {
@@ -113,6 +123,9 @@ export class CreateRecoveryComponent implements OnInit {
           }
         },
         (error: any) => {
+          if (submitBtn) {
+            submitBtn.removeAttribute('disabled');
+          }
           // console.log(error);
           Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
         }
@@ -121,6 +134,7 @@ export class CreateRecoveryComponent implements OnInit {
       alert('Không để trống');
     }
   }
+
   showNextMessage(errorMessages: any) {
     if (errorMessages.length > 0) {
       const message = errorMessages.shift();

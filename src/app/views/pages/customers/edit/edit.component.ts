@@ -157,7 +157,11 @@ export class EditComponent implements OnInit {
     );
   }
   onSubmit() {
+    const submitBtn = document.querySelector('#submitBtn');
     if (this.customersForm.valid) {
+      if (submitBtn) {
+        submitBtn.setAttribute('disabled', 'disabled');
+      }
       const dataToSend = {
         ...this.customersForm.value,
         name: String(this.customersForm.value.name),
@@ -200,6 +204,9 @@ export class EditComponent implements OnInit {
             this.router.navigate(['../customers/list']);
           } else {
             // console.log(response);
+            if (submitBtn) {
+              submitBtn.removeAttribute('disabled');
+            }
             const errorMessages = [];
             if (response.meta && typeof response.meta === 'object') {
               for (const key in response.meta.errors) {
@@ -231,6 +238,9 @@ export class EditComponent implements OnInit {
           }
         },
         (error) => {
+          if (submitBtn) {
+            submitBtn.removeAttribute('disabled');
+          }
           Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
         }
       );

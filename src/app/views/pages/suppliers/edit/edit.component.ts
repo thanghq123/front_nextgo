@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {FormGroup, FormControl, Validators} from '@angular/forms';
 import Swal from 'sweetalert2';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { SuppliersService } from 'src/app/service/suppliers/suppliers.service';
-import { GroupSuppliersService } from 'src/app/service/group_suppliers/group-suppliers.service';
-import { AresService } from 'src/app/service/ares/ares.service';
-import { Subject } from 'rxjs';
-import { debounceTime, switchMap } from 'rxjs/operators';
+import {Router, ActivatedRoute, ParamMap} from '@angular/router';
+import {SuppliersService} from 'src/app/service/suppliers/suppliers.service';
+import {GroupSuppliersService} from 'src/app/service/group_suppliers/group-suppliers.service';
+import {AresService} from 'src/app/service/ares/ares.service';
+import {Subject} from 'rxjs';
+import {debounceTime, switchMap} from 'rxjs/operators';
+
 @Component({
   selector: 'app-edit',
   templateUrl: './edit.component.html',
@@ -38,24 +39,26 @@ export class EditComponent implements OnInit {
     address_detail: new FormControl(''),
     note: new FormControl(''),
   });
+
   constructor(
     private SuppliersService: SuppliersService,
     private GroupSuppliersService: GroupSuppliersService,
     private AresService: AresService,
     private router: Router,
     private route: ActivatedRoute,
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     this.types = [
-      { id: 0, name: 'Cá nhân' },
-      { id: 1, name: 'Doanh nghiệp' },
+      {id: 0, name: 'Cá nhân'},
+      {id: 1, name: 'Doanh nghiệp'},
     ];
 
 
     this.status = [
-      { id: 0, name: 'Kích hoạt' },
-      { id: 1, name: 'Không kích hoạt' },
+      {id: 0, name: 'Kích hoạt'},
+      {id: 1, name: 'Không kích hoạt'},
     ];
     this.GroupSuppliersService.GetData().subscribe((data: any) => {
       this.GroupsCustomers = data.payload;
@@ -65,7 +68,7 @@ export class EditComponent implements OnInit {
       this.provinces =
         data.status != 'error'
           ? data.results
-          : [{ id: 0, name: `${data.message}` }];
+          : [{id: 0, name: `${data.message}`}];
     });
 
     this.provinceChangeSubject
@@ -79,7 +82,7 @@ export class EditComponent implements OnInit {
         this.districts =
           data.status != 'error'
             ? data.results
-            : [{ id: 0, name: `${data.message}` }];
+            : [{id: 0, name: `${data.message}`}];
       });
 
     this.districtChangeSubject
@@ -91,7 +94,7 @@ export class EditComponent implements OnInit {
         this.wards =
           data.status != 'error'
             ? data.results
-            : { id: 0, name: `${data.message}`, status: false };
+            : {id: 0, name: `${data.message}`, status: false};
         this.isWardDataLoaded = data.status != 'error' ? true : false;
         if (this.wards && this.wards.status != false) {
           this.customersForm
@@ -114,9 +117,9 @@ export class EditComponent implements OnInit {
             const customerData = data.payload;
             // Chuyển đổi giá trị gender sang kiểu number
             customerData.gender = String(customerData.gender);
-            if(customerData.status == false){
+            if (customerData.status == false) {
               customerData.status = 0;
-            }else{
+            } else {
               customerData.status = 1;
             }
 
@@ -137,7 +140,6 @@ export class EditComponent implements OnInit {
     });
 
 
-
   }
 
 
@@ -152,8 +154,13 @@ export class EditComponent implements OnInit {
       Number(this.customersForm.value.district_code)
     );
   }
+
   onSubmit() {
+    const submitBtn = document.querySelector('#submitBtn');
     if (this.customersForm.valid) {
+      if (submitBtn) {
+        submitBtn.setAttribute('disabled', 'disabled');
+      }
       const dataToSend = {
         ...this.customersForm.value,
         name: String(this.customersForm.value.name),
@@ -192,6 +199,9 @@ export class EditComponent implements OnInit {
             this.router.navigate(['../suppliers/list']);
           } else {
             // console.log(response);
+            if (submitBtn) {
+              submitBtn.removeAttribute('disabled');
+            }
             const errorMessages = [];
             for (const key in response.meta.errors) {
               const messages = response.meta.errors[key];
@@ -218,6 +228,9 @@ export class EditComponent implements OnInit {
           }
         },
         (error) => {
+          if (submitBtn) {
+            submitBtn.removeAttribute('disabled');
+          }
           Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
         }
       );
@@ -226,7 +239,7 @@ export class EditComponent implements OnInit {
     }
   }
 
-  showNextMessage(errorMessages : any) {
+  showNextMessage(errorMessages: any) {
     if (errorMessages.length > 0) {
       const message = errorMessages.shift();
       Swal.fire({

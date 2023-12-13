@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { FormsModule } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {FormControl, FormGroup} from '@angular/forms';
+import {FormsModule} from '@angular/forms';
+import {ReactiveFormsModule} from '@angular/forms';
+import {ActivatedRoute, Router} from '@angular/router';
 import Swal from 'sweetalert2';
 
-import { StorageImportService } from 'src/app/service/storage/storage-import.service';
+import {StorageImportService} from 'src/app/service/storage/storage-import.service';
 
 @Component({
   selector: 'app-detail',
@@ -31,7 +31,8 @@ export class DetailComponent implements OnInit {
     private _storage: StorageImportService,
     private route: ActivatedRoute,
     private router: Router
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((queryParams) => {
@@ -78,7 +79,11 @@ export class DetailComponent implements OnInit {
       confirmButtonText: 'Có, tiến hành!',
     }).then((result) => {
       if (result.isConfirmed) {
+        const submitBtn = document.querySelector('#submitBtn');
         if (this.storageTransForm.valid) {
+          if (submitBtn) {
+            submitBtn.setAttribute('disabled', 'disabled');
+          }
           // const dataSend = {
           //   inventory_transaction_id: String(this.id),
           // }
@@ -106,12 +111,18 @@ export class DetailComponent implements OnInit {
                     }
                   }
                 } else {
+                  if (submitBtn) {
+                    submitBtn.removeAttribute('disabled');
+                  }
                   errorMessages.push(`${response.meta}`);
                 }
                 this.showNextMessage(errorMessages);
               }
             },
             (error) => {
+              if (submitBtn) {
+                submitBtn.removeAttribute('disabled');
+              }
               // console.log(error);
               Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
             }
@@ -122,6 +133,7 @@ export class DetailComponent implements OnInit {
       }
     });
   }
+
   cancel() {
     // console.log('Đã nhấn nút');
     Swal.fire({

@@ -254,12 +254,12 @@ export class ConfigComponent implements OnInit {
 
   onSubmit() {
     const submitBtn = document.querySelector('#submitBtn');
-    if (submitBtn) {
-      submitBtn.setAttribute('disabled', 'disabled');
-    }
     this.errorMessages = [];
 
     if (this.configForm.valid) {
+      if (submitBtn) {
+        submitBtn.setAttribute('disabled', 'disabled');
+      }
       const data = this.configForm.value;
       // console.log(data);
       // const businessFieldId = this.businessFields.find(
@@ -310,6 +310,9 @@ export class ConfigComponent implements OnInit {
             }, 1200);
             // window.location.reload();
           } else {
+            if (submitBtn) {
+              submitBtn.removeAttribute('disabled');
+            }
             // console.log(response);
             const errorMessages = [];
             if (response.meta && typeof response.meta === 'object') {
@@ -327,6 +330,9 @@ export class ConfigComponent implements OnInit {
           }
         },
         (error) => {
+          if (submitBtn) {
+            submitBtn.removeAttribute('disabled');
+          }
           // console.log(error.error.meta);
           const errorMessages = [];
           if (error.error.meta && typeof error.error.meta === 'object') {
