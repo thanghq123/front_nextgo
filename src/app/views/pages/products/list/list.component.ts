@@ -90,6 +90,10 @@ export class ListComponent implements OnInit {
                     this.addDeleteEventHandlers();
                 });
 
+                dataTable.on('datatable.page', () => {
+                  this.addDeleteEventHandlers();
+                });
+
             }, 0);
 
         });

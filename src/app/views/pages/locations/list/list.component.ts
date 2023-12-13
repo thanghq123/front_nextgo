@@ -109,6 +109,10 @@ export class ListComponent implements OnInit, AfterViewInit {
                   this.addDeleteEventHandlers();
               });
 
+              db.on('datatable.page', () => {
+                this.addDeleteEventHandlers();
+              });
+
               }, 0)
             })
 
