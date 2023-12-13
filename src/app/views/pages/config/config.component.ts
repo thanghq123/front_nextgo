@@ -1,20 +1,21 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
-import { ConfigService } from '../../../service/config/config.service';
-import { Router } from '@angular/router';
-import { BusinessField } from '../../../interface/business-field/business-field';
-import { Tenant } from '../../../interface/tenant/tenant';
-import { BusinessFieldService } from '../../../service/business-field/business-field.service';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { debounceTime, switchMap } from 'rxjs/operators';
-import { Subject } from 'rxjs';
-import { AresService } from 'src/app/service/ares/ares.service';
-import { Config } from '../../../interface/config/config';
-import { SettingService } from '../../../service/setting/setting.service';
+import {Component, OnInit, TemplateRef} from '@angular/core';
+import {ConfigService} from '../../../service/config/config.service';
+import {Router} from '@angular/router';
+import {BusinessField} from '../../../interface/business-field/business-field';
+import {Tenant} from '../../../interface/tenant/tenant';
+import {BusinessFieldService} from '../../../service/business-field/business-field.service';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {debounceTime, switchMap} from 'rxjs/operators';
+import {Subject} from 'rxjs';
+import {AresService} from 'src/app/service/ares/ares.service';
+import {Config} from '../../../interface/config/config';
+import {SettingService} from '../../../service/setting/setting.service';
 import Swal from 'sweetalert2';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { AuthService } from '../../../service/auth/auth.service';
-import { PricingService } from '../../../service/pricing/pricing.service';
-import { SubcriptionOrderService } from '../../../service/subcription-order/subcription-order.service';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {AuthService} from '../../../service/auth/auth.service';
+import {PricingService} from '../../../service/pricing/pricing.service';
+import {SubcriptionOrderService} from '../../../service/subcription-order/subcription-order.service';
+import {Pricing} from "../../../interface/pricing/pricing";
 
 @Component({
   selector: 'app-config',
@@ -55,13 +56,15 @@ export class ConfigComponent implements OnInit {
     name: string;
     tel: any;
     type: number;
-    pricing_id: string;
+    pricing_id: any;
   } = {
     name: '',
     tel: '',
     type: 1,
     pricing_id: '',
   };
+
+  pricing: Pricing;
 
   businessTypes = [
     {
@@ -85,9 +88,9 @@ export class ConfigComponent implements OnInit {
     business_registration: new FormControl(''),
     license_date: new FormControl(''),
     license_address: new FormControl(''),
-    province_code: new FormControl(''),
-    district_code: new FormControl(''),
-    ward_code: new FormControl(''),
+    province_id: new FormControl(''),
+    district_id: new FormControl(''),
+    commune_id: new FormControl(''),
     address_detail: new FormControl('', [Validators.required]),
   });
 
@@ -102,12 +105,11 @@ export class ConfigComponent implements OnInit {
     private modalService: NgbModal,
     private authService: AuthService,
     private pricingService: PricingService,
-    private subcriptionOrderService: SubcriptionOrderService
+    private subcriptionOrderService: SubcriptionOrderService,
   ) {
     this.tenant = this.settingService.tenant;
     this.order.name = this.tenant.name;
     this.order.tel = this.authService.user.tel ?? '';
-    this.order.pricing_id = this.tenant.pricing.id;
   }
 
   ngOnInit(): void {
@@ -116,14 +118,17 @@ export class ConfigComponent implements OnInit {
     // this.onProvinceChange();
     // this.onDistrictChange();
     this.getBusinessFields();
+
     this.getPricing();
+
+    this.getCurrentPricing();
 
 
     this.AresService.getProvinces().subscribe((data: any) => {
       this.provinces =
         data.status != 'error'
           ? data.results
-          : [{ id: 0, name: `${data.message}` }];
+          : [{id: 0, name: `${data.message}`}];
     });
 
     this.provinceChangeSubject
@@ -131,16 +136,13 @@ export class ConfigComponent implements OnInit {
         debounceTime(300),
         switchMap((province_code) =>
           this.AresService.getDistricts(province_code)
-    
         )
       )
       .subscribe((data) => {
-        console.log(data);
-        
         this.districts =
           data.status != 'error'
             ? data.results
-            : [{ id: 0, name: `${data.message}` }];
+            : [{id: 0, name: `${data.message}`}];
       });
 
     this.districtChangeSubject
@@ -149,13 +151,10 @@ export class ConfigComponent implements OnInit {
         switchMap((district_code) => this.AresService.getWards(district_code))
       )
       .subscribe((data) => {
-        console.log(data);
-        
         this.wards =
           data.status != 'error'
             ? data.results
-            : { id: 0, name: `${data.message}`, status: false };
-            console.log(data);
+            : {id: 0, name: `${data.message}`, status: false};
         this.isWardDataLoaded = data.status != 'error' ? true : false;
         if (this.wards && this.wards.status != false) {
           this.configForm
@@ -164,11 +163,9 @@ export class ConfigComponent implements OnInit {
           this.configForm?.get('ward_code')?.updateValueAndValidity();
         } else {
           // console.log(this.wards);
-          this.configForm.value.ward_code = '';
+          this.configForm.value.commune_id = '';
         }
       });
-
-
 
 
   }
@@ -186,17 +183,25 @@ export class ConfigComponent implements OnInit {
     });
   }
 
+  getCurrentPricing() {
+    this.pricingService.get().subscribe((response: any) => {
+      this.pricing = response.payload;
+      this.order.pricing_id = this.pricing.id;
+    });
+  }
+
   getConfig() {
     this.isLoading = true;
     this.configService.getConfig().subscribe((response: any) => {
       this.config = response.payload;
-      // console.log(this.config);
-      console.log(response.payload);
-      this.config.province_code = Number(this.config.province_code);
-      this.config.district_code = Number(this.config.district_code);
-      this.config.ward_code = Number(this.config.ward_code);
+      this.config.province_code = this.config.province_code ? Number(this.config.province_code) : null;
+      this.config.district_code = this.config.district_code ? Number(this.config.district_code) : null;
+      this.config.ward_code = this.config.ward_code ? Number(this.config.ward_code) : null;
       this.configForm.patchValue({
         ...this.config,
+        province_id: this.config.province_code,
+        district_id: this.config.district_code,
+        commune_id: this.config.ward_code,
         business_name: this.config.business_name,
         tel: this.config.tel,
         email: this.config.email,
@@ -208,19 +213,19 @@ export class ConfigComponent implements OnInit {
         address_detail: this.config.address_detail,
       });
       // this.configForm.patchValue(response.payload);
-      console.log({
-        ...this.config,
-        business_name: this.config.business_name,
-        tel: this.config.tel,
-        email: this.config.email,
-        business_field_code: this.config.business_field_code,
-        business_type: this.config.business_type,
-        business_registration: this.config.business_registration,
-        license_date: this.config.license_date,
-        license_address: this.config.license_address,
-        address_detail: this.config.address_detail,
-      });
-      
+      // console.log({
+      //   ...this.config,
+      //   business_name: this.config.business_name,
+      //   tel: this.config.tel,
+      //   email: this.config.email,
+      //   business_field_code: this.config.business_field_code,
+      //   business_type: this.config.business_type,
+      //   business_registration: this.config.business_registration,
+      //   license_date: this.config.license_date,
+      //   license_address: this.config.license_address,
+      //   address_detail: this.config.address_detail,
+      // });
+
       this.onProvinceChange();
       this.onDistrictChange();
 
@@ -230,27 +235,28 @@ export class ConfigComponent implements OnInit {
   }
 
   onProvinceChange(): void {
-    console.log(this.configForm.value.province_code);
-    
     this.provinceChangeSubject.next(
-      Number(this.configForm.value.province_code)
+      Number(this.configForm.value.province_id)
     );
   }
 
   onDistrictChange(): void {
-    console.log(this.configForm.value.district_code);
     this.districtChangeSubject.next(
-      Number(this.configForm.value.district_code)
+      Number(this.configForm.value.district_id)
     );
   }
 
 
   onSubmit() {
+    const submitBtn = document.querySelector('#submitBtn');
+    if (submitBtn) {
+      submitBtn.setAttribute('disabled', 'disabled');
+    }
     this.errorMessages = [];
 
     if (this.configForm.valid) {
       const data = this.configForm.value;
-      console.log(data);
+      // console.log(data);
       // const businessFieldId = this.businessFields.find(
       //   (businessField: BusinessField) =>
       //     businessField.code == data.business_field_code
@@ -269,14 +275,14 @@ export class ConfigComponent implements OnInit {
         business_registration: this.configForm.value.business_registration ?? null,
         license_date: this.configForm.value.license_date ?? null,
         address_detail: String(this.configForm.value.address_detail),
-        province_code: this.configForm.value.province_code ? Number(this.configForm.value.province_code) : '',
-        district_code: this.configForm.value.district_code ? Number(this.configForm.value.district_code) : '',
-        license_address: String(this.configForm.value.license_address),
-        ward_code: this.configForm.value.ward_code ? Number(this.configForm.value.ward_code) : '',
+        province_code: String(this.configForm.value.province_id),
+        district_code: String(this.configForm.value.district_id),
+        ward_code: String(this.configForm.value.commune_id),
+        license_address: this.configForm.value.license_address ?? null,
       };
-      
-      console.log(formData);
-      
+
+      // console.log(formData);
+
       this.configService.update(formData).subscribe(
         (response: any) => {
           if (response.status == true) {
@@ -294,7 +300,10 @@ export class ConfigComponent implements OnInit {
               },
             });
             // this.router.navigate([`../setting/`]);
-            window.location.reload();
+            setTimeout(() => {
+              window.location.reload();
+            }, 1200);
+            // window.location.reload();
           } else {
             // console.log(response);
             const errorMessages = [];
@@ -346,27 +355,28 @@ export class ConfigComponent implements OnInit {
     this.modalService
       .open(content, {})
       .result.then((result) => {
-        // console.log(result);
-        if (result == 'by: save button') {
-          const dataSend = {
-            name: this.order.name,
-            tel: this.order.tel,
-            pricing_id: this.order.pricing_id,
-            type: this.order.type,
-            tenant_id: this.tenant.id,
-          };
+      // console.log(result);
+      if (result == 'by: save button') {
+        const dataSend = {
+          name: this.order.name,
+          tel: this.order.tel,
+          pricing_id: this.order.pricing_id,
+          type: this.order.type,
+          tenant_id: this.tenant.id,
+        };
 
-          // console.log(dataSend);
+        // console.log(dataSend);
 
-          if (
-            dataSend.name &&
-            dataSend.tel &&
-            dataSend.pricing_id &&
-            dataSend.type !== null
-          ) {
-            this.subcriptionOrderService
-              .create(dataSend)
-              .subscribe((response: any) => {
+        if (
+          dataSend.name &&
+          dataSend.tel &&
+          dataSend.pricing_id &&
+          dataSend.type !== null
+        ) {
+          this.subcriptionOrderService
+            .create(dataSend)
+            .subscribe(
+              (response: any) => {
                 if (response.status) {
                   Swal.fire({
                     toast: true,
@@ -393,7 +403,7 @@ export class ConfigComponent implements OnInit {
                     window.location.reload();
                   }, 1200);
                 } else {
-                  // console.log(response);
+                  console.log(response);
                   const errorMessages = [];
                   for (const key in response.meta.errors) {
                     const messages = response.meta.errors[key];
@@ -416,29 +426,50 @@ export class ConfigComponent implements OnInit {
                     },
                   });
                 }
-              });
-          } else {
-            Swal.fire({
-              toast: true,
-              position: 'top-end',
-              showConfirmButton: false,
-              timer: 3000,
-              title: 'Thất bại!',
-              text: 'Vui lòng nhập đầy đủ thông tin để được hỗ trợ',
-              icon: 'error',
-              timerProgressBar: true,
-              didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer);
-                toast.addEventListener('mouseleave', Swal.resumeTimer);
               },
-            });
-          }
+              (error) => {
+                const text = error.error.meta.errors ? Object.values(error.error.meta.errors)[0] : '';
+                if (error.error.status == false) {
+                  Swal.fire({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    title: "Có lỗi xảy ra",
+                    text: `${text}`,
+                    icon: "error",
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                      toast.addEventListener("mouseenter", Swal.stopTimer);
+                      toast.addEventListener("mouseleave", Swal.resumeTimer);
+                    },
+                  });
+                }
+              });
+        } else {
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            title: 'Thất bại!',
+            text: 'Vui lòng nhập đầy đủ thông tin để được hỗ trợ',
+            icon: 'error',
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer);
+              toast.addEventListener('mouseleave', Swal.resumeTimer);
+            },
+          });
         }
+      }
 
-        // this.basicModalCloseResult = 'Modal closed' + result;
-      })
-      .catch((res) => {});
+      // this.basicModalCloseResult = 'Modal closed' + result;
+    })
+      .catch((res) => {
+      });
   }
+
   showNextMessage(errorMessages: any) {
     if (errorMessages.length > 0) {
       const message = errorMessages.shift();
