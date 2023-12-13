@@ -106,7 +106,7 @@ export class BrandsListComponent implements OnInit, AfterViewInit {
       next: (res: any) => {
         // console.log(res.status);
         if(res.status == true){
-          this.listBrands = of(res.payload.data) ;
+          this.listBrands = of(res.payload) ;
           // console.log(res.payload.data);
           this.isLoading = false;
           // console.log(this.listBrands);

@@ -4,37 +4,34 @@ import { CategoriesService } from 'src/app/service/categories/categories.service
 import { Categories } from 'src/app/interface/categories/categories';
 import { Observable, of } from 'rxjs';
 import Swal from 'sweetalert2';
-import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-categories-list',
   templateUrl: './categories-list.component.html',
   styleUrls: ['./categories-list.component.scss'],
 })
-export class CategoriesListComponent implements OnInit {
+export class CategoriesListComponent implements OnInit, AfterViewInit {
   ListsCategories: Observable<Categories[]>;
-  currentPage: number = 1;
   isLoading = false;
-  dataTable: DataTable | null = null;
-  totalPage: number;
 
   constructor(private categoriesService: CategoriesService) {
     this.ListsCategories = new Observable();
   }
 
   ngOnInit(): void {
-    this.refreshCategories(true);
+    this.refreshCategories();
   }
 
-  // ngAfterViewInit(): void {
-  // const dataTableElement = document.getElementById('dataTableExample');
-  // if (dataTableElement) {
-  //   const db = new DataTable(dataTableElement);
-  //   db.on('datatable.init', () => {
-  //     this.addDeleteEventHandlers();
-  //   });
-  // }
-  // }
+  ngAfterViewInit(): void {
+    this.ListsCategories.subscribe(() => {
+      setTimeout(() => {
+        const dataTable = new DataTable('#dataTableExample');
+        dataTable.on('datatable.init', () => {
+          this.addDeleteEventHandlers();
+        });
+      }, 0);
+    });
+  }
 
   addDeleteEventHandlers(): void {
     const deleteButtons = document.getElementsByClassName('btn-danger');
@@ -44,14 +41,6 @@ export class CategoriesListComponent implements OnInit {
         this.deleteCategory(Number(id));
       });
     });
-  }
-
-  changePage(page: number) {
-    // console.log(page);
-
-    const oldPage = page;
-    if (page == oldPage) {
-    }
   }
 
   // ...
@@ -72,60 +61,38 @@ export class CategoriesListComponent implements OnInit {
           (response) => {
             Swal.fire('Đã xóa!', 'Danh mục của bạn đã được xóa.', 'success');
             // Navigate to the list after successful deletion
-            // location.reload();
-            this.refreshCategories(false);
+            location.reload();
           },
           (error) => {
-            if (error.success == false) {
-              Swal.fire('Lỗi!', `${error.meta.name}`, 'error');
-            }
+            Swal.fire('Lỗi!', 'Có lỗi xảy ra khi xóa danh mục.', 'error');
           }
         );
       }
     });
   }
-  pageChange(page: number) {
-    this.refreshCategories(false);
-  }
 
-  refreshCategories(status: boolean): void {
+  refreshCategories(): void {
     this.isLoading = true;
-    this.categoriesService.GetDataPanigate(this.currentPage).subscribe(
+    this.categoriesService.GetData().subscribe(
       (response: any) => {
         if (response.status == true) {
-          this.ListsCategories = of(response.payload.data);
+          this.ListsCategories = of(response.payload);
           this.isLoading = false;
-          this.totalPage = response.payload.total;
-          // console.log(this.totalPage);
-
-          if (this.dataTable) {
-            this.dataTable.destroy();
-          }
-
           // console.log(this.ListsCategories);
           this.ListsCategories.subscribe((categories) => {
             setTimeout(() => {
-              let options = {
-                searchable: true,
-              };
-              const dataTableElement =
-                document.getElementById('dataTableExample');
-              // if ((status = true)) {
-                if (dataTableElement) {
-                  const db = new DataTable(dataTableElement, options);
-
-                  db.on('datatable.init', () => {
-                    db.destroy();
-                    this.addDeleteEventHandlers();
-                  });
-                }
+              const dataTable = new DataTable('#dataTableExample');
+              // Here, use the 'categories' data to populate your DataTable
+              // ...
+              dataTable.on('datatable.init', () => {
+                this.addDeleteEventHandlers();
+              });
             }, 0);
           });
         }
         // Navigate to the list after successful deletion
       },
       (error) => {
-        // console.log(error);
         Swal.fire('Lỗi!', 'Có lỗi xảy ra khi xóa danh mục.', 'error');
       }
     );

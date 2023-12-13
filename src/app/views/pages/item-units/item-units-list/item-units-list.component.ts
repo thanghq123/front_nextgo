@@ -99,7 +99,7 @@ export class ItemUnitsListComponent implements OnInit {
       next: (res: any) => {
         // console.log(res.status);
         if(res.status == true){
-          this.listUnits = of(res.payload.data) ;
+          this.listUnits = of(res.payload) ;
           // console.log(this.listBrands);
           this.isLoading = false;
           this.listUnits.subscribe(
