@@ -113,8 +113,8 @@ export class ConfigComponent implements OnInit {
   ngOnInit(): void {
 
     this.getConfig();
-    this.onProvinceChange();
-    this.onDistrictChange();
+    // this.onProvinceChange();
+    // this.onDistrictChange();
     this.getBusinessFields();
     this.getPricing();
 
@@ -131,6 +131,7 @@ export class ConfigComponent implements OnInit {
         debounceTime(300),
         switchMap((province_code) =>
           this.AresService.getDistricts(province_code)
+    
         )
       )
       .subscribe((data) => {
@@ -204,6 +205,7 @@ export class ConfigComponent implements OnInit {
         license_address: this.config.license_address,
         address_detail: this.config.address_detail,
       });
+      // this.configForm.patchValue(response.payload);
       console.log({
         ...this.config,
         business_name: this.config.business_name,
@@ -226,13 +228,15 @@ export class ConfigComponent implements OnInit {
   }
 
   onProvinceChange(): void {
+    console.log(this.configForm.value.province_code);
+    
     this.provinceChangeSubject.next(
       Number(this.configForm.value.province_code)
     );
   }
 
   onDistrictChange(): void {
-    console.log(this.config);
+    console.log(this.configForm.value.district_code);
     this.districtChangeSubject.next(
       Number(this.configForm.value.district_code)
     );
@@ -244,28 +248,33 @@ export class ConfigComponent implements OnInit {
 
     if (this.configForm.valid) {
       const data = this.configForm.value;
-
-      const businessFieldId = this.businessFields.find(
-        (businessField: BusinessField) =>
-          businessField.code == data.business_field_code
-      )?.id;
+      console.log(data);
+      // const businessFieldId = this.businessFields.find(
+      //   (businessField: BusinessField) =>
+      //     businessField.code == data.business_field_code
+      // )?.id;
 
       const formData = {
         id: String(this.config.id),
-        business_name: String(data.business_name),
-        tel: data.tel,
-        business_field_code: String(data.business_field_code),
-        business_field_id: String(businessFieldId),
-        business_type: data.business_type ?? null,
-        business_registration: data.business_registration ?? null,
-        license_date: data.license_date ?? null,
-        address_detail: String(data.address_detail),
-        province_code: data.province_code ? Number(data.province_code) : '',
-        district_code: data.province_code ? Number(data.province_code) : '',
-        license_address: String(data.license_address),
-        ward_code: data.ward_code ? Number(data.ward_code) : '',
+        business_name: String(this.configForm.value.business_name),
+        tel: this.configForm.value.tel,
+        business_field_code: String(this.configForm.value.business_field_code),
+        business_field_id: String(this.businessFields.find(
+          (businessField: BusinessField) =>
+            businessField.code == data.business_field_code
+        )?.id),
+        business_type: this.configForm.value.business_type ?? null,
+        business_registration: this.configForm.value.business_registration ?? null,
+        license_date: this.configForm.value.license_date ?? null,
+        address_detail: String(this.configForm.value.address_detail),
+        province_code: this.configForm.value.province_code ? Number(this.configForm.value.province_code) : '',
+        district_code: this.configForm.value.district_code ? Number(this.configForm.value.district_code) : '',
+        license_address: String(this.configForm.value.license_address),
+        ward_code: this.configForm.value.ward_code ? Number(this.configForm.value.ward_code) : '',
       };
-
+      
+      // console.log(formData);
+      
       this.configService.update(formData).subscribe(
         (response: any) => {
           if (response.status == true) {
@@ -282,7 +291,8 @@ export class ConfigComponent implements OnInit {
                 toast.addEventListener('mouseleave', Swal.resumeTimer);
               },
             });
-            this.router.navigate([`../setting/`]);
+            // this.router.navigate([`../setting/`]);
+            window.location.reload();
           } else {
             // console.log(response);
             const errorMessages = [];
