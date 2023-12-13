@@ -226,8 +226,13 @@ export class ConfigComponent implements OnInit {
       //   address_detail: this.config.address_detail,
       // });
 
-      this.onProvinceChange();
-      this.onDistrictChange();
+      if (this.config.province_code) {
+        this.onProvinceChange();
+      }
+
+      if (this.config.district_code) {
+        this.onDistrictChange();
+      }
 
       this.isLoading = false;
 
