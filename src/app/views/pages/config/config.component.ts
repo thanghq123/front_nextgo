@@ -135,6 +135,8 @@ export class ConfigComponent implements OnInit {
         )
       )
       .subscribe((data) => {
+        console.log(data);
+        
         this.districts =
           data.status != 'error'
             ? data.results
@@ -191,7 +193,7 @@ export class ConfigComponent implements OnInit {
       // console.log(this.config);
       console.log(response.payload);
       this.config.province_code = Number(this.config.province_code);
-      this.config.istrict_code = Number(this.config.district_code);
+      this.config.district_code = Number(this.config.district_code);
       this.config.ward_code = Number(this.config.ward_code);
       this.configForm.patchValue({
         ...this.config,
@@ -273,7 +275,7 @@ export class ConfigComponent implements OnInit {
         ward_code: this.configForm.value.ward_code ? Number(this.configForm.value.ward_code) : '',
       };
       
-      // console.log(formData);
+      console.log(formData);
       
       this.configService.update(formData).subscribe(
         (response: any) => {
