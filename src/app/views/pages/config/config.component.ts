@@ -120,7 +120,6 @@ export class ConfigComponent implements OnInit {
 
 
     this.AresService.getProvinces().subscribe((data: any) => {
-      console.log(data);
       this.provinces =
         data.status != 'error'
           ? data.results
@@ -187,6 +186,8 @@ export class ConfigComponent implements OnInit {
     this.configService.getConfig().subscribe((response: any) => {
       this.config = response.payload;
       // console.log(this.config);
+      console.log(response.payload);
+      
       this.config.province_code = Number(this.config.province_code);
       this.config.district_code = Number(this.config.district_code);
       this.config.ward_code = Number(this.config.ward_code);
