@@ -19,7 +19,7 @@ import { SubcriptionOrderService } from '../../../service/subcription-order/subc
 @Component({
   selector: 'app-config',
   templateUrl: 'config.component.html',
-  styleUrls: ['config.component.scss'],
+  styleUrls: ['config.component.scss']
 })
 export class ConfigComponent implements OnInit {
   private provinceChangeSubject = new Subject<number>();

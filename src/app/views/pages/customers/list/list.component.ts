@@ -91,7 +91,6 @@ export class ListComponent implements OnInit {
       (response : any) => {
         if(response.status == true){
           this.Customers =of(response.payload);
-
           this.Customers.subscribe((categories) => {
             setTimeout(() => {
                 const dataTable = new DataTable('#dataTableExample');
