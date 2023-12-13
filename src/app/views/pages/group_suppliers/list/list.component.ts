@@ -99,6 +99,10 @@ export class ListComponent implements OnInit {
                 dataTable.on('datatable.init', () => {
                     this.addDeleteEventHandlers();
                 });
+
+                dataTable.on('datatable.page', () => {
+                  this.addDeleteEventHandlers();
+                });
             }, 0);
           this.isLoading = false;
         });

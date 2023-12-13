@@ -117,6 +117,10 @@ export class BrandsListComponent implements OnInit, AfterViewInit {
                 db.on('datatable.init', () => {
                   this.addDeleteEventHandlers();
               });
+
+              db.on('datatable.page', () => {
+                this.addDeleteEventHandlers();
+              });
               }, 0)
             })
 
