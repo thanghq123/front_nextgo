@@ -187,11 +187,11 @@ export class ConfigComponent implements OnInit {
       this.config = response.payload;
       // console.log(this.config);
       console.log(response.payload);
-    
-      
-      
+
+
+
       this.config.province_code = Number(this.config.province_code);
-      this.config.district_code = Number(this.config.district_code);
+      this.config.istrict_code = Number(this.config.district_code);
       this.config.ward_code = Number(this.config.ward_code);
       this.configForm.patchValue({
         ...this.config,
@@ -207,7 +207,7 @@ export class ConfigComponent implements OnInit {
       });
       this.onProvinceChange();
       this.onDistrictChange();
-    
+
       this.isLoading = false;
 
     });

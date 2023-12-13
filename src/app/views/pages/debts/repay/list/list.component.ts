@@ -39,11 +39,11 @@ export class ListRepayComponent implements OnInit {
       next: (res: any) => {
         // console.log(res.data);
         if(res.status == true){
-          this.listRepay = of(res.payload.data) ;
-          const payment: any[] = res.payload.data
+          this.listRepay = of(res.payload) ;
+          const payment: any[] = res.payload
           // console.log(res.payload.data);
           this.totalRevenue = 0;
-          if(res.payload.data){
+          if(res.payload){
             payment.forEach((payment) => {
               this.totalRevenue += payment.amount_debt;
             });

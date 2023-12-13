@@ -99,7 +99,7 @@ export class ListComponent implements OnInit {
       next: (res: any) => {
         // console.log(res.status);
         if(res.status == true){
-          this.fakeData = of(res.payload.data) ;
+          this.fakeData = of(res.payload) ;
           this.isLoading = false;
           this.fakeData.subscribe(
             (res)=> {
