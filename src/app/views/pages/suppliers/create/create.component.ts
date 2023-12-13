@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { SuppliersService } from 'src/app/service/suppliers/suppliers.service';
+import {Component, OnInit} from '@angular/core';
+import {FormGroup, FormControl, Validators} from '@angular/forms';
+import {SuppliersService} from 'src/app/service/suppliers/suppliers.service';
 import Swal from 'sweetalert2';
-import { Router } from '@angular/router';
-import { GroupSuppliersService } from 'src/app/service/group_suppliers/group-suppliers.service';
-import { AresService } from 'src/app/service/ares/ares.service';
-import { debounceTime, switchMap } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import {Router} from '@angular/router';
+import {GroupSuppliersService} from 'src/app/service/group_suppliers/group-suppliers.service';
+import {AresService} from 'src/app/service/ares/ares.service';
+import {debounceTime, switchMap} from 'rxjs/operators';
+import {Subject} from 'rxjs';
+
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
@@ -42,17 +43,18 @@ export class CreateComponent implements OnInit {
     private GroupSuppliersService: GroupSuppliersService,
     private AresService: AresService,
     private router: Router
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     this.types = [
-      { id: 0, name: 'Cá nhân' },
-      { id: 1, name: 'Doanh nghiệp' },
+      {id: 0, name: 'Cá nhân'},
+      {id: 1, name: 'Doanh nghiệp'},
     ];
 
     this.status = [
-      { id: 0, name: 'Kích hoạt' },
-      { id: 1, name: 'Không kích hoạt' },
+      {id: 0, name: 'Kích hoạt'},
+      {id: 1, name: 'Không kích hoạt'},
     ];
 
     this.GroupSuppliersService.GetData().subscribe((data: any) => {
@@ -63,7 +65,7 @@ export class CreateComponent implements OnInit {
       this.provinces =
         data.status != 'error'
           ? data.results
-          : [{ id: 0, name: `${data.message}` }];
+          : [{id: 0, name: `${data.message}`}];
     });
 
     this.provinceChangeSubject
@@ -77,7 +79,7 @@ export class CreateComponent implements OnInit {
         this.districts =
           data.status != 'error'
             ? data.results
-            : [{ id: 0, name: `${data.message}` }];
+            : [{id: 0, name: `${data.message}`}];
       });
 
     this.districtChangeSubject
@@ -89,7 +91,7 @@ export class CreateComponent implements OnInit {
         this.wards =
           data.status != 'error'
             ? data.results
-            : { id: 0, name: `${data.message}`, status: false };
+            : {id: 0, name: `${data.message}`, status: false};
         this.isWardDataLoaded = data.status != 'error' ? true : false;
         // if (this.wards && this.wards.status != false) {
         //   this.customersForm
@@ -124,7 +126,11 @@ export class CreateComponent implements OnInit {
   }
 
   onSubmit() {
+    const submitBtn = document.querySelector('#submitBtn');
     if (this.customersForm.valid) {
+      if (submitBtn) {
+        submitBtn.setAttribute('disabled', 'disabled');
+      }
       const dataToSend = {
         name: String(this.customersForm.value.name),
         type: Number(this.customersForm.value.type) || null,
@@ -163,6 +169,9 @@ export class CreateComponent implements OnInit {
             });
             this.router.navigate(['../suppliers/list']);
           } else {
+            if (submitBtn) {
+              submitBtn.removeAttribute('disabled');
+            }
             // console.log(response);
             const errorMessages = [];
             for (const key in response.meta.errors) {
@@ -192,6 +201,9 @@ export class CreateComponent implements OnInit {
           }
         },
         (error) => {
+          if (submitBtn) {
+            submitBtn.removeAttribute('disabled');
+          }
           // console.log(error);
           Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
         }
@@ -201,7 +213,7 @@ export class CreateComponent implements OnInit {
     }
   }
 
-  showNextMessage(errorMessages : any) {
+  showNextMessage(errorMessages: any) {
     if (errorMessages.length > 0) {
       const message = errorMessages.shift();
       Swal.fire({

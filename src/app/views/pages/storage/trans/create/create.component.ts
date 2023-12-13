@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {FormGroup, FormControl, Validators} from '@angular/forms';
 import Swal from 'sweetalert2';
-import { Router } from '@angular/router';
-import { Observable, Subject, debounceTime, map, of } from 'rxjs';
+import {Router} from '@angular/router';
+import {Observable, Subject, debounceTime, map, of} from 'rxjs';
 
-import { LocationsService } from 'src/app/service/locations/locations.service';
-import { SearchProductService } from 'src/app/service/searchProduct/search-product.service';
-import { StorageImportService } from 'src/app/service/storage/storage-import.service';
+import {LocationsService} from 'src/app/service/locations/locations.service';
+import {SearchProductService} from 'src/app/service/searchProduct/search-product.service';
+import {StorageImportService} from 'src/app/service/storage/storage-import.service';
 
 @Component({
   selector: 'app-create',
@@ -50,7 +50,9 @@ export class CreateComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
+
   onInventoryOut() {
     // console.log(this.codeInventoryOut);
     this.products = [];
@@ -68,9 +70,11 @@ export class CreateComponent implements OnInit {
       });
     }
   }
+
   Edit(val: any) {
     this.editRowID = val;
   }
+
   search = (text$: Observable<string>) =>
     text$.pipe(
       debounceTime(200),
@@ -78,17 +82,18 @@ export class CreateComponent implements OnInit {
         term === ''
           ? []
           : this.listProduct
-              .filter(
-                (v) =>
-                  v.product_name_variation
-                    .toLowerCase()
-                    .indexOf(term.toLowerCase()) > -1
-              )
-              .slice(0, 10)
+            .filter(
+              (v) =>
+                v.product_name_variation
+                  .toLowerCase()
+                  .indexOf(term.toLowerCase()) > -1
+            )
+            .slice(0, 10)
       )
     );
   formatter = (x: { product_name_variation: string }) =>
     x.product_name_variation;
+
   searchProduct() {
     if (this.input != '' && this.input.id != undefined) {
       // Kiểm tra xem sản phẩm vừa nhập có trùng với sản phẩm nào trong this.products không
@@ -117,6 +122,7 @@ export class CreateComponent implements OnInit {
       // console.log(this.products);
     }
   }
+
   resultTotal(e: any) {
     this.updateQuantity(
       this.products,
@@ -125,6 +131,7 @@ export class CreateComponent implements OnInit {
       e.target.name
     );
   }
+
   updateQuantity(array: any, id: number, newQuantity: any, name: string) {
     // console.log(name);
 
@@ -143,8 +150,13 @@ export class CreateComponent implements OnInit {
   removeProduct(index: number): void {
     this.products.splice(index, 1);
   }
+
   onSubmit(): void {
+    const submitBtn = document.querySelector('#submitBtn');
     if (this.storageTransForm.valid && this.products.length > 0) {
+      if (submitBtn) {
+        submitBtn.setAttribute('disabled', 'disabled');
+      }
       let flag = true;
       const dataSend = {
         reason: this.storageTransForm.value.reason,
@@ -193,6 +205,9 @@ export class CreateComponent implements OnInit {
                 `../storage/trans/list`,
               ]);
             } else {
+              if (submitBtn) {
+                submitBtn.removeAttribute('disabled');
+              }
               // console.log(response);
               const errorMessages = [];
               if (response.meta && typeof response.meta === 'object') {
@@ -210,6 +225,9 @@ export class CreateComponent implements OnInit {
             }
           },
           (error) => {
+            if (submitBtn) {
+              submitBtn.removeAttribute('disabled');
+            }
             // console.log(error);
             Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
           }
@@ -219,6 +237,7 @@ export class CreateComponent implements OnInit {
       alert('Sản phẩm không được để trống');
     }
   }
+
   showNextMessage(errorMessages: any) {
     if (errorMessages.length > 0) {
       const message = errorMessages.shift();

@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import {Component, OnInit, TemplateRef} from '@angular/core';
 import {
   FormGroup,
   FormBuilder,
@@ -6,16 +6,17 @@ import {
   Validators,
   FormArray,
 } from '@angular/forms';
-import { ProductsService } from 'src/app/service/products/products.service';
-import { CategoriesService } from 'src/app/service/categories/categories.service';
-import { WarrantiesService } from 'src/app/service/warranties/warranties.service';
-import { ItemUnitsService } from 'src/app/service/item_units/item-units.service';
-import { BrandsService } from 'src/app/service/brands/brands.service';
-import { of } from 'rxjs';
-import { map, expand, take } from 'rxjs/operators';
+import {ProductsService} from 'src/app/service/products/products.service';
+import {CategoriesService} from 'src/app/service/categories/categories.service';
+import {WarrantiesService} from 'src/app/service/warranties/warranties.service';
+import {ItemUnitsService} from 'src/app/service/item_units/item-units.service';
+import {BrandsService} from 'src/app/service/brands/brands.service';
+import {of} from 'rxjs';
+import {map, expand, take} from 'rxjs/operators';
 import Swal from 'sweetalert2';
-import { Router } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {Router} from '@angular/router';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
@@ -45,7 +46,7 @@ export class CreateComponent implements OnInit {
   form: FormGroup;
   rows: FormArray;
 
-  statusVersionDefault : boolean = false;
+  statusVersionDefault: boolean = false;
   originalArray: any[] = [];
 
   dataValueVariable: any[];
@@ -78,7 +79,8 @@ export class CreateComponent implements OnInit {
     private WarrantiesService: WarrantiesService,
     private modalService: NgbModal,
     private fb: FormBuilder
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     if (this.countCreate == 0) {
@@ -91,8 +93,8 @@ export class CreateComponent implements OnInit {
       this.indexOld = 0;
     }
     this.manage_type = [
-      { id: 0, name: 'Thường' },
-      { id: 1, name: 'Theo Lô/HSD' },
+      {id: 0, name: 'Thường'},
+      {id: 1, name: 'Theo Lô/HSD'},
     ];
     // this.ItemUnitsService.GetData().subscribe((data: any) => {
     //   this.item_units = data.payload.data;
@@ -118,10 +120,11 @@ export class CreateComponent implements OnInit {
       this.warranties = data.payload;
     });
 
-    this.renderVersion({ status: false });
+    this.renderVersion({status: false});
 
     this.isLoading = false;
   }
+
   createItemFormGroup(item: any): FormGroup {
     return this.fb.group({
       sku: [item.sku],
@@ -134,6 +137,7 @@ export class CreateComponent implements OnInit {
       status: [item.status],
     });
   }
+
   addAttributesForm() {
     this.itemBoxTypeQuality++;
     this.itemBoxTypeQualityArray = Array(this.itemBoxTypeQuality).fill(null);
@@ -145,20 +149,20 @@ export class CreateComponent implements OnInit {
   }
 
   renderVersion({
-    dataDefalut = [
-      {
-        sku: null,
-        barcode: null,
-        variation_name: "Mặc định",
-        display_name:  "Mặc định",
-        image: null,
-        price_import: 0,
-        price_export: 0,
-        status: 1,
-      },
-    ],
-    status = true,
-  } = {}) {
+                  dataDefalut = [
+                    {
+                      sku: null,
+                      barcode: null,
+                      variation_name: "Mặc định",
+                      display_name: "Mặc định",
+                      image: null,
+                      price_import: 0,
+                      price_export: 0,
+                      status: 1,
+                    },
+                  ],
+                  status = true,
+                } = {}) {
     console.log(dataDefalut);
 
     if (status) {
@@ -247,6 +251,7 @@ export class CreateComponent implements OnInit {
       });
     }
   }
+
   removeAttributesForm(index: number) {
     if (this.itemBoxTypeQuality > 1) {
       this.itemBoxTypeQuality--;
@@ -257,6 +262,7 @@ export class CreateComponent implements OnInit {
       console.log(this.simpleItems);
     }
   }
+
   addItem(index: number) {
     // console.log(index);
     if (
@@ -299,7 +305,7 @@ export class CreateComponent implements OnInit {
     this.simpleItems[indexValue].attribute_values.splice(index, 1);
   }
 
-  checkValueAttribite(e : any){
+  checkValueAttribite(e: any) {
 
   }
 
@@ -327,21 +333,21 @@ export class CreateComponent implements OnInit {
   checkValueInput(value: string) {
     // Sử dụng biểu thức chính quy để kiểm tra chuỗi
     var pattern = /^[a-zA-Z0-9]+$/;
-  
+
     // Kiểm tra xem chuỗi có chứa ký tự không mong muốn hay không
     if (!pattern.test(value)) {
       return false;
     }
-  
+
     // Kiểm tra xem chuỗi có chứa ký tự -.,/_=... hay không
     var unwantedChars = /[-.,\/_=]+/;
     if (unwantedChars.test(value)) {
       return false;
     }
-  
+
     return true;
   }
- 
+
 
   CheckStatusform() {
     this.statusFormType = true;
@@ -417,24 +423,30 @@ export class CreateComponent implements OnInit {
     });
     this.renderVersion();
   }
+
   openBasicModal(content: TemplateRef<any>) {
     this.modalService
       .open(content, {})
       .result.then((result) => {
-        // this.dataAttributes = "Modal closed" + result
-        // console.log('Modal closed with:', result);
-        // console.log('Weight value:', this.weightValue);
-        // console.log('abc:',this.simpleItems);
-        if (result) {
-          this.renderValue();
-          this.CheckStatusform();
-        }
-      })
-      .catch((res) => {});
+      // this.dataAttributes = "Modal closed" + result
+      // console.log('Modal closed with:', result);
+      // console.log('Weight value:', this.weightValue);
+      // console.log('abc:',this.simpleItems);
+      if (result) {
+        this.renderValue();
+        this.CheckStatusform();
+      }
+    })
+      .catch((res) => {
+      });
   }
 
   onSubmit() {
+    const submitBtn = document.querySelector('#submitBtn');
     if (this.productsForm.valid) {
+      if (submitBtn) {
+        submitBtn.setAttribute('disabled', 'disabled');
+      }
       // this.originalArray
       // value.forEach((item: any, index: number) => {
       //   if (item.sku) {
@@ -457,12 +469,12 @@ export class CreateComponent implements OnInit {
         status: Number(this.productsForm.value.status),
         attributes: this.checkAtribute(),
         variations: this.originalArray.map((item) => {
-          const newItem = { ...item };
+          const newItem = {...item};
           if (newItem.sku === null) {
             newItem.sku = this.generateRandomString(10);
           }
 
-          if(newItem.variation_name == "Mặc định" || newItem.display_name == "Mặc định" ){
+          if (newItem.variation_name == "Mặc định" || newItem.display_name == "Mặc định") {
             newItem.variation_name = this.productsForm.value.name;
             newItem.display_name = this.productsForm.value.name;
           }
@@ -493,6 +505,9 @@ export class CreateComponent implements OnInit {
             });
             this.router.navigate(['../products/list']);
           } else {
+            if (submitBtn) {
+              submitBtn.removeAttribute('disabled');
+            }
             console.log(response);
             const errorMessages = [];
             for (const key in response.meta.errors) {
@@ -517,6 +532,9 @@ export class CreateComponent implements OnInit {
           }
         },
         (error) => {
+          if (submitBtn) {
+            submitBtn.removeAttribute('disabled');
+          }
           console.log(error);
           Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
         }
@@ -526,12 +544,12 @@ export class CreateComponent implements OnInit {
     }
   }
 
-  checkAtribute(){
+  checkAtribute() {
     if (this.simpleItems.every(item => item.name === '' && item.attribute_values.length === 0 && item.newItemText === '')) {
       return null;
-  } else {
+    } else {
       return this.simpleItems;
-  }
+    }
   }
 
   generateRandomString(length: number): string {

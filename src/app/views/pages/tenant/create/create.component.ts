@@ -50,11 +50,11 @@ export class CreateComponent implements OnInit {
 
   onSubmit() {
     const submitBtn = document.querySelector('#submitBtn');
-    if (submitBtn) {
-      submitBtn.setAttribute('disabled', 'disabled');
-    }
     this.errorMessages = [];
     if (this.form.valid) {
+      if (submitBtn) {
+        submitBtn.setAttribute('disabled', 'disabled');
+      }
       const dataToSend = {
         business_name: this.form.value.business_name || "",
         name_tenant: this.form.value.name_tenant,
@@ -89,6 +89,9 @@ export class CreateComponent implements OnInit {
             if (typeof response.meta == 'string') {
               msg = response.meta;
             } else {
+              if (submitBtn) {
+                submitBtn.removeAttribute('disabled');
+              }
               this.errorMessages = response.meta;
               if (this.errorMessages.domain_name) {
                 msg = this.errorMessages.domain_name;
@@ -111,6 +114,9 @@ export class CreateComponent implements OnInit {
           }
         },
         (error) => {
+          if (submitBtn) {
+            submitBtn.removeAttribute('disabled');
+          }
           if (error.error.status == false) {
             Swal.fire({
               toast: true,
