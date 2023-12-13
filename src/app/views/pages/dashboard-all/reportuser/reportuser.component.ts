@@ -30,15 +30,17 @@ export class ReportuserComponent implements OnInit {
     this.start_time = this.formatDate(oneMonthAgo);
     this.end_time = this.formatDate(currentDate);
     this.ReportService.customer('thirtyDays').subscribe((response: any) => {
-      console.log(response.payload);
-      
-      this.customer = response.payload;
-      this.result.quanlityResult = response.payload.reduce((index : number, item: any) => {
-        return index + item.total_product;
-      },0)
-      this.result.quanlitySell = response.payload.reduce((index : number, item: any) => {
-        return index + item.total_price;
-      },0)
+      console.log(response);
+      if(response){
+        this.customer = response.payload;
+        this.result.quanlityResult = response.payload.reduce((index : number, item: any) => {
+          return index + item.total_product;
+        },0)
+        this.result.quanlitySell = response.payload.reduce((index : number, item: any) => {
+          return index + item.total_price;
+        },0)
+      }
+   
     
     });
   }
@@ -98,13 +100,16 @@ export class ReportuserComponent implements OnInit {
     // this.chart.destroy();
     console.log(this.start_time,this.end_time);
     this.ReportService.customer('fromTo',this.start_time,this.end_time).subscribe((response: any) => {
-      this.customer = response.payload;
-      this.result.quanlityResult = response.payload.reduce((index : number, item: any) => {
-        return index + item.total_product;
-      },0)
-      this.result.quanlitySell = response.payload.reduce((index : number, item: any) => {
-        return index + item.total_price;
-      },0)
+      if(response){
+        this.customer = response.payload;
+        this.result.quanlityResult = response.payload.reduce((index : number, item: any) => {
+          return index + item.total_product;
+        },0)
+        this.result.quanlitySell = response.payload.reduce((index : number, item: any) => {
+          return index + item.total_price;
+        },0)
+      }
+      
     });
   }
   
