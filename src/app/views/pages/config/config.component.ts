@@ -275,57 +275,58 @@ export class ConfigComponent implements OnInit {
       
       // console.log(formData);
       
-      // this.configService.update(formData).subscribe(
-      //   (response: any) => {
-      //     if (response.status == true) {
-      //       Swal.fire({
-      //         toast: true,
-      //         position: 'top-end',
-      //         showConfirmButton: false,
-      //         timer: 3000,
-      //         title: 'Cập nhật thành công',
-      //         icon: 'success',
-      //         timerProgressBar: true,
-      //         didOpen: (toast) => {
-      //           toast.addEventListener('mouseenter', Swal.stopTimer);
-      //           toast.addEventListener('mouseleave', Swal.resumeTimer);
-      //         },
-      //       });
-      //       this.router.navigate([`../setting/`]);
-      //     } else {
-      //       // console.log(response);
-      //       const errorMessages = [];
-      //       if (response.meta && typeof response.meta === 'object') {
-      //         for (const key in response.meta.errors) {
-      //           // errorMessages.push(`${response.meta}`);
-      //           const messages = response.meta.errors[key];
-      //           for (const message of messages) {
-      //             errorMessages.push(`${key}: ${message}`);
-      //           }
-      //         }
-      //       } else {
-      //         errorMessages.push(`${response.meta}`);
-      //       }
-      //       this.showNextMessage(errorMessages);
-      //     }
-      //   },
-      //   (error) => {
-      //     // console.log(error.error.meta);
-      //     const errorMessages = [];
-      //     if (error.error.meta && typeof error.error.meta === 'object') {
-      //       for (const key in error.error.meta.errors) {
-      //         // errorMessages.push(`${response.meta}`);
-      //         const messages = error.error.meta.errors[key];
-      //         for (const message of messages) {
-      //           errorMessages.push(`${key}: ${message}`);
-      //         }
-      //       }
-      //     } else {
-      //       errorMessages.push(`${error.error.meta}`);
-      //     }
-      //     this.showNextMessage(errorMessages);
-      //   }
-      // );
+      this.configService.update(formData).subscribe(
+        (response: any) => {
+          if (response.status == true) {
+            Swal.fire({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 3000,
+              title: 'Cập nhật thành công',
+              icon: 'success',
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer);
+                toast.addEventListener('mouseleave', Swal.resumeTimer);
+              },
+            });
+            // this.router.navigate([`../setting/`]);
+            window.location.reload();
+          } else {
+            // console.log(response);
+            const errorMessages = [];
+            if (response.meta && typeof response.meta === 'object') {
+              for (const key in response.meta.errors) {
+                // errorMessages.push(`${response.meta}`);
+                const messages = response.meta.errors[key];
+                for (const message of messages) {
+                  errorMessages.push(`${key}: ${message}`);
+                }
+              }
+            } else {
+              errorMessages.push(`${response.meta}`);
+            }
+            this.showNextMessage(errorMessages);
+          }
+        },
+        (error) => {
+          // console.log(error.error.meta);
+          const errorMessages = [];
+          if (error.error.meta && typeof error.error.meta === 'object') {
+            for (const key in error.error.meta.errors) {
+              // errorMessages.push(`${response.meta}`);
+              const messages = error.error.meta.errors[key];
+              for (const message of messages) {
+                errorMessages.push(`${key}: ${message}`);
+              }
+            }
+          } else {
+            errorMessages.push(`${error.error.meta}`);
+          }
+          this.showNextMessage(errorMessages);
+        }
+      );
     }
   }
 
