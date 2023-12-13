@@ -49,6 +49,10 @@ export class CreateComponent implements OnInit {
   }
 
   onSubmit() {
+    const submitBtn = document.querySelector('#submitBtn');
+    if (submitBtn) {
+      submitBtn.setAttribute('disabled', 'disabled');
+    }
     this.errorMessages = [];
     if (this.form.valid) {
       const dataToSend = {
