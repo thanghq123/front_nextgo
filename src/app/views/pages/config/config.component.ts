@@ -191,6 +191,8 @@ export class ConfigComponent implements OnInit {
       this.config.province_code = Number(this.config.province_code);
       this.config.district_code = Number(this.config.district_code);
       this.config.ward_code = Number(this.config.ward_code);
+      this.onProvinceChange();
+      this.onDistrictChange();
       this.configForm.patchValue({
         ...this.config,
         business_name: this.config.business_name,
@@ -203,7 +205,7 @@ export class ConfigComponent implements OnInit {
         license_address: this.config.license_address,
         address_detail: this.config.address_detail,
       });
-
+    
       this.isLoading = false;
 
     });
