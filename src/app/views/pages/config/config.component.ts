@@ -146,6 +146,8 @@ export class ConfigComponent implements OnInit {
         switchMap((district_code) => this.AresService.getWards(district_code))
       )
       .subscribe((data) => {
+        console.log(data);
+        
         this.wards =
           data.status != 'error'
             ? data.results
@@ -205,6 +207,7 @@ export class ConfigComponent implements OnInit {
         license_address: this.config.license_address,
         address_detail: this.config.address_detail,
       });
+
       this.onProvinceChange();
       this.onDistrictChange();
     
@@ -214,14 +217,12 @@ export class ConfigComponent implements OnInit {
   }
 
   onProvinceChange(): void {
-    console.log(this.config.province_code);
     this.provinceChangeSubject.next(
-      this.config.province_code
+      Number(this.configForm.value.province_code)
     );
   }
 
   onDistrictChange(): void {
-    console.log(this.config.district_code);
     this.districtChangeSubject.next(
       Number(this.configForm.value.district_code)
     );
