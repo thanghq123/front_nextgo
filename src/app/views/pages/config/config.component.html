@@ -2,7 +2,12 @@
   [formGroup]="configForm"
   (ngSubmit)="onSubmit()"
 >
-  <div class="row">
+<div *ngIf="isLoading" class="d-flex justify-content-center">
+  <div class="spinner-border" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+  <div *ngIf="!isLoading" class="row">
     <div class="col-12">
       <div class="row">
         <div class="col-12">
@@ -19,7 +24,7 @@
       </div>
     </div>
   </div>
-  <div class="row">
+  <div *ngIf="!isLoading" class="row">
     <div class="col-md-4 col-12">
       <h5><b>Thông tin chung</b></h5>
       <p>Thông tin được sử dụng để NextGo và khách hàng liên hệ đến bạn</p>
@@ -81,12 +86,12 @@
                       <!---->
                       <div>
                         <label>Địa chỉ email</label>
-                        <!-- <input
+                        <input
                           type="text"
                           disabled="true"
                           placeholder="Địa chỉ email"
-                          value="{{ config.email ? config.email : '' }}"
-                          class="form-control"> -->
+                          [value]=" config.email ?? '' "
+                          class="form-control">
                       </div>
                     </div>
                   </div>
@@ -192,8 +197,8 @@
       </div>
     </div>
   </div>
-  <hr class="hr-solid pb-4">
-  <div class="row">
+  <hr *ngIf="!isLoading" class="hr-solid pb-4">
+  <div *ngIf="!isLoading" class="row">
     <div class="col-md-4 col-12">
       <h5><b>Địa chỉ doanh nghiệp</b></h5>
       <p>Thông tin được sử dụng trong các thông báo về đơn hàng và địa chỉ để liên hệ đến doanh nghiệp</p>
@@ -268,8 +273,8 @@
     </div>
     <div class="col-12"></div>
   </div>
-  <hr class="hr-solid pb-4">
-  <div class="row pb-5 mb-5">
+  <hr *ngIf="!isLoading" class="hr-solid pb-4">
+  <div *ngIf="!isLoading" class="row pb-5 mb-5">
     <div class="col-md-4 col-12">
       <h5><b>Thông tin tài khoản</b></h5>
       <p>Các thông tin về tài khoản</p>
@@ -317,7 +322,7 @@
       </div>
     </div>
   </div>
-  <div class="row">
+  <div *ngIf="!isLoading" class="row">
     <div class="col-12">
       <div class="footer-custom">
         <div class="d-flex align-items-center justify-content-end px-1">

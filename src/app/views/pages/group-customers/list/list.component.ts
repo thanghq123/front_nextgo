@@ -11,8 +11,10 @@ import Swal from 'sweetalert2';
 })
 export class ListComponent implements OnInit {
 
+  isLoading = false;
+
   groupCustomers: Observable<GroupCustomers[]>;
-  
+
   constructor(private GroupCustomersService: GroupCustomersService) {
     this.groupCustomers = new Observable();
   }
@@ -84,12 +86,13 @@ export class ListComponent implements OnInit {
   }
 
   refreshCategories(): void {
+    this.isLoading = true;
    this.GroupCustomersService.GetData().subscribe(
       (response : any) => {
         if(response.status == true){
           this.groupCustomers =of(response.payload.data);
           // console.log(response.payload);
-          
+
           this.groupCustomers.subscribe((groupCustomers) => {
             setTimeout(() => {
                 const dataTable = new DataTable('#dataTableExample');
@@ -97,6 +100,7 @@ export class ListComponent implements OnInit {
                     this.addDeleteEventHandlers();
                 });
             }, 0);
+            this.isLoading = false;
         });
         }
         // Navigate to the list after successful deletion
@@ -105,7 +109,7 @@ export class ListComponent implements OnInit {
         Swal.fire('Lỗi!', 'Có lỗi xảy ra khi xóa danh mục.', 'error');
       }
     );
-    
+
   }
 
 }

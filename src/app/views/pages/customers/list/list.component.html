@@ -10,7 +10,12 @@
         <div class="card-body">
         <h6 class="card-title">Quản lí Khách hàng</h6>
         <button routerLink="/customers/create"  type="button" class="btn btn-primary">Thêm mới</button>
-        <div class="table-responsive">
+        <div *ngIf="isLoading" class="d-flex justify-content-center">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+        <div *ngIf="!isLoading" class="table-responsive">
             <table id="dataTableExample" class="table">
             <thead>
                 <tr>
@@ -29,7 +34,7 @@
                 <td>{{ cate.tel }}</td>
                 <td>
                     <a [routerLink]="['../edit', cate.id]" class="btn btn-success mx-2">Sửa</a>
-                   <button  data-id="{{cate.id}}" class="btn btn-danger">Xóa</button>  
+                   <button  data-id="{{cate.id}}" class="btn btn-danger">Xóa</button>
                 </td>
                 </tr>
             </tbody>
