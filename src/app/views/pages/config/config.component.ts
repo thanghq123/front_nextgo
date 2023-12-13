@@ -188,7 +188,7 @@ export class ConfigComponent implements OnInit {
     this.configService.getConfig().subscribe((response: any) => {
       this.config = response.payload;
       // console.log(this.config);
-      console.log(response.payload);
+      // console.log(response.payload);
     
       
       
@@ -207,7 +207,19 @@ export class ConfigComponent implements OnInit {
         license_address: this.config.license_address,
         address_detail: this.config.address_detail,
       });
-
+      console.log({
+        ...this.config,
+        business_name: this.config.business_name,
+        tel: this.config.tel,
+        email: this.config.email,
+        business_field_code: this.config.business_field_code,
+        business_type: this.config.business_type,
+        business_registration: this.config.business_registration,
+        license_date: this.config.license_date,
+        license_address: this.config.license_address,
+        address_detail: this.config.address_detail,
+      });
+      
       this.onProvinceChange();
       this.onDistrictChange();
     
@@ -223,6 +235,7 @@ export class ConfigComponent implements OnInit {
   }
 
   onDistrictChange(): void {
+    console.log(this.config);
     this.districtChangeSubject.next(
       Number(this.configForm.value.district_code)
     );
