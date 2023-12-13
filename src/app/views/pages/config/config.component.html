@@ -210,35 +210,35 @@
             <div class="col-12">
               <div id="input-group-1" role="group" class="form-group">
                 <!---->
-                <label for="exampleInputUsername1" class="form-label">
+                <label for="" class="form-label">
                   Tỉnh thành phố
                 </label>
-                <ng-select [searchable]="true" (change)="onProvinceChange()" formControlName="province_code"
-                placeholder="Chọn Tỉnh">
-                <ng-option *ngFor="let item of provinces" [value]="item.id">{{item.name}}</ng-option>
-            </ng-select>
+                <ng-select [searchable]="true" (change)="onProvinceChange()" formControlName="province_id"
+                           placeholder="Chọn Tỉnh">
+                  <ng-option *ngFor="let item of provinces" [value]="item.id">{{item.name}}</ng-option>
+                </ng-select>
               </div>
             </div>
           </div>
           <div class="row mb-3">
             <div class="col-md-6 col-12">
-              <div id="input-group-1" role="group" class="form-group">
+              <div id="=" role="group" class="form-group">
                 <!---->
                 <div><label>Quận/Huyện</label>
-                  <ng-select [searchable]="true" (change)="onDistrictChange()" formControlName="district_code" [(ngModel)]="config.district_code"
-                    placeholder="Chọn Tỉnh">
+                  <ng-select [searchable]="true" (change)="onDistrictChange()" formControlName="district_id"
+                             placeholder="Chọn Tỉnh">
                     <ng-option *ngFor="let item of districts" [value]="item.id">{{item.name}}</ng-option>
-                </ng-select>
+                  </ng-select>
                 </div>
               </div>
             </div>
             <div class="col-md-6 col-12">
-              <div id="input-group-1" role="group" class="form-group">
+              <div id="" role="group" class="form-group">
                 <!---->
                 <div><label>Phường/Xã</label>
-                  <ng-select [searchable]="true" formControlName="ward_code" placeholder="Chọn Xã">
+                  <ng-select [searchable]="true" formControlName="commune_id" placeholder="Chọn Xã">
                     <ng-option *ngFor="let item of wards" [value]="item.id">{{item.name}}</ng-option>
-                </ng-select>
+                  </ng-select>
                 </div>
               </div>
             </div>
@@ -286,7 +286,7 @@
             <div class="col-lg-12 row">
               <label class="col-form-label col-lg-3 font-size-14 font-weight-bold">Gói dịch vụ</label>
               <div class="col-lg-9">
-                <span class="d-inline-block" style="min-width: 200px">: {{ tenant.pricing.name }}</span>
+                <span class="d-inline-block" style="min-width: 200px">: {{ pricing?.name }}</span>
                 <!-- <button type="button" class="btn btn-secondary ms-5">Thông tin gói</button> -->
               </div>
             </div>
@@ -327,7 +327,7 @@
       <div class="footer-custom">
         <div class="d-flex align-items-center justify-content-end px-1">
           <!--  -->
-          <button type="submit" class="btn btn-primary" [disabled]="configForm.invalid" > Cập nhật</button>
+          <button type="submit" id="submitBtn" class="btn btn-primary" [disabled]="configForm.invalid" > Cập nhật</button>
         </div>
       </div>
     </div>
