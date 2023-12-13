@@ -32,8 +32,8 @@ export class EditComponent implements OnInit {
     province_code: new FormControl(''),
     district_code: new FormControl(''),
     ward_code: new FormControl(''),
-    email: new FormControl(''),
-    tel: new FormControl('', Validators.required),
+    email: new FormControl('', Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)),
+    tel: new FormControl('', [Validators.required, Validators.pattern(/^(03|05|07|08|09)+([0-9]{8})$/)]),
     status: new FormControl(1),
     address_detail: new FormControl(''),
     note: new FormControl(''),
@@ -99,7 +99,7 @@ export class EditComponent implements OnInit {
             ?.setValidators(Validators.required);
           this.customersForm?.get('ward_code')?.updateValueAndValidity();
         } else {
-          console.log(this.wards);
+          // console.log(this.wards);
           this.customersForm.value.ward_code = '';
         }
       });
@@ -120,7 +120,7 @@ export class EditComponent implements OnInit {
               customerData.status = 1;
             }
 
-            console.log(customerData);
+            // console.log(customerData);
 
             this.customersForm.patchValue(customerData);
             this.onProvinceChange();
@@ -191,7 +191,7 @@ export class EditComponent implements OnInit {
             });
             this.router.navigate(['../suppliers/list']);
           } else {
-            console.log(response);
+            // console.log(response);
             const errorMessages = [];
             for (const key in response.meta.errors) {
               const messages = response.meta.errors[key];

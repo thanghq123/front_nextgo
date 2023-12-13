@@ -46,7 +46,7 @@ export class ItemUnitsCreateComponent implements OnInit {
             });
             this._router.navigate(['../item-units/list']);
           } else {
-            console.log(response);
+            // console.log(response);
             const errorMessages = [];
             for (const key in response.meta.errors) {
               errorMessages.push(...response.meta.errors[key]);
@@ -90,7 +90,7 @@ export class ItemUnitsCreateComponent implements OnInit {
         }
       );
     } else {
-      console.log("Error create item-units!");
+      // console.log("Error create item-units!");
     }
   }
 }

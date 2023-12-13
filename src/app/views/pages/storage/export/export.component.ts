@@ -58,7 +58,7 @@ export class ExportComponent implements OnInit {
       confirmButtonText: 'Có, thực hiện!',
     }).then((result) => {
       if (result.isConfirmed) {
-        console.log(123);
+        // console.log(123);
 
         // If confirmed, delete the category
         const dataSend = {
@@ -107,7 +107,7 @@ export class ExportComponent implements OnInit {
         if(res.status == true){
           this.listStorageExport = of(res.payload.data) ;
           this.isLoading = false;
-          console.log(res.payload);
+          // console.log(res.payload);
           this.listStorageExport.subscribe(
             (res)=> {
               setTimeout(() => {
@@ -122,7 +122,7 @@ export class ExportComponent implements OnInit {
         }
       },
       error: (err: any) => {
-        console.log(err);
+        // console.log(err);
         Swal.fire('Lỗi!', 'Có lỗi xảy ra. Vui lòng liên hệ QTV.', 'error');
       }
     })

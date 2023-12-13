@@ -45,7 +45,7 @@ export class DetailComponent implements OnInit {
             const storageData = data.payload[0];
             this.status = storageData.status;
             this.listStorage = data.payload[0].inventory_transaction_details;
-            console.log(storageData);
+            // console.log(storageData);
 
             // Chuyển đổi giá trị gender sang kiểu number
             // locationData.gender = String(locationData.gender);
@@ -87,7 +87,7 @@ export class DetailComponent implements OnInit {
             id: this.id,
             tranType: 2
           }
-          console.log(dataSend);
+          // console.log(dataSend);
 
           this._storage.update(dataSend).subscribe(
             (response: any) => {
@@ -95,7 +95,7 @@ export class DetailComponent implements OnInit {
                 this.storageTransForm.reset();
                 this.showSuccessMessage('storage/trans');
               } else {
-                console.log(response);
+                // console.log(response);
                 const errorMessages = [];
                 if (response.meta && typeof response.meta === 'object') {
                   for (const key in response.meta.errors) {
@@ -112,7 +112,7 @@ export class DetailComponent implements OnInit {
               }
             },
             (error) => {
-              console.log(error);
+              // console.log(error);
               Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
             }
           );
@@ -123,7 +123,7 @@ export class DetailComponent implements OnInit {
     });
   }
   cancel() {
-    console.log('Đã nhấn nút');
+    // console.log('Đã nhấn nút');
     Swal.fire({
       title: 'Bạn có chắc chắn muốn hủy đơn chuyển kho?',
       text: 'Bạn sẽ không thể hoàn tác lại hành động này!',
@@ -139,7 +139,7 @@ export class DetailComponent implements OnInit {
             this.storageTransForm.reset();
             this.showSuccessMessage('storage/trans');
           } else {
-            console.log(res);
+            // console.log(res);
             const errorMessages = [];
             for (const key in res.meta.errors) {
               const messages = res.meta.errors[key];

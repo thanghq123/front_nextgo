@@ -47,7 +47,7 @@ export class CategoriesListComponent implements OnInit {
   }
 
   changePage(page: number) {
-    console.log(page);
+    // console.log(page);
 
     const oldPage = page;
     if (page == oldPage) {
@@ -96,13 +96,13 @@ export class CategoriesListComponent implements OnInit {
           this.ListsCategories = of(response.payload.data);
           this.isLoading = false;
           this.totalPage = response.payload.total;
-          console.log(this.totalPage);
+          // console.log(this.totalPage);
 
           if (this.dataTable) {
             this.dataTable.destroy();
           }
 
-          console.log(this.ListsCategories);
+          // console.log(this.ListsCategories);
           this.ListsCategories.subscribe((categories) => {
             setTimeout(() => {
               let options = {
@@ -125,7 +125,7 @@ export class CategoriesListComponent implements OnInit {
         // Navigate to the list after successful deletion
       },
       (error) => {
-        console.log(error);
+        // console.log(error);
         Swal.fire('Lỗi!', 'Có lỗi xảy ra khi xóa danh mục.', 'error');
       }
     );

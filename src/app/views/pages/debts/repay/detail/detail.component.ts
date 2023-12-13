@@ -83,12 +83,12 @@ export class DetailRepayComponent implements OnInit {
             this.oldPayment = data.payload.payments;
 
             if (data.payload.payments != '') {
-              console.log(this.oldPayment);
+              // console.log(this.oldPayment);
               this.totalPayment = 0;
               this.oldPayment.forEach((payment) => {
                 this.totalPayment += payment.amount_in;
               });
-              console.log('Tổng tiền thanh toán là: ' + this.totalPayment);
+              // console.log('Tổng tiền thanh toán là: ' + this.totalPayment);
             } else {
               this.totalPayment = 0;
             }
@@ -156,7 +156,7 @@ export class DetailRepayComponent implements OnInit {
     this.modalService
       .open(content, {})
       .result.then((result) => {
-        console.log(result);
+        // console.log(result);
 
         const dataSend = {
           id: this.id,
@@ -171,7 +171,7 @@ export class DetailRepayComponent implements OnInit {
           reference_code: this.dataAdd.reference_code,
           note: this.dataAdd.note,
         };
-        console.log(dataSend);
+        // console.log(dataSend);
         const cartInReturn = this.debt.amount_debt - this.debt.amount_paid;
 
         if (dataSend.amount > 0 && dataSend.amount <= cartInReturn) {
@@ -203,7 +203,7 @@ export class DetailRepayComponent implements OnInit {
                 };
                 window.location.reload();
               } else {
-                console.log(response);
+                // console.log(response);
                 const errorMessages = [];
                 if (response.meta && typeof response.meta === 'object') {
                   for (const key in response.meta.errors) {
@@ -245,7 +245,7 @@ export class DetailRepayComponent implements OnInit {
         note: String(this.repayForm.value.note),
         type: 0,
       };
-      console.log(dataSend);
+      // console.log(dataSend);
       this._debtService.update(dataSend).subscribe((response: any) => {
         if (response.status == true) {
           Swal.fire({
@@ -264,7 +264,7 @@ export class DetailRepayComponent implements OnInit {
           });
           // location.reload();
         } else {
-          console.log(response);
+          // console.log(response);
           const errorMessages = [];
           if (response.meta && typeof response.meta === 'object') {
             for (const key in response.meta.errors) {
@@ -283,7 +283,7 @@ export class DetailRepayComponent implements OnInit {
       // Log dữ liệu từ form
       // Bạn có thể xử lý dữ liệu ở đây, gửi nó đến server hoặc thực hiện các hành động khác
     } else {
-      console.log('Form không hợp lệ!'); // Log nếu form không hợp lệ
+      // console.log('Form không hợp lệ!'); // Log nếu form không hợp lệ
     }
   }
   showNextMessage(errorMessages: any) {

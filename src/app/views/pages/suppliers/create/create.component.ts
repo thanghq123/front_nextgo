@@ -30,7 +30,7 @@ export class CreateComponent implements OnInit {
     province_code: new FormControl(''),
     district_code: new FormControl(''),
     ward_code: new FormControl(''),
-    email: new FormControl(''),
+    email: new FormControl('', Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)),
     tel: new FormControl('', [Validators.required, Validators.pattern(/^(03|05|07|08|09)+([0-9]{8})$/)]),
     status: new FormControl(1),
     address_detail: new FormControl(''),
@@ -141,7 +141,7 @@ export class CreateComponent implements OnInit {
         updated_at: null,
       };
 
-      console.log(dataToSend);
+      // console.log(dataToSend);
 
       this.SuppliersService.create(dataToSend).subscribe(
         (response: any) => {
@@ -163,7 +163,7 @@ export class CreateComponent implements OnInit {
             });
             this.router.navigate(['../suppliers/list']);
           } else {
-            console.log(response);
+            // console.log(response);
             const errorMessages = [];
             for (const key in response.meta.errors) {
               const messages = response.meta.errors[key];
@@ -192,7 +192,7 @@ export class CreateComponent implements OnInit {
           }
         },
         (error) => {
-          console.log(error);
+          // console.log(error);
           Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
         }
       );

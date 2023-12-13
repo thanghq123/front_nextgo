@@ -32,7 +32,7 @@ export class EditComponent implements OnInit {
 
   locationsForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
-    email: new FormControl(''),
+    email: new FormControl('', Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)),
     imageUpdate: new FormControl(''),
     description: new FormControl(''),
     tel: new FormControl('', [Validators.required, Validators.pattern(/^(03|05|07|08|09)+([0-9]{8})$/)]),
@@ -101,7 +101,7 @@ export class EditComponent implements OnInit {
             ?.setValidators(Validators.required);
           this.locationsForm?.get('ward_code')?.updateValueAndValidity();
         } else {
-          console.log(this.wards);
+          // console.log(this.wards);
           this.locationsForm.value.commune_id = '';
         }
       });
@@ -114,7 +114,7 @@ export class EditComponent implements OnInit {
         this._locaService.GetOneRecord(id).subscribe(
           (data) => {
             const locationData = data.payload;
-            console.log(locationData);
+            // console.log(locationData);
             locationData.is_main = locationData.is_main == true ? 1 : 0;
             locationData.status = locationData.status == true ? 1 : 0;
             // locationData.image = ' ';
@@ -181,7 +181,7 @@ export class EditComponent implements OnInit {
       }
       // Lưu trữ tệp hình ảnh và tiếp tục xử lý nếu tệp hợp lệ
       this.img = img;
-      console.log('Tệp hình ảnh hợp lệ.');
+      // console.log('Tệp hình ảnh hợp lệ.');
     } else {
       Swal.fire({
         icon: 'error',
@@ -199,14 +199,14 @@ export class EditComponent implements OnInit {
     if (this.locationsForm.value.imageUpdate) {
       // Nếu giá trị tồn tại (không phải null hoặc undefined)
       // Thực hiện các hành động cần thiết ở đây
-      console.log('Giá trị tồn tại:', this.locationsForm.value.imageUpdate);
+      // console.log('Giá trị tồn tại:', this.locationsForm.value.imageUpdate);
     } else {
       // Nếu giá trị không tồn tại (null hoặc undefined)
-      console.log('Giá trị không tồn tại hoặc là null/undefined.');
+      // console.log('Giá trị không tồn tại hoặc là null/undefined.');
     }
 
     if (this.locationsForm.valid) {
-      console.log(this.locationsForm.value);
+      // console.log(this.locationsForm.value);
       const formData = new FormData();
 
       const locationsData = this.locationsForm.value;
@@ -234,7 +234,7 @@ export class EditComponent implements OnInit {
             this.locationsForm.reset();
             this.showSuccessMessage('setting/locations');
           } else {
-            console.log(response);
+            // console.log(response);
             const errorMessages = [];
             if (response.meta && typeof response.meta === 'object') {
               for (const key in response.meta) {
@@ -251,7 +251,7 @@ export class EditComponent implements OnInit {
           }
         },
         (error) => {
-          console.log(error);
+          // console.log(error);
           Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
         }
       );

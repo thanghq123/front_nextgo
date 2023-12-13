@@ -54,11 +54,11 @@ export class CreateComponent implements OnInit {
   ) {
     this._supplier.GetData().subscribe((res: any) => {
       this.listSupplier = res.payload;
-      console.log(this.listSupplier);
+      // console.log(this.listSupplier);
     });
     this._product.GetData().subscribe((res: any) => {
       this.listProduct = res.payload;
-      console.log(this.listProduct);
+      // console.log(this.listProduct);
     });
 
     this._location.GetData().subscribe((res: any) => {
@@ -116,7 +116,7 @@ export class CreateComponent implements OnInit {
         this.inputSerach.reset();
       }
 
-      console.log(this.products);
+      // console.log(this.products);
     }
   }
 
@@ -145,7 +145,7 @@ export class CreateComponent implements OnInit {
     }, 0);
   }
   updateQuantity(array: any, id: number, newQuantity: any, name: string) {
-    console.log(name);
+    // console.log(name);
 
     const typeUpdate = name === 'quantity' ? 'quantity' : 'price';
     const resultType = name === 'quantity' ? 'price' : 'quantity';
@@ -153,7 +153,7 @@ export class CreateComponent implements OnInit {
       if (array[i].id === id) {
         array[i][typeUpdate] = newQuantity;
         array[i].result = newQuantity * array[i][resultType];
-        console.log(array[i]);
+        // console.log(array[i]);
 
         break;
       }
@@ -209,7 +209,7 @@ export class CreateComponent implements OnInit {
                 `../storage/import/detail/${response.payload}`,
               ]);
             } else {
-              console.log(response);
+              // console.log(response);
               const errorMessages = [];
               for (const key in response.meta.errors) {
                 const messages = response.meta.errors[key];
@@ -221,7 +221,7 @@ export class CreateComponent implements OnInit {
             }
           },
           (error) => {
-            console.log(error);
+            // console.log(error);
             Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
           }
         );

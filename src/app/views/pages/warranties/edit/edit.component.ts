@@ -26,7 +26,7 @@ export class EditComponent implements OnInit {
       const id = queryParams.get('id');
       if (id !== null) {
         this.id = id;
-       
+
         this.WarrantiesService.GetOneRecord(id).subscribe(data => {
           Swal.fire({
             toast: true,
@@ -63,7 +63,7 @@ export class EditComponent implements OnInit {
       updated_at: new Date().toISOString(),
       id : this.id
     };
-    
+
       this.WarrantiesService.update(dataToSend).subscribe(
         response => {
         if (response.status == true) {
@@ -84,7 +84,7 @@ export class EditComponent implements OnInit {
           });
           this.router.navigate(['/warranties/list'])
         } else {
-          console.log(response);
+          // console.log(response);
           const errorMessages = [];
           for (const key in response.meta.errors) {
             errorMessages.push(...response.meta.errors[key]);
@@ -127,6 +127,6 @@ export class EditComponent implements OnInit {
     }else {
       alert("Không để trống")
     }
-    
+
   }
 }

@@ -44,7 +44,7 @@ export class EditComponent implements OnInit {
       updated_at: new Date().toISOString(),
       id : this.id
     };
-    
+
       this.GroupCustomersService.update(dataToSend).subscribe(
         response => {
         if (response.status == true) {
@@ -64,7 +64,7 @@ export class EditComponent implements OnInit {
           });
           this.router.navigate(['/group_customers/list'])
         } else {
-          console.log(response);
+          // console.log(response);
           const errorMessages = [];
           for (const key in response.meta.errors) {
             errorMessages.push(...response.meta.errors[key]);
@@ -107,6 +107,6 @@ export class EditComponent implements OnInit {
     }else {
       alert("Không để trống")
     }
-    
+
   }
 }

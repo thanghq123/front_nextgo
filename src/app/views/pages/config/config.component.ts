@@ -59,7 +59,7 @@ export class ConfigComponent implements OnInit {
   } = {
     name: '',
     tel: '',
-    type: 0,
+    type: 1,
     pricing_id: '',
   };
 
@@ -79,7 +79,7 @@ export class ConfigComponent implements OnInit {
     tel: new FormControl('', [
       Validators.pattern(/^(03|05|07|08|09)+([0-9]{8})$/),
     ]),
-    email: new FormControl(''),
+    email: new FormControl('', Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)),
     business_field_code: new FormControl('', [Validators.required]),
     business_type: new FormControl(''),
     business_registration: new FormControl(''),
@@ -111,6 +111,14 @@ export class ConfigComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    this.getConfig();
+    this.onProvinceChange();
+    this.onDistrictChange();
+    this.getBusinessFields();
+    this.getPricing();
+
+
     this.AresService.getProvinces().subscribe((data: any) => {
       this.provinces =
         data.status != 'error'
@@ -144,19 +152,21 @@ export class ConfigComponent implements OnInit {
             : { id: 0, name: `${data.message}`, status: false };
         this.isWardDataLoaded = data.status != 'error' ? true : false;
         if (this.wards && this.wards.status != false) {
-          this.configForm?.get('ward_code')?.setValidators(Validators.required);
+          this.configForm
+            ?.get('ward_code')
+            ?.setValidators(Validators.required);
           this.configForm?.get('ward_code')?.updateValueAndValidity();
         } else {
-          console.log(this.wards);
+          // console.log(this.wards);
           this.configForm.value.ward_code = '';
         }
       });
 
-    this.getConfig();
 
-    this.getBusinessFields();
-    this.getPricing();
+
+
   }
+
 
   getBusinessFields() {
     this.businessFieldService.getBusinessFields().subscribe((response: any) => {
@@ -174,7 +184,7 @@ export class ConfigComponent implements OnInit {
     this.isLoading = true;
     this.configService.getConfig().subscribe((response: any) => {
       this.config = response.payload;
-      console.log(this.config);
+      // console.log(this.config);
       this.config.province_code = Number(this.config.province_code);
       this.config.district_code = Number(this.config.district_code);
       this.config.ward_code = Number(this.config.ward_code);
@@ -190,9 +200,9 @@ export class ConfigComponent implements OnInit {
         license_address: this.config.license_address,
         address_detail: this.config.address_detail,
       });
+
       this.isLoading = false;
-      this.onProvinceChange();
-      this.onDistrictChange();
+
     });
   }
 
@@ -207,6 +217,7 @@ export class ConfigComponent implements OnInit {
       Number(this.configForm.value.district_code)
     );
   }
+
 
   onSubmit() {
     this.errorMessages = [];
@@ -253,7 +264,7 @@ export class ConfigComponent implements OnInit {
             });
             this.router.navigate([`../setting/`]);
           } else {
-            console.log(response);
+            // console.log(response);
             const errorMessages = [];
             if (response.meta && typeof response.meta === 'object') {
               for (const key in response.meta.errors) {
@@ -270,7 +281,7 @@ export class ConfigComponent implements OnInit {
           }
         },
         (error) => {
-          console.log(error.error.meta);
+          // console.log(error.error.meta);
           const errorMessages = [];
           if (error.error.meta && typeof error.error.meta === 'object') {
             for (const key in error.error.meta.errors) {
@@ -303,7 +314,7 @@ export class ConfigComponent implements OnInit {
     this.modalService
       .open(content, {})
       .result.then((result) => {
-        console.log(result);
+        // console.log(result);
         if (result == 'by: save button') {
           const dataSend = {
             name: this.order.name,
@@ -313,7 +324,7 @@ export class ConfigComponent implements OnInit {
             tenant_id: this.tenant.id,
           };
 
-          console.log(dataSend);
+          // console.log(dataSend);
 
           if (
             dataSend.name &&
@@ -350,7 +361,7 @@ export class ConfigComponent implements OnInit {
                     window.location.reload();
                   }, 1200);
                 } else {
-                  console.log(response);
+                  // console.log(response);
                   const errorMessages = [];
                   for (const key in response.meta.errors) {
                     const messages = response.meta.errors[key];

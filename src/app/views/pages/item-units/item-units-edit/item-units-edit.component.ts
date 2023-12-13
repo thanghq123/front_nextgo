@@ -72,7 +72,7 @@ export class ItemUnitsEditComponent implements OnInit {
             });
             this._router.navigate(['/item-units/list']);
           } else {
-            console.log(response);
+            // console.log(response);
             const errorMessages = [];
             for (const key in response.meta.errors) {
               errorMessages.push(...response.meta.errors[key]);

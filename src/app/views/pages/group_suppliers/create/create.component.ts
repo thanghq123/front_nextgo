@@ -10,7 +10,7 @@ import { Router} from '@angular/router';
 })
 export class CreateComponent implements OnInit {
 
-  
+
   groupsSuppliersForm = new FormGroup({
     name: new FormControl('', Validators.required),
     description : new FormControl('')
@@ -52,7 +52,7 @@ export class CreateComponent implements OnInit {
                 errorMessages.push(...response.meta.errors[key]);
               }
               const message = errorMessages.join(' ');
-    
+
               Swal.fire({
                 toast: true,
                 position: 'top-end',
@@ -70,11 +70,11 @@ export class CreateComponent implements OnInit {
             }
           },
           (error) => {
-            console.log(error);
+            // console.log(error);
             Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
           }
         );
-      
+
     } else {
       alert('Không để trống');
     }

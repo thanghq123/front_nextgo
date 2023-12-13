@@ -46,13 +46,13 @@ export class CreateComponent implements OnInit {
               });
               this.router.navigate(['../group_customers/list']);
             } else {
-              console.log(response);
+              // console.log(response);
               const errorMessages = [];
               for (const key in response.meta.errors) {
                 errorMessages.push(...response.meta.errors[key]);
               }
               const message = errorMessages.join(' ');
-    
+
               Swal.fire({
                 toast: true,
                 position: 'top-end',
@@ -70,11 +70,11 @@ export class CreateComponent implements OnInit {
             }
           },
           (error) => {
-            console.log(error);
+            // console.log(error);
             Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
           }
         );
-      
+
     } else {
       alert('Không để trống');
     }

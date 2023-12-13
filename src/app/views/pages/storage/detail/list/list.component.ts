@@ -31,7 +31,7 @@ export class ListComponent implements OnInit {
       next: (res: any) => {
         if (res.status == true) {
           this.inventory = res.payload;
-          console.log(this.inventory);
+          // console.log(this.inventory);
         }
       },
     });
@@ -111,7 +111,7 @@ export class ListComponent implements OnInit {
   }
 
   refreshData(id: any): void {
-    console.log(id);
+    // console.log(id);
     this.isLoading = true;
     let dataSend = null;
     if (id != null) {
@@ -124,11 +124,11 @@ export class ListComponent implements OnInit {
         if (res.status == true) {
           this.inventoryStorageList = of(res.payload.data);
           this.isLoading = false;
-          console.log(res.payload);
+          // console.log(res.payload);
         }
       },
       error: (err: any) => {
-        console.log(err);
+        // console.log(err);
         Swal.fire('Lỗi!', 'Có lỗi xảy ra. Vui lòng liên hệ QTV.', 'error');
       },
     });
