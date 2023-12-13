@@ -187,7 +187,7 @@ export class ConfigComponent implements OnInit {
       this.config = response.payload;
       // console.log(this.config);
       console.log(response.payload);
-      console.log(this.configForm.value.province_code);
+    
       
       
       this.config.province_code = Number(this.config.province_code);
@@ -214,14 +214,16 @@ export class ConfigComponent implements OnInit {
   }
 
   onProvinceChange(): void {
+    console.log(this.config.province_code);
     this.provinceChangeSubject.next(
-      Number(this.config.province_code)
+      this.config.province_code
     );
   }
 
   onDistrictChange(): void {
+    console.log(this.config.district_code);
     this.districtChangeSubject.next(
-      Number(this.config.district_code)
+      Number(this.configForm.value.district_code)
     );
   }
 
