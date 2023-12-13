@@ -77,10 +77,10 @@ export class ListComponent implements OnInit {
       (response : any) => {
         this.isLoading = true;
         if(response.status == true){
-          this.ListsProducts =of(response.payload.data);
+          this.ListsProducts =of(response.payload);
           // console.log(this.ListsCategories);
           console.log(this.ListsProducts);
-         
+
           this.ListsProducts.subscribe((categories) => {
             setTimeout(() => {
                 const dataTable = new DataTable('#dataTableExamples');
@@ -89,9 +89,9 @@ export class ListComponent implements OnInit {
                 dataTable.on('datatable.init', () => {
                     this.addDeleteEventHandlers();
                 });
-              
+
             }, 0);
-        
+
         });
 
         }

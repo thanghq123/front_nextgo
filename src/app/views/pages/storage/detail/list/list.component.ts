@@ -122,7 +122,7 @@ export class ListComponent implements OnInit {
     this._storageService.getAllVariation(dataSend).subscribe({
       next: (res: any) => {
         if (res.status == true) {
-          this.inventoryStorageList = of(res.payload.data);
+          this.inventoryStorageList = of(res.payload);
           this.isLoading = false;
           // console.log(res.payload);
         }

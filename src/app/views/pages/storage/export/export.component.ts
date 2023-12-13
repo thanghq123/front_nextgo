@@ -105,7 +105,7 @@ export class ExportComponent implements OnInit {
       next: (res: any) => {
         // console.log(res.status);
         if(res.status == true){
-          this.listStorageExport = of(res.payload.data) ;
+          this.listStorageExport = of(res.payload) ;
           this.isLoading = false;
           // console.log(res.payload);
           this.listStorageExport.subscribe(

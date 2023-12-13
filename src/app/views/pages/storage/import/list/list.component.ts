@@ -99,7 +99,7 @@ export class ListComponent implements OnInit, AfterViewInit {
       next: (res: any) => {
         // console.log(res.status);
         if(res.status == true){
-          this.listStorageImport = of(res.payload.data) ;
+          this.listStorageImport = of(res.payload) ;
           this.isLoading = false;
           // console.log(res.payload);
           this.listStorageImport.subscribe(
