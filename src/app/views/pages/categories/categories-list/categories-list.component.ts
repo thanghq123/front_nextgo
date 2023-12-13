@@ -13,28 +13,53 @@ import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 })
 export class CategoriesListComponent implements OnInit {
   ListsCategories: Observable<Categories[]>;
-  currentPage: number = 1;
+  // currentPage: number;
   isLoading = false;
   dataTable: DataTable | null = null;
-  totalPage: number;
+
+  currentPage: number = 1; // Trang hiện tại
+  pages: number[] = [];
+  lastPage: number;
 
   constructor(private categoriesService: CategoriesService) {
     this.ListsCategories = new Observable();
   }
 
   ngOnInit(): void {
-    this.refreshCategories(true);
+    this.refreshCategories();
+    this.currentPage = 1;
+    this.calculatePages();
   }
 
-  // ngAfterViewInit(): void {
-  // const dataTableElement = document.getElementById('dataTableExample');
-  // if (dataTableElement) {
-  //   const db = new DataTable(dataTableElement);
-  //   db.on('datatable.init', () => {
-  //     this.addDeleteEventHandlers();
-  //   });
-  // }
-  // }
+  calculatePages() {
+    this.pages = [];
+    const totalPages = 4;
+    for (let i = 1; i <= totalPages; i++) {
+      this.pages.push(i);
+    }
+    console.log(this.pages);
+  }
+
+  setPage(page: number) {
+    if (page >= 1 && page <= this.pages.length) {
+      this.currentPage = page;
+      this.refreshCategories()
+    }
+  }
+
+  nextPage() {
+    if (this.currentPage < this.pages.length) {
+      this.currentPage++;
+      this.refreshCategories()
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.refreshCategories()
+    }
+  }
 
   addDeleteEventHandlers(): void {
     const deleteButtons = document.getElementsByClassName('btn-danger');
@@ -45,16 +70,6 @@ export class CategoriesListComponent implements OnInit {
       });
     });
   }
-
-  changePage(page: number) {
-    // console.log(page);
-
-    const oldPage = page;
-    if (page == oldPage) {
-    }
-  }
-
-  // ...
 
   deleteCategory(id: number) {
     Swal.fire({
@@ -71,9 +86,7 @@ export class CategoriesListComponent implements OnInit {
         this.categoriesService.delete(id).subscribe(
           (response) => {
             Swal.fire('Đã xóa!', 'Danh mục của bạn đã được xóa.', 'success');
-            // Navigate to the list after successful deletion
-            // location.reload();
-            this.refreshCategories(false);
+            this.refreshCategories();
           },
           (error) => {
             if (error.success == false) {
@@ -84,25 +97,19 @@ export class CategoriesListComponent implements OnInit {
       }
     });
   }
-  pageChange(page: number) {
-    this.refreshCategories(false);
-  }
 
-  refreshCategories(status: boolean): void {
+  refreshCategories(): void {
     this.isLoading = true;
     this.categoriesService.GetDataPanigate(this.currentPage).subscribe(
       (response: any) => {
         if (response.status == true) {
           this.ListsCategories = of(response.payload.data);
           this.isLoading = false;
-          this.totalPage = response.payload.total;
-          // console.log(this.totalPage);
-
+          this.lastPage = response.payload.last_page;
+          // console.log(response.payload);
           if (this.dataTable) {
             this.dataTable.destroy();
           }
-
-          // console.log(this.ListsCategories);
           this.ListsCategories.subscribe((categories) => {
             setTimeout(() => {
               let options = {
@@ -110,10 +117,8 @@ export class CategoriesListComponent implements OnInit {
               };
               const dataTableElement =
                 document.getElementById('dataTableExample');
-              // if ((status = true)) {
                 if (dataTableElement) {
                   const db = new DataTable(dataTableElement, options);
-
                   db.on('datatable.init', () => {
                     db.destroy();
                     this.addDeleteEventHandlers();
@@ -122,10 +127,8 @@ export class CategoriesListComponent implements OnInit {
             }, 0);
           });
         }
-        // Navigate to the list after successful deletion
       },
       (error) => {
-        // console.log(error);
         Swal.fire('Lỗi!', 'Có lỗi xảy ra khi xóa danh mục.', 'error');
       }
     );
