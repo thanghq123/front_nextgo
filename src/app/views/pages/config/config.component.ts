@@ -120,6 +120,7 @@ export class ConfigComponent implements OnInit {
 
 
     this.AresService.getProvinces().subscribe((data: any) => {
+      console.log(data);
       this.provinces =
         data.status != 'error'
           ? data.results
