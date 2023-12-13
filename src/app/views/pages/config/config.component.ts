@@ -150,6 +150,7 @@ export class ConfigComponent implements OnInit {
           data.status != 'error'
             ? data.results
             : { id: 0, name: `${data.message}`, status: false };
+            console.log(data);
         this.isWardDataLoaded = data.status != 'error' ? true : false;
         if (this.wards && this.wards.status != false) {
           this.configForm
