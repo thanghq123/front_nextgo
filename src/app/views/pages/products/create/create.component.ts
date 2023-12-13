@@ -299,6 +299,50 @@ export class CreateComponent implements OnInit {
     this.simpleItems[indexValue].attribute_values.splice(index, 1);
   }
 
+  checkValueAttribite(e : any){
+
+  }
+
+  checkDataModalTarget(e: any) {
+    console.log(e.target.value);
+    if (this.checkValueInput(e.target.value) == false) {
+      e.target.value = '';
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        title: 'Lỗi!',
+        text: 'Vui lòng không nhập kí tự đặc biệt!',
+        icon: 'error',
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.addEventListener('mouseenter', Swal.stopTimer);
+          toast.addEventListener('mouseleave', Swal.resumeTimer);
+        },
+      });
+    }
+  }
+
+  checkValueInput(value: string) {
+    // Sử dụng biểu thức chính quy để kiểm tra chuỗi
+    var pattern = /^[a-zA-Z0-9]+$/;
+  
+    // Kiểm tra xem chuỗi có chứa ký tự không mong muốn hay không
+    if (!pattern.test(value)) {
+      return false;
+    }
+  
+    // Kiểm tra xem chuỗi có chứa ký tự -.,/_=... hay không
+    var unwantedChars = /[-.,\/_=]+/;
+    if (unwantedChars.test(value)) {
+      return false;
+    }
+  
+    return true;
+  }
+ 
+
   CheckStatusform() {
     this.statusFormType = true;
     let nameAttributeTracker: { [key: string]: boolean } = {};
