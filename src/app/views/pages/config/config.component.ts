@@ -187,12 +187,12 @@ export class ConfigComponent implements OnInit {
       this.config = response.payload;
       // console.log(this.config);
       console.log(response.payload);
+      console.log(this.configForm.value.province_code);
+      
       
       this.config.province_code = Number(this.config.province_code);
       this.config.district_code = Number(this.config.district_code);
       this.config.ward_code = Number(this.config.ward_code);
-      this.onProvinceChange();
-      this.onDistrictChange();
       this.configForm.patchValue({
         ...this.config,
         business_name: this.config.business_name,
@@ -205,6 +205,8 @@ export class ConfigComponent implements OnInit {
         license_address: this.config.license_address,
         address_detail: this.config.address_detail,
       });
+      this.onProvinceChange();
+      this.onDistrictChange();
     
       this.isLoading = false;
 
@@ -213,13 +215,13 @@ export class ConfigComponent implements OnInit {
 
   onProvinceChange(): void {
     this.provinceChangeSubject.next(
-      Number(this.configForm.value.province_code)
+      Number(this.config.province_code)
     );
   }
 
   onDistrictChange(): void {
     this.districtChangeSubject.next(
-      Number(this.configForm.value.district_code)
+      Number(this.config.district_code)
     );
   }
 
