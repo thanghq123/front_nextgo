@@ -107,7 +107,7 @@ export class BrandsListComponent implements OnInit, AfterViewInit {
         // console.log(res.status);
         if(res.status == true){
           this.listBrands = of(res.payload.data) ;
-          console.log(res.payload.data);
+          // console.log(res.payload.data);
           this.isLoading = false;
           // console.log(this.listBrands);
           this.listBrands.subscribe(
@@ -123,7 +123,7 @@ export class BrandsListComponent implements OnInit, AfterViewInit {
         }
       },
       error: (err: any) => {
-        console.log(err);
+        // console.log(err);
         Swal.fire('Lỗi!', 'Có lỗi xảy ra.', 'error');
       }
     })

@@ -52,7 +52,7 @@ export class CreateComponent implements OnInit {
 
   ngOnInit(): void {}
   onInventoryOut() {
-    console.log(this.codeInventoryOut);
+    // console.log(this.codeInventoryOut);
     this.products = [];
     if (this.codeInventoryOut != null) {
       const dataSend = {
@@ -60,7 +60,7 @@ export class CreateComponent implements OnInit {
       };
       this._storage.getAllVariation(dataSend).subscribe((res: any) => {
         this.listProduct = res.payload.data;
-        console.log(this.listProduct);
+        // console.log(this.listProduct);
       });
 
     }else{
@@ -118,7 +118,7 @@ export class CreateComponent implements OnInit {
         this.inputSerach.reset();
       }
 
-      console.log(this.products);
+      // console.log(this.products);
     }
   }
   resultTotal(e: any) {
@@ -130,7 +130,7 @@ export class CreateComponent implements OnInit {
     );
   }
   updateQuantity(array: any, id: number, newQuantity: any, name: string) {
-    console.log(name);
+    // console.log(name);
 
     const typeUpdate = name === 'quantity' ? 'quantity' : 'price';
     const resultType = name === 'quantity' ? 'price' : 'quantity';
@@ -138,7 +138,7 @@ export class CreateComponent implements OnInit {
       if (array[i].id === id) {
         array[i][typeUpdate] = newQuantity;
         array[i].result = newQuantity * array[i][resultType];
-        console.log(array[i]);
+        // console.log(array[i]);
         break;
       }
     }
@@ -163,7 +163,7 @@ export class CreateComponent implements OnInit {
           JSON.stringify(this.products)
         ),
       };
-      console.log(dataSend);
+      // console.log(dataSend);
       this._storage.createTrans(dataSend).subscribe(
         (response: any) => {
           if (response.status == true) {
@@ -187,7 +187,7 @@ export class CreateComponent implements OnInit {
               `../storage/trans/list`,
             ]);
           } else {
-            console.log(response);
+            // console.log(response);
             const errorMessages = [];
             if (response.meta && typeof response.meta === 'object') {
               for (const key in response.meta.errors) {
@@ -204,7 +204,7 @@ export class CreateComponent implements OnInit {
           }
         },
         (error) => {
-          console.log(error);
+          // console.log(error);
           Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
         }
       );

@@ -53,13 +53,13 @@ export class CreateComponent implements OnInit {
               });
               this.router.navigate(['../warranties/list']);
             } else {
-              console.log(response);
+              // console.log(response);
               const errorMessages = [];
               for (const key in response.meta.errors) {
                 errorMessages.push(...response.meta.errors[key]);
               }
               const message = errorMessages.join(' ');
-    
+
               Swal.fire({
                 toast: true,
                 position: 'top-end',
@@ -93,10 +93,10 @@ export class CreateComponent implements OnInit {
                 },
               });
             }
-           
+
           }
         );
-      
+
     } else {
       alert('Không để trống');
     }

@@ -68,7 +68,7 @@ export class EditCategoriesComponent implements OnInit {
             });
             this.router.navigate(['/categories/list']);
           } else {
-            console.log(response);
+            // console.log(response);
             const errorMessages = [];
             for (const key in response.meta.errors) {
               errorMessages.push(...response.meta.errors[key]);

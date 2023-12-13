@@ -332,7 +332,7 @@ export class EditComponent implements OnInit {
     this.modalService
       .open(content, { size: 'xl' })
       .result.then((result) => {
-        console.log('Modal closed' + result);
+        // console.log('Modal closed' + result);
       })
       .catch((res) => { });
   }
@@ -345,7 +345,7 @@ export class EditComponent implements OnInit {
       form: JSON.parse(JSON.stringify(this.oldForm)),
       default: 0,
     };
-    console.log(dataSend);
+    // console.log(dataSend);
 
     this._printService.update(dataSend).subscribe(
       (response: any) => {
@@ -366,7 +366,7 @@ export class EditComponent implements OnInit {
           });
           this._router.navigate(['setting/print']);
         } else {
-          console.log(response);
+          // console.log(response);
           const errorMessages = [];
           for (const key in response.meta.errors) {
             errorMessages.push(...response.meta.errors[key]);

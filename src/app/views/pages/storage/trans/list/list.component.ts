@@ -97,7 +97,7 @@ export class ListComponent implements OnInit, AfterViewInit {
         if(res.status == true){
           this.listStorageTrans = of(res.payload) ;
           this.isLoading = false;
-          console.log(res.payload);
+          // console.log(res.payload);
           this.listStorageTrans.subscribe(
             (res)=> {
               setTimeout(() => {
@@ -112,7 +112,7 @@ export class ListComponent implements OnInit, AfterViewInit {
         }
       },
       error: (err: any) => {
-        console.log(err);
+        // console.log(err);
         Swal.fire('Lỗi!', 'Có lỗi xảy ra. Vui lòng liên hệ QTV.', 'error');
       }
     })

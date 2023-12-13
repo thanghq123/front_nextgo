@@ -41,7 +41,7 @@ export class ListRepayComponent implements OnInit {
         if(res.status == true){
           this.listRepay = of(res.payload.data) ;
           const payment: any[] = res.payload.data
-          console.log(res.payload.data);
+          // console.log(res.payload.data);
           this.totalRevenue = 0;
           if(res.payload.data){
             payment.forEach((payment) => {
@@ -66,7 +66,7 @@ export class ListRepayComponent implements OnInit {
         }
       },
       error: (err: any) => {
-        console.log(err);
+        // console.log(err);
         Swal.fire('Lỗi!', 'Có lỗi xảy ra.', 'error');
       }
     })

@@ -41,7 +41,7 @@ export class CreateRecoveryComponent implements OnInit {
   ngOnInit(): void {
     this._customerService.getCustomer().subscribe((res: any) => {
       this.listCustomer = res.payload;
-      console.log(this.listCustomer);
+      // console.log(this.listCustomer);
     });
   }
   searchTerm: any[] = [];
@@ -75,7 +75,7 @@ export class CreateRecoveryComponent implements OnInit {
         note: String(this.recoveryForm.value.note),
         status: Number(1),
       };
-      console.log(dataSend);
+      // console.log(dataSend);
       this._debtService.createDebts(dataSend).subscribe(
         (response: any) => {
           if (response.status == true) {
@@ -96,7 +96,7 @@ export class CreateRecoveryComponent implements OnInit {
             });
             this.router.navigate(['debts/recovery/list']);
           } else {
-            console.log(response);
+            // console.log(response);
             const errorMessages = [];
             if (response.meta && typeof response.meta === 'object') {
               for (const key in response.meta.errors) {
@@ -113,7 +113,7 @@ export class CreateRecoveryComponent implements OnInit {
           }
         },
         (error: any) => {
-          console.log(error);
+          // console.log(error);
           Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
         }
       );

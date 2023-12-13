@@ -32,7 +32,7 @@ export class EditComponent implements OnInit {
     province_code: new FormControl(''),
     district_code: new FormControl(''),
     ward_code: new FormControl(''),
-    email: new FormControl(''),
+    email: new FormControl('', Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)),
     tel: new FormControl('', [Validators.required, Validators.pattern(/^(03|05|07|08|09)+([0-9]{8})$/)]),
     status: new FormControl(1),
     address_detail: new FormControl(''),
@@ -102,7 +102,7 @@ export class EditComponent implements OnInit {
             ?.setValidators(Validators.required);
           this.customersForm?.get('ward_code')?.updateValueAndValidity();
         } else {
-          console.log(this.wards);
+          // console.log(this.wards);
           this.customersForm.value.ward_code = '';
         }
       });
@@ -173,7 +173,7 @@ export class EditComponent implements OnInit {
         updated_at: new Date().toISOString(),
         id: this.id,
       };
-      console.log(dataToSend);
+      // console.log(dataToSend);
 
 
       this.CustomersService.update(dataToSend).subscribe(
@@ -196,7 +196,7 @@ export class EditComponent implements OnInit {
             });
             this.router.navigate(['../customers/list']);
           } else {
-            console.log(response);
+            // console.log(response);
             const errorMessages = [];
             if (response.meta && typeof response.meta === 'object') {
               for (const key in response.meta.errors) {

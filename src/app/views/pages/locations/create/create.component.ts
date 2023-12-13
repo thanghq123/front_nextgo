@@ -36,7 +36,7 @@ export class CreateComponent implements OnInit {
     image: new FormControl(''),
     description: new FormControl(''),
     tel: new FormControl('', [Validators.required, Validators.pattern(/^(03|05|07|08|09)+([0-9]{8})$/)]),
-    email: new FormControl(''),
+    email: new FormControl('', Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)),
 
     province_code: new FormControl(''),
     district_code: new FormControl(''),
@@ -159,7 +159,7 @@ export class CreateComponent implements OnInit {
 
       // Lưu trữ tệp hình ảnh và tiếp tục xử lý nếu tệp hợp lệ
       this.img = img;
-      console.log('Tệp hình ảnh hợp lệ.');
+      // console.log('Tệp hình ảnh hợp lệ.');
     } else {
       Swal.fire({
         icon: 'error',
@@ -187,7 +187,7 @@ export class CreateComponent implements OnInit {
       const formData = new FormData();
 
       const locationsData = this.locationsForm.value;
-      console.log(locationsData);
+      // console.log(locationsData);
 
       formData.append('domain_name', String(this.domain_name));
       if (this.locationsForm.value.image) {
@@ -221,7 +221,7 @@ export class CreateComponent implements OnInit {
       );
       formData.append('ward_code', String(locationsData.ward_code));
       formData.append('description', String(locationsData.description));
-      console.log(formData.get('address_detail'));
+      // console.log(formData.get('address_detail'));
 
       this._locaService.createFormData(formData).subscribe(
         (response: any) => {
@@ -243,7 +243,7 @@ export class CreateComponent implements OnInit {
             });
             this.router.navigate(['../setting/locations']);
           } else {
-            console.log(response);
+            // console.log(response);
             const errorMessages = [];
             if (response.meta && typeof response.meta === 'object') {
               for (const key in response.meta) {
@@ -260,7 +260,7 @@ export class CreateComponent implements OnInit {
           }
         },
         (error: any) => {
-          console.log(error);
+          // console.log(error);
           Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
         }
       );

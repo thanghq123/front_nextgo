@@ -115,7 +115,7 @@ export class ListComponent implements OnInit, AfterViewInit {
         }
       },
       error: (err: any) => {
-        console.log(err);
+        // console.log(err);
         Swal.fire('Lỗi!', 'Có lỗi xảy ra. Vui lòng liên hệ QTV.', 'error');
       }
     })

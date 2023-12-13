@@ -90,7 +90,9 @@ export class ListComponent implements OnInit {
    this.CustomersService.GetData().subscribe(
       (response : any) => {
         if(response.status == true){
-          this.Customers =of(response.payload);
+          this.Customers =of(response.payload.data);
+          // console.log(response.payload);
+
           this.Customers.subscribe((categories) => {
             setTimeout(() => {
                 const dataTable = new DataTable('#dataTableExample');

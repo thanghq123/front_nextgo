@@ -22,7 +22,7 @@ export class EditComponent implements OnInit {
 
   userForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
-    email: new FormControl('', [Validators.required, Validators.email]),
+    email: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]),
     tel: new FormControl('', [Validators.required, Validators.pattern(/^(03|05|07|08|09)+([0-9]{8})$/)]),
     password: new FormControl(''),
     location_id: new FormControl('', [Validators.required]),
@@ -78,7 +78,7 @@ export class EditComponent implements OnInit {
     this.isLoading = true;
     this.userService.GetOneRecord(this.id).subscribe((response: any) => {
       this.user = response.payload;
-      console.log(response.payload);
+      // console.log(response.payload);
 
       this.userForm.patchValue({
         ...response.payload,
@@ -109,6 +109,7 @@ export class EditComponent implements OnInit {
         password: String(data.password),
         location_id: String(data.location_id),
         role_id: String(data.role_id),
+        status: Number(data.status)
       }
 
       this.userService.update(formData).subscribe(
@@ -149,7 +150,7 @@ export class EditComponent implements OnInit {
           }
         },
         (error) => {
-          console.log(error);
+          // console.log(error);
           Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
         }
       );

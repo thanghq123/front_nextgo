@@ -67,7 +67,7 @@ export class EditComponent implements OnInit {
             });
             this.router.navigate(['/group_suppliers/list']);
           } else {
-            console.log(response);
+            // console.log(response);
             const errorMessages = [];
             for (const key in response.meta.errors) {
               errorMessages.push(...response.meta.errors[key]);

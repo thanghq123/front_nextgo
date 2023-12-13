@@ -35,7 +35,7 @@ export class ListRecoveryComponent implements OnInit{
 
   openBasicModal(content: TemplateRef<any>) {
     this.modalService.open(content, {}).result.then((result) => {
-      console.log(result);
+      // console.log(result);
 
       this.basicModalCloseResult = "Modal closed" + result
     }).catch((res) => {});
@@ -49,7 +49,7 @@ export class ListRecoveryComponent implements OnInit{
         if(res.status == true){
           this.listRecovery = of(res.payload.data) ;
           const payment: any[] = res.payload.data
-          console.log(res.payload.data);
+          // console.log(res.payload.data);
           this.totalRevenue = 0;
           if(res.payload.data){
             payment.forEach((payment) => {
@@ -74,7 +74,7 @@ export class ListRecoveryComponent implements OnInit{
         }
       },
       error: (err: any) => {
-        console.log(err);
+        // console.log(err);
         Swal.fire('Lỗi!', 'Có lỗi xảy ra.', 'error');
       }
     })

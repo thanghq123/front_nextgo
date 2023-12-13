@@ -225,7 +225,7 @@
               <div id="input-group-1" role="group" class="form-group">
                 <!---->
                 <div><label>Quận/Huyện</label>
-                  <ng-select [searchable]="true" (change)="onDistrictChange()" formControlName="district_code"
+                  <ng-select [searchable]="true" (change)="onDistrictChange()" formControlName="district_code" [(ngModel)]="config.district_code"
                     placeholder="Chọn Tỉnh">
                     <ng-option *ngFor="let item of districts" [value]="item.id">{{item.name}}</ng-option>
                 </ng-select>
@@ -362,7 +362,7 @@
     </div>
     <div class="row mb-3">
       <div class="col-md-12">
-        <label class="form-label">Loại yêu cầu hỗ trọ: <span class="text-danger">(*)</span></label>
+        <label class="form-label">Loại yêu cầu hỗ trợ: <span class="text-danger">(*)</span></label>
         <ng-select [searchable]="true" placeholder="Loại yêu cầu hỗ trọ" [(ngModel)]="order.type">
           <ng-option *ngFor="let item of types" [value]="item.value">{{item.name}}</ng-option>
         </ng-select>

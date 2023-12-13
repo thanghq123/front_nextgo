@@ -66,7 +66,7 @@ export class EditComponent implements OnInit {
         this.isLoading = true;
         this._storage.getAllInventory(id).subscribe(
           (data: any) => {
-            console.log(data);
+            // console.log(data);
             this.variation = data.payload;
             this.detailForm.patchValue(data.payload);
             this.isLoading = false;
@@ -83,7 +83,7 @@ export class EditComponent implements OnInit {
 
   calculator(adjust: number, quantity: number) {
     const reason = Number(this.detailForm.value.reason);
-    console.log(adjust + ' _ ' + quantity);
+    // console.log(adjust + ' _ ' + quantity);
     if (adjust == undefined && quantity == undefined) {
       return this.result = 0;
     }
@@ -145,9 +145,9 @@ export class EditComponent implements OnInit {
         quantity: quantity_edit,
         batch_id: this.variation.batch_id
       }
-      console.log(dataSend);
+      // console.log(dataSend);
       const inventory_id = this.variation.inventory_id;
-      console.log(inventory_id);
+      // console.log(inventory_id);
 
       if(inventory_id != '' || inventory_id != undefined){
         this._storage.updateQuantity(dataSend, inventory_id).subscribe(
@@ -169,7 +169,7 @@ export class EditComponent implements OnInit {
               });
               this._router.navigate(['/storage/detail/list']);
             } else {
-              console.log(response);
+              // console.log(response);
               const errorMessages = [];
               if (response.meta && typeof response.meta === 'object') {
                 for (const key in response.meta.errors) {

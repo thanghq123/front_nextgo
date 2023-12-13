@@ -44,7 +44,7 @@ export class BrandsCreateComponent implements OnInit {
             });
             this._router.navigate(['../brands/list']);
           } else {
-            console.log(response);
+            // console.log(response);
             const errorMessages = [];
             for (const key in response.meta.errors) {
               errorMessages.push(...response.meta.errors[key]);
@@ -88,7 +88,7 @@ export class BrandsCreateComponent implements OnInit {
         }
       );
     } else {
-      console.log("Error create brand!");
+      // console.log("Error create brand!");
     }
   }
 }
