@@ -84,15 +84,10 @@ export class DetailComponent implements OnInit {
           if (submitBtn) {
             submitBtn.setAttribute('disabled', 'disabled');
           }
-          // const dataSend = {
-          //   inventory_transaction_id: String(this.id),
-          // }
-          // console.log(dataSend);
           const dataSend = {
             id: this.id,
             tranType: 2
           }
-          // console.log(dataSend);
 
           this._storage.update(dataSend).subscribe(
             (response: any) => {
@@ -146,18 +141,25 @@ export class DetailComponent implements OnInit {
       confirmButtonText: 'Có, tiến hành!',
     }).then((result) => {
       if (result.isConfirmed) {
-        this._storage.cancel(this.id).subscribe((res) => {
+        const dataSend = {
+          trans_type: 2,
+        }
+        this._storage.cancel(this.id, dataSend).subscribe((res) => {
           if (res.status == true) {
             this.storageTransForm.reset();
             this.showSuccessMessage('storage/trans');
           } else {
-            // console.log(res);
             const errorMessages = [];
-            for (const key in res.meta.errors) {
-              const messages = res.meta.errors[key];
-              for (const message of messages) {
-                errorMessages.push(`${message}`);
+            if (res.meta && typeof res.meta === 'object') {
+              for (const key in res.meta) {
+                // errorMessages.push(`${response.meta}`);
+                const messages = res.meta[key];
+                for (const message of messages) {
+                  errorMessages.push(`${key}: ${message}`);
+                }
               }
+            } else {
+              errorMessages.push(`${res.meta}`);
             }
             this.showNextMessage(errorMessages);
           }

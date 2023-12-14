@@ -36,10 +36,10 @@ export class StorageImportService extends CRUDServiceService<any> {
     );
   }
 
-  cancel(id: string): Observable<any> {
+  cancel(id: string, data: any): Observable<any> {
     return this.http.post(
       `${this.apiUrl}/import/cancel/${id}`,
-      this.dataService.handleData(),this.header
+      this.dataService.handleData(data),this.header
     );
   }
 

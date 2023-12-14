@@ -62,7 +62,8 @@ export class ListComponent implements OnInit, AfterViewInit {
       if (result.isConfirmed) {
         // If confirmed, delete the category
         this._locaService.delete(id).subscribe(
-          (response) => {
+          (response: any) => {
+            if(response.status == true){
             Swal.fire({
               toast: true,
               position: "top-end",
@@ -78,9 +79,24 @@ export class ListComponent implements OnInit, AfterViewInit {
               },
             });
             // Navigate to the list after successful deletion
-            setTimeout(() => {
-              location.reload();
-            }, 1000);
+            // setTimeout(() => {
+            //   location.reload();
+            // }, 1000);
+          }else{
+            const errorMessages = [];
+            if (response.meta && typeof response.meta === 'object') {
+              for (const key in response.meta.errors) {
+                // errorMessages.push(`${response.meta}`);
+                const messages = response.meta.errors[key];
+                for (const message of messages) {
+                  errorMessages.push(`${key}: ${message}`);
+                }
+              }
+            } else {
+              errorMessages.push(`${response.meta}`);
+            }
+            this.showNextMessage(errorMessages);
+          }
           },
           (error) => {
             if(error.success == false){
@@ -123,6 +139,29 @@ export class ListComponent implements OnInit, AfterViewInit {
         Swal.fire('Lỗi!', 'Có lỗi xảy ra. Vui lòng liên hệ QTV.', 'error');
       }
     })
+  }
+
+  showNextMessage(errorMessages: any) {
+    if (errorMessages.length > 0) {
+      const message = errorMessages.shift();
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        title: 'Thất bại!',
+        text: message,
+        icon: 'error',
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.addEventListener('mouseenter', Swal.stopTimer);
+          toast.addEventListener('mouseleave', Swal.resumeTimer);
+        },
+        didClose: () => {
+          this.showNextMessage(errorMessages);
+        },
+      });
+    }
   }
 
 }
