@@ -79,9 +79,9 @@ export class ListComponent implements OnInit, AfterViewInit {
               },
             });
             // Navigate to the list after successful deletion
-            // setTimeout(() => {
-            //   location.reload();
-            // }, 1000);
+            setTimeout(() => {
+              location.reload();
+            }, 1000);
           }else{
             const errorMessages = [];
             if (response.meta && typeof response.meta === 'object') {

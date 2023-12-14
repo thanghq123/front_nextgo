@@ -70,8 +70,8 @@ export class CreateComponent implements OnInit {
       {id: 1, name: 'Hoạt động'},
     ];
     this.is_main = [
-      {id: 0, name: 'Chi nhánh mặc định'},
-      {id: 1, name: 'Chi nhánh phụ'},
+      {id: 1, name: 'Chi nhánh mặc định'},
+      {id: 0, name: 'Chi nhánh phụ'},
     ];
     this.AresService.getProvinces().subscribe((data: any) => {
       this.provinces =
