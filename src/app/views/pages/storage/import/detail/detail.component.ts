@@ -184,15 +184,19 @@ export class DetailComponent implements OnInit {
             this.storageConfirmForm.reset();
             this.showSuccessMessage('storage/import');
           } else {
-            // console.log(res);
             const errorMessages = [];
-            for (const key in res.meta.errors) {
-              const messages = res.meta.errors[key];
-              for (const message of messages) {
-                errorMessages.push(`${message}`);
-              }
-            }
-            this.showNextMessage(errorMessages);
+                if (res.meta && typeof res.meta === 'object') {
+                  for (const key in res.meta) {
+                    // errorMessages.push(`${response.meta}`);
+                    const messages = res.meta[key];
+                    for (const message of messages) {
+                      errorMessages.push(`${key}: ${message}`);
+                    }
+                  }
+                } else {
+                  errorMessages.push(`${res.meta}`);
+                }
+                this.showNextMessage(errorMessages);
           }
         });
       }

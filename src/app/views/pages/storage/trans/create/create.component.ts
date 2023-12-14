@@ -107,8 +107,10 @@ export class CreateComponent implements OnInit {
     x.product_name_variation;
 
   searchProduct() {
-    if(this.input.quantity <= 0){
-      this.showNextMessage(['Sản phẩm này số lượng đang bằng 0!'])
+    console.log(this.input);
+
+    if (this.input && (this.input.quantity === 0 || !('quantity' in this.input))) {
+      this.showNextMessage(['Sản phẩm này có số lượng bằng 0 hoặc không có số lượng!']);
     }
     if (this.input != '' && this.input.id != undefined && this.input.quantity > 0) {
       // Kiểm tra xem sản phẩm vừa nhập có trùng với sản phẩm nào trong this.products không
@@ -136,7 +138,7 @@ export class CreateComponent implements OnInit {
 
       // console.log(this.products);
     }else{
-      this.showNextMessage(['Vui lòng chọn kho xuất và kho nhập']);
+      this.showNextMessage(['Vui lòng kiểm tra lại tồn kho sản phẩm tại kho xuất']);
     }
   }
 
@@ -242,7 +244,7 @@ export class CreateComponent implements OnInit {
             }
           },
           (error) => {
-            // if (submitBtn) 
+            // if (submitBtn)
             //   submitBtn.removeAttribute('disabled');
             // }
             // console.log(error);
