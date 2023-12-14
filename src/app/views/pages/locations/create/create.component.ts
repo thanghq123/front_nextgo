@@ -37,7 +37,7 @@ export class CreateComponent implements OnInit {
     image: new FormControl(''),
     description: new FormControl(''),
     tel: new FormControl('', [Validators.required, Validators.pattern(/^(03|05|07|08|09)+([0-9]{8})$/)]),
-    email: new FormControl('', Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)),
+    email: new FormControl('', Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$/g)),
 
     province_code: new FormControl(''),
     district_code: new FormControl(''),

@@ -250,6 +250,13 @@ export class CreateComponent implements OnInit {
     }
   }
 
+  onKeyDown(event: KeyboardEvent): void {
+    if (event.key === 'Enter') {
+      event.preventDefault(); // Ngăn chặn hành động mặc định của nút Enter
+      // Bạn có thể thêm xử lý khác ở đây nếu cần
+    }
+  }
+
   showNextMessage(errorMessages: any) {
     if (errorMessages.length > 0) {
       const message = errorMessages.shift();

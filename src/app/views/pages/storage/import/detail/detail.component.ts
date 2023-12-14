@@ -123,18 +123,36 @@ export class DetailComponent implements OnInit {
                 if (submitBtn) {
                   submitBtn.removeAttribute('disabled');
                 }
-                // console.log(response);
+                console.log(response);
                 const errorMessages = [];
-                for (const key in response.meta.errors) {
-                  const messages = response.meta.errors[key];
-                  for (const message of messages) {
-                    errorMessages.push(`${message}`);
+                if (response.meta && typeof response.meta === 'object') {
+                  for (const key in response.meta) {
+                    // errorMessages.push(`${response.meta}`);
+                    const messages = response.meta[key];
+                    for (const message of messages) {
+                      errorMessages.push(`${key}: ${message}`);
+                    }
                   }
+                } else {
+                  errorMessages.push(`${response.meta}`);
                 }
                 this.showNextMessage(errorMessages);
               }
             },
             (error) => {
+              const errorMessages = [];
+            if (error.meta && typeof error.meta === 'object') {
+              for (const key in error.meta) {
+                // errorMessages.push(`${response.meta}`);
+                const messages = error.meta[key];
+                for (const message of messages) {
+                  errorMessages.push(`${key}: ${message}`);
+                }
+              }
+            } else {
+              errorMessages.push(`${error.meta}`);
+            }
+            this.showNextMessage(errorMessages);
               if (submitBtn) {
                 submitBtn.removeAttribute('disabled');
               }
@@ -161,7 +179,7 @@ export class DetailComponent implements OnInit {
       confirmButtonText: 'Có, tiến hành!',
     }).then((result) => {
       if (result.isConfirmed) {
-        this._storage.cancel(this.id).subscribe((res) => {
+        this._storage.cancel(this.id, null).subscribe((res) => {
           if (res.status == true) {
             this.storageConfirmForm.reset();
             this.showSuccessMessage('storage/import');
