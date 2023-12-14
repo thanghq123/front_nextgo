@@ -35,6 +35,7 @@ export class CustomersService extends CRUDServiceService<Customers> {
     return this.http.post(`${this.apiUrlProducts}customers/store`, {
       domain_name: this.settingService.tenant.name,
       location: this.settingService.location.id, statusCreate: 1, ...data,
+      status : 1,
       type : 0
     },this.header);
   }

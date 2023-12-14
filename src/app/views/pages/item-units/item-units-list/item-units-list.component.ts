@@ -29,16 +29,16 @@ export class ItemUnitsListComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.listUnits.subscribe(() => {
-      setTimeout(() => {
-        // const db = new DataTable('#dataTableExample');
-        setTimeout(() => {
-          const db = new DataTable('#dataTableExample');
-            db.on('datatable.init', () => {
-              this.addDeleteEventHandlers();
-          });
+      // setTimeout(() => {
+      //   // const db = new DataTable('#dataTableExample');
+      //   setTimeout(() => {
+      //     // const db = new DataTable('#dataTableExample');
+      //     //   db.on('datatable.init', () => {
+      //     //     this.addDeleteEventHandlers();
+      //     // });
 
-        }, 0);
-      }, 0);
+      //   }, 0);
+      // }, 0);
     });
   }
 
@@ -99,6 +99,7 @@ export class ItemUnitsListComponent implements OnInit, AfterViewInit {
 
   refreshData(): void {
     this.isLoading = true;
+    
     this._unitsService.GetData().subscribe({
       next: (res: any) => {
         // console.log(res.status);
