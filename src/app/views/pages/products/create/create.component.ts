@@ -331,21 +331,15 @@ export class CreateComponent implements OnInit {
   }
 
   checkValueInput(value: string) {
-    // Sử dụng biểu thức chính quy để kiểm tra chuỗi
-    var pattern = /^[a-zA-Z0-9]+$/;
+   // Sử dụng biểu thức chính quy để kiểm tra chuỗi
+  var pattern = /^[a-zA-Z0-9\s]+$/;
 
-    // Kiểm tra xem chuỗi có chứa ký tự không mong muốn hay không
-    if (!pattern.test(value)) {
-      return false;
-    }
+  // Kiểm tra xem chuỗi có chứa ký tự không mong muốn hay không
+  if (!pattern.test(value)) {
+    return false;
+  }
 
-    // Kiểm tra xem chuỗi có chứa ký tự -.,/_=... hay không
-    var unwantedChars = /[-.,\/_=]+/;
-    if (unwantedChars.test(value)) {
-      return false;
-    }
-
-    return true;
+  return true;
   }
 
 
