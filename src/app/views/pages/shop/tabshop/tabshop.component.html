@@ -529,20 +529,8 @@
     <h5 class="modal-title" id="exampleModalLabel">In hóa đơn</h5>
   </div>
   <div class="modal-body">
-    <h5>Chọn thông tin bạn muốn in</h5>
-    <div class="form-check mb-2 mt-3">
-        <input type="radio" class="form-check-input" name="bill" checked id="radioDefault">
-        <label class="form-check-label" for="radioDefault">
-          Hóa Đơn
-        </label>
-      </div>
-      <h5>Chọn mẫu in</h5>
-      <div class="form-check mt-3 mb-2">
-          <input type="radio" class="form-check-input" name="template" checked id="radioDefault">
-          <label class="form-check-label" for="radioDefault">
-            In đầy đủ
-          </label>
-        </div>
+    <h5>Bạn muốn in hóa đơn không ?</h5>
+ 
         <!-- <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
             <input type="radio"  class="btn-check" [(ngModel)]="modelRadioPrintf" [value]="1" name="btnradio" id="btnradio1" autocomplete="off">
             <label class="btn btn-outline-primary" for="btnradio1">Mẫu in A4</label>
@@ -558,6 +546,7 @@
           </div> -->
   </div>
   <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close(false)">Tiếp tục bán</button>
     <button type="button" class="btn btn-primary" (click)="modal.close(true)">In ngay</button>
   </div>
 </ng-template>
