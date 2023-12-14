@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { CustomersService } from 'src/app/service/customers/customers.service';
+import {Component, OnInit} from '@angular/core';
+import {FormGroup, FormControl, Validators} from '@angular/forms';
+import {CustomersService} from 'src/app/service/customers/customers.service';
 import Swal from 'sweetalert2';
-import { Router } from '@angular/router';
-import { GroupCustomersService } from 'src/app/service/group_customers/group-customers.service';
-import { AresService } from 'src/app/service/ares/ares.service';
-import { debounceTime, switchMap } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import {Router} from '@angular/router';
+import {GroupCustomersService} from 'src/app/service/group_customers/group-customers.service';
+import {AresService} from 'src/app/service/ares/ares.service';
+import {debounceTime, switchMap} from 'rxjs/operators';
+import {Subject} from 'rxjs';
+
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
@@ -30,7 +31,7 @@ export class CreateComponent implements OnInit {
     province_code: new FormControl(''),
     district_code: new FormControl(''),
     ward_code: new FormControl(''),
-    email: new FormControl('', Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)),
+    email: new FormControl('', Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$/g)),
     tel: new FormControl('', [Validators.required, Validators.pattern(/^(03|05|07|08|09)+([0-9]{8})$/)]),
     status: new FormControl(1),
     address_detail: new FormControl(''),
@@ -50,17 +51,18 @@ export class CreateComponent implements OnInit {
     private GroupCustomersService: GroupCustomersService,
     private AresService: AresService,
     private router: Router
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     this.types = [
-      { id: 0, name: 'Cá nhân' },
-      { id: 1, name: 'Doanh nghiệp' },
+      {id: 0, name: 'Cá nhân'},
+      {id: 1, name: 'Doanh nghiệp'},
     ];
 
     this.status = [
-      { id: 0, name: 'Kích hoạt' },
-      { id: 1, name: 'Không kích hoạt' },
+      {id: 0, name: 'Kích hoạt'},
+      {id: 1, name: 'Không kích hoạt'},
     ];
 
     this.GroupCustomersService.GetData().subscribe((data: any) => {
@@ -71,8 +73,8 @@ export class CreateComponent implements OnInit {
       this.provinces =
         data.status != 'error'
           ? data.results
-          : [{ id: 0, name: `${data.message}` }];
-          this.province = data.results
+          : [{id: 0, name: `${data.message}`}];
+      this.province = data.results
     });
 
     this.provinceChangeSubject
@@ -86,8 +88,8 @@ export class CreateComponent implements OnInit {
         this.districts =
           data.status != 'error'
             ? data.results
-            : [{ id: 0, name: `${data.message}` }];
-            this.district = data.results
+            : [{id: 0, name: `${data.message}`}];
+        this.district = data.results
       });
 
     this.districtChangeSubject
@@ -99,8 +101,8 @@ export class CreateComponent implements OnInit {
         this.wards =
           data.status != 'error'
             ? data.results
-            : { id: 0, name: `${data.message}`, status: false };
-            this.ward = data.results;
+            : {id: 0, name: `${data.message}`, status: false};
+        this.ward = data.results;
         this.isWardDataLoaded = data.status != 'error' ? true : false;
         // if (this.wards && this.wards.status != false) {
         //   this.customersForm
@@ -136,8 +138,12 @@ export class CreateComponent implements OnInit {
   }
 
   onSubmit() {
+    const submitBtn = document.querySelector('#submitBtn');
     if (this.customersForm.valid) {
-      const nameDistrict = this.district.find(item => item.id == this.codeDistrict)?.name ??'';
+      if (submitBtn) {
+        submitBtn.setAttribute('disabled', 'disabled');
+      }
+      const nameDistrict = this.district.find(item => item.id == this.codeDistrict)?.name ?? '';
       const nameWard = this.ward.find(item => item.id == this.codeWard)?.name ?? '';
       const nameProvince = this.province.find(item => item.id == this.codeProvince)?.name ?? '';
       // console.log(nameProvince);
@@ -153,7 +159,7 @@ export class CreateComponent implements OnInit {
         email: String(this.customersForm.value.email) || null,
         tel: String(this.customersForm.value.tel),
         status: Number(this.customersForm.value.status),
-        address_detail: String(this.customersForm.value.address_detail + ', ' + nameWard + ', ' + nameDistrict + ', ' +  nameProvince ) || null,
+        address_detail: String(this.customersForm.value.address_detail + ', ' + nameWard + ', ' + nameDistrict + ', ' + nameProvince) || null,
         note: String(this.customersForm.value.note) || null,
         ward_code: Number(this.customersForm.value.ward_code) || null,
         created_at: new Date(),
@@ -183,6 +189,9 @@ export class CreateComponent implements OnInit {
             });
             this.router.navigate(['../customers/list']);
           } else {
+            if (submitBtn) {
+              submitBtn.removeAttribute('disabled');
+            }
             // console.log(response);
             const errorMessages = [];
             if (response.meta && typeof response.meta === 'object') {
@@ -217,6 +226,9 @@ export class CreateComponent implements OnInit {
           }
         },
         (error) => {
+          if (submitBtn) {
+            submitBtn.removeAttribute('disabled');
+          }
           // console.log(error);
           Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
         }
@@ -226,7 +238,7 @@ export class CreateComponent implements OnInit {
     }
   }
 
-  showNextMessage(errorMessages : any) {
+  showNextMessage(errorMessages: any) {
     if (errorMessages.length > 0) {
       const message = errorMessages.shift();
       Swal.fire({

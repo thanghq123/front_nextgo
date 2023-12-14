@@ -111,7 +111,7 @@
                             <input type="number" min="0"
                               formControlName="price" [ngModel]="products[i].price" data-id="{{value.id}}"
                               (input)="resultTotal($event)" name="price" class="form-control" id="exampleInputText1"
-                              placeholder="Nhập giá" />
+                              placeholder="Nhập giá" (keydown)="onKeyDown($event)"/>
                           </td>
                           <td *ngIf="i !== editRowID" (click)="Edit(i)">
                             {{ value.price }}
@@ -119,7 +119,7 @@
                           <td *ngIf="i === editRowID">
                             <input type="number" formControlName="quantity" [ngModel]="products[i].quantity" min="0"
                               data-id="{{value.id}}" (input)="resultTotal($event)" name="quantity" class="form-control"
-                              id="exampleInputText1" placeholder="Nhập số lượng" />
+                              id="exampleInputText1" placeholder="Nhập số lượng" (keydown)="onKeyDown($event)"/>
                           </td>
                           <td *ngIf="i !== editRowID" (click)="Edit(i)">
                             {{ value.quantity }}
@@ -151,7 +151,7 @@
               </div>
             </div>
           </div>
-          <button type="submit" [disabled]="storageImportForm.invalid" class="btn btn-primary me-2">
+          <button type="submit" id="submitBtn" [disabled]="storageImportForm.invalid" class="btn btn-primary me-2">
             Tạo mới
           </button>
           <button class="btn btn-secondary" routerLink="/storage/import/list">

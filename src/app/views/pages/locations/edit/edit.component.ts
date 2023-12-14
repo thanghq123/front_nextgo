@@ -1,14 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {FormGroup, FormControl, Validators} from '@angular/forms';
 import Swal from 'sweetalert2';
-import { ActivatedRoute, Router } from '@angular/router';
-import { debounceTime, switchMap } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import {ActivatedRoute, Router} from '@angular/router';
+import {debounceTime, switchMap} from 'rxjs/operators';
+import {Subject} from 'rxjs';
 
-import { LocationsService } from 'src/app/service/locations/locations.service';
-import { AresService } from 'src/app/service/ares/ares.service';
-import { environment } from 'src/environments/environment';
-import { SettingService } from '../../../../service/setting/setting.service';
+import {LocationsService} from 'src/app/service/locations/locations.service';
+import {AresService} from 'src/app/service/ares/ares.service';
+import {environment} from 'src/environments/environment';
+import {SettingService} from '../../../../service/setting/setting.service';
 
 @Component({
   selector: 'app-edit',
@@ -32,7 +32,7 @@ export class EditComponent implements OnInit {
 
   locationsForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
-    email: new FormControl('', Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)),
+    email: new FormControl('', Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$/g)),
     imageUpdate: new FormControl(''),
     description: new FormControl(''),
     tel: new FormControl('', [Validators.required, Validators.pattern(/^(03|05|07|08|09)+([0-9]{8})$/)]),
@@ -56,18 +56,18 @@ export class EditComponent implements OnInit {
 
   ngOnInit(): void {
     this.status = [
-      { id: 0, name: 'Đóng cửa' },
-      { id: 1, name: 'Hoạt động' },
+      {id: 0, name: 'Đóng cửa'},
+      {id: 1, name: 'Hoạt động'},
     ];
     this.is_main = [
-      { id: 0, name: 'Chi nhánh mặc định' },
-      { id: 1, name: 'Chi nhánh phụ' },
+      {id: 1, name: 'Chi nhánh mặc định'},
+      {id: 0, name: 'Chi nhánh phụ'},
     ];
     this.AresService.getProvinces().subscribe((data: any) => {
       this.provinces =
         data.status != 'error'
           ? data.results
-          : [{ id: 0, name: `${data.message}` }];
+          : [{id: 0, name: `${data.message}`}];
     });
 
     this.provinceChangeSubject
@@ -81,7 +81,7 @@ export class EditComponent implements OnInit {
         this.districts =
           data.status != 'error'
             ? data.results
-            : [{ id: 0, name: `${data.message}` }];
+            : [{id: 0, name: `${data.message}`}];
       });
 
     this.districtChangeSubject
@@ -93,7 +93,7 @@ export class EditComponent implements OnInit {
         this.wards =
           data.status != 'error'
             ? data.results
-            : { id: 0, name: `${data.message}`, status: false };
+            : {id: 0, name: `${data.message}`, status: false};
         this.isWardDataLoaded = data.status != 'error' ? true : false;
         if (this.wards && this.wards.status != false) {
           this.locationsForm
@@ -196,6 +196,7 @@ export class EditComponent implements OnInit {
   }
 
   onSubmit() {
+    const submitBtn = document.querySelector('#submitBtn');
     if (this.locationsForm.value.imageUpdate) {
       // Nếu giá trị tồn tại (không phải null hoặc undefined)
       // Thực hiện các hành động cần thiết ở đây
@@ -206,6 +207,9 @@ export class EditComponent implements OnInit {
     }
 
     if (this.locationsForm.valid) {
+      if (submitBtn) {
+        submitBtn.setAttribute('disabled', 'disabled');
+      }
       // console.log(this.locationsForm.value);
       const formData = new FormData();
 
@@ -245,12 +249,18 @@ export class EditComponent implements OnInit {
                 }
               }
             } else {
+              if (submitBtn) {
+                submitBtn.removeAttribute('disabled');
+              }
               errorMessages.push(`${response.meta}`);
             }
             this.showNextMessage(errorMessages);
           }
         },
         (error) => {
+          if (submitBtn) {
+            submitBtn.removeAttribute('disabled');
+          }
           // console.log(error);
           Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
         }

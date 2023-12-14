@@ -338,6 +338,10 @@ export class EditComponent implements OnInit {
   }
 
   onSubmit() {
+    const submitBtn = document.querySelector('#submitBtn');
+    if (submitBtn) {
+      submitBtn.setAttribute('disabled', 'disabled');
+    }
     // this.submitEvent.emit();
     const dataSend = {
       id: 1,
@@ -366,6 +370,9 @@ export class EditComponent implements OnInit {
           });
           this._router.navigate(['setting/print']);
         } else {
+          if (submitBtn) {
+            submitBtn.removeAttribute('disabled');
+          }
           // console.log(response);
           const errorMessages = [];
           for (const key in response.meta.errors) {
@@ -390,6 +397,9 @@ export class EditComponent implements OnInit {
         }
       },
       (error: any) => {
+        if (submitBtn) {
+          submitBtn.removeAttribute('disabled');
+        }
         // console.log(error);
         if (error.error.status == false) {
           Swal.fire({

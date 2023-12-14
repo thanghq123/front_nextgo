@@ -1,22 +1,23 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {FormGroup, FormControl, Validators} from '@angular/forms';
 import Swal from 'sweetalert2';
-import { Router, ParamMap } from '@angular/router';
+import {Router, ParamMap} from '@angular/router';
 import {
   debounceTime,
   switchMap,
   distinctUntilChanged,
   map,
 } from 'rxjs/operators';
-import { Observable, Subject, of } from 'rxjs';
-import { ChangeDetectionStrategy } from '@angular/core';
+import {Observable, Subject, of} from 'rxjs';
+import {ChangeDetectionStrategy} from '@angular/core';
 
-import { SuppliersService } from 'src/app/service/suppliers/suppliers.service';
-import { LocationsService } from 'src/app/service/locations/locations.service';
-import { Product } from 'src/app/interface/product/product';
-import { SearchProductService } from 'src/app/service/searchProduct/search-product.service';
-import { StorageImportService } from 'src/app/service/storage/storage-import.service';
-import { StorageImport } from 'src/app/interface/storage/storage-import';
+import {SuppliersService} from 'src/app/service/suppliers/suppliers.service';
+import {LocationsService} from 'src/app/service/locations/locations.service';
+import {Product} from 'src/app/interface/product/product';
+import {SearchProductService} from 'src/app/service/searchProduct/search-product.service';
+import {StorageImportService} from 'src/app/service/storage/storage-import.service';
+import {StorageImport} from 'src/app/interface/storage/storage-import';
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-create',
@@ -45,6 +46,7 @@ export class CreateComponent implements OnInit {
   inputSerach = new FormGroup({
     input: new FormControl(''),
   });
+
   constructor(
     private _supplier: SuppliersService,
     private _location: LocationsService,
@@ -66,13 +68,16 @@ export class CreateComponent implements OnInit {
       // console.log(this.listLocation);
     });
   }
+
   Edit(val: any) {
     this.editRowID = val;
   }
+
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
   }
+
   search = (text$: Observable<string>) =>
     text$.pipe(
       debounceTime(200),
@@ -80,13 +85,13 @@ export class CreateComponent implements OnInit {
         term === ''
           ? []
           : this.listProduct
-              .filter(
-                (v) =>
-                  v.product_name_variation
-                    .toLowerCase()
-                    .indexOf(term.toLowerCase()) > -1
-              )
-              .slice(0, 10)
+            .filter(
+              (v) =>
+                v.product_name_variation
+                  .toLowerCase()
+                  .indexOf(term.toLowerCase()) > -1
+            )
+            .slice(0, 10)
       )
     );
   formatter = (x: { product_name_variation: string }) =>
@@ -123,6 +128,7 @@ export class CreateComponent implements OnInit {
   calculateTotal(index1: number, index2: number): number {
     return index1 * index2;
   }
+
   calculateTotalPrice(): number {
     let total = 0;
     for (let i = 0; i < this.products.length; i++) {
@@ -130,9 +136,11 @@ export class CreateComponent implements OnInit {
     }
     return total;
   }
+
   removeProduct(index: number): void {
     this.products.splice(index, 1);
   }
+
   resultTotal(e: any) {
     this.updateQuantity(
       this.products,
@@ -144,6 +152,7 @@ export class CreateComponent implements OnInit {
       return total + current.result;
     }, 0);
   }
+
   updateQuantity(array: any, id: number, newQuantity: any, name: string) {
     // console.log(name);
 
@@ -162,7 +171,11 @@ export class CreateComponent implements OnInit {
 
   onSubmit() {
     // If confirmed, delete the category
+    const submitBtn = document.querySelector('#submitBtn');
     if (this.storageImportForm.valid && this.products.length > 0) {
+      if (submitBtn) {
+        submitBtn.setAttribute('disabled', 'disabled');
+      }
       let flag = true;
       const datasend = {
         reason: this.storageImportForm.value.reason,
@@ -179,14 +192,14 @@ export class CreateComponent implements OnInit {
       };
       this.products.forEach((value) => {
         // console.log(value);
-        if(value.price == 0 || value.quantity == 0){
+        if (value.price == 0 || value.quantity == 0) {
           flag = false;
           this.showNextMessage(['Giá nhập hoặc số lượng phải lớn hơn 0'])
         }
 
       });
       // console.log(flag);
-      if(flag == true){
+      if (flag == true) {
         this._storage.createData(datasend).subscribe(
           (response: any) => {
             if (response.status == true) {
@@ -209,6 +222,9 @@ export class CreateComponent implements OnInit {
                 `../storage/import/detail/${response.payload}`,
               ]);
             } else {
+              if (submitBtn) {
+                submitBtn.removeAttribute('disabled');
+              }
               // console.log(response);
               const errorMessages = [];
               for (const key in response.meta.errors) {
@@ -221,6 +237,9 @@ export class CreateComponent implements OnInit {
             }
           },
           (error) => {
+            if (submitBtn) {
+              submitBtn.removeAttribute('disabled');
+            }
             // console.log(error);
             Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
           }
@@ -230,6 +249,14 @@ export class CreateComponent implements OnInit {
       this.showNextMessage(['Sản phẩm không được để trống!'])
     }
   }
+
+  onKeyDown(event: KeyboardEvent): void {
+    if (event.key === 'Enter') {
+      event.preventDefault(); // Ngăn chặn hành động mặc định của nút Enter
+      // Bạn có thể thêm xử lý khác ở đây nếu cần
+    }
+  }
+
   showNextMessage(errorMessages: any) {
     if (errorMessages.length > 0) {
       const message = errorMessages.shift();

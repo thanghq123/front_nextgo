@@ -72,9 +72,13 @@ export class CreateComponent implements OnInit {
   }
 
   onSubmit() {
+    const submitBtn = document.querySelector('#submitBtn');
     this.errorMessages = [];
 
     if (this.userForm.valid) {
+      if (submitBtn) {
+        submitBtn.setAttribute('disabled', 'disabled');
+      }
 
       const data = this.userForm.value;
 
@@ -107,6 +111,9 @@ export class CreateComponent implements OnInit {
             });
             this.router.navigate([`../users/list`]);
           } else {
+            if (submitBtn) {
+              submitBtn.removeAttribute('disabled');
+            }
             this.errorMessages = response.meta;
             if (this.errorMessages.domain_name) {
               Swal.fire({
@@ -127,6 +134,9 @@ export class CreateComponent implements OnInit {
           }
         },
         (error) => {
+          if (submitBtn) {
+            submitBtn.removeAttribute('disabled');
+          }
           // console.log(error);
           const errorMessages = [];
           if (error.error.meta && typeof error.error.meta === 'object') {
@@ -145,6 +155,7 @@ export class CreateComponent implements OnInit {
       );
     }
   }
+
   showNextMessage(errorMessages: any) {
     if (errorMessages.length > 0) {
       const message = errorMessages.shift();

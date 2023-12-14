@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -6,14 +6,15 @@ import {
   Validators,
 } from '@angular/forms';
 import Swal from 'sweetalert2';
-import { Router } from '@angular/router';
-import { debounceTime, switchMap } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import {Router} from '@angular/router';
+import {debounceTime, switchMap} from 'rxjs/operators';
+import {Subject} from 'rxjs';
 
-import { LocationsService } from 'src/app/service/locations/locations.service';
-import { AresService } from 'src/app/service/ares/ares.service';
-import { environment } from 'src/environments/environment';
-import { SettingService } from '../../../../service/setting/setting.service';
+import {LocationsService} from 'src/app/service/locations/locations.service';
+import {AresService} from 'src/app/service/ares/ares.service';
+import {environment} from 'src/environments/environment';
+import {SettingService} from '../../../../service/setting/setting.service';
+
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
@@ -36,7 +37,7 @@ export class CreateComponent implements OnInit {
     image: new FormControl(''),
     description: new FormControl(''),
     tel: new FormControl('', [Validators.required, Validators.pattern(/^(03|05|07|08|09)+([0-9]{8})$/)]),
-    email: new FormControl('', Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)),
+    email: new FormControl('', Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$/g)),
 
     province_code: new FormControl(''),
     district_code: new FormControl(''),
@@ -65,18 +66,18 @@ export class CreateComponent implements OnInit {
 
   ngOnInit(): void {
     this.status = [
-      { id: 0, name: 'Đóng cửa' },
-      { id: 1, name: 'Hoạt động' },
+      {id: 0, name: 'Đóng cửa'},
+      {id: 1, name: 'Hoạt động'},
     ];
     this.is_main = [
-      { id: 0, name: 'Chi nhánh mặc định' },
-      { id: 1, name: 'Chi nhánh phụ' },
+      {id: 1, name: 'Chi nhánh mặc định'},
+      {id: 0, name: 'Chi nhánh phụ'},
     ];
     this.AresService.getProvinces().subscribe((data: any) => {
       this.provinces =
         data.status != 'error'
           ? data.results
-          : [{ id: 0, name: `${data.message}` }];
+          : [{id: 0, name: `${data.message}`}];
       this.province = data.results;
     });
 
@@ -91,7 +92,7 @@ export class CreateComponent implements OnInit {
         this.districts =
           data.status != 'error'
             ? data.results
-            : [{ id: 0, name: `${data.message}` }];
+            : [{id: 0, name: `${data.message}`}];
         this.district = data.results;
       });
 
@@ -104,7 +105,7 @@ export class CreateComponent implements OnInit {
         this.wards =
           data.status != 'error'
             ? data.results
-            : { id: 0, name: `${data.message}`, status: false };
+            : {id: 0, name: `${data.message}`, status: false};
         this.ward = data.results;
         this.isWardDataLoaded = data.status != 'error' ? true : false;
       });
@@ -174,7 +175,11 @@ export class CreateComponent implements OnInit {
   }
 
   onSubmit() {
+    const submitBtn = document.querySelector('#submitBtn');
     if (this.locationsForm.valid) {
+      if (submitBtn) {
+        submitBtn.setAttribute('disabled', 'disabled');
+      }
       const nameDistrict =
         this.district.find((item) => item.id == this.codeDistrict)?.name ?? '';
       const nameWard =
@@ -202,12 +207,12 @@ export class CreateComponent implements OnInit {
         'address_detail',
         String(
           locationsData.address_detail +
-            ', ' +
-            nameWard +
-            ', ' +
-            nameDistrict +
-            ', ' +
-            nameProvince
+          ', ' +
+          nameWard +
+          ', ' +
+          nameDistrict +
+          ', ' +
+          nameProvince
         )
       );
       formData.append('created_by', '1');
@@ -243,6 +248,9 @@ export class CreateComponent implements OnInit {
             });
             this.router.navigate(['../setting/locations']);
           } else {
+            if (submitBtn) {
+              submitBtn.removeAttribute('disabled');
+            }
             // console.log(response);
             const errorMessages = [];
             if (response.meta && typeof response.meta === 'object') {
@@ -260,6 +268,9 @@ export class CreateComponent implements OnInit {
           }
         },
         (error: any) => {
+          if (submitBtn) {
+            submitBtn.removeAttribute('disabled');
+          }
           // console.log(error);
           Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
         }
