@@ -9,6 +9,7 @@ import Swal from 'sweetalert2';
 import {Router} from '@angular/router';
 import {debounceTime, switchMap} from 'rxjs/operators';
 import {Subject} from 'rxjs';
+import { CustomValidators } from 'ng2-validation';
 
 import {LocationsService} from 'src/app/service/locations/locations.service';
 import {AresService} from 'src/app/service/ares/ares.service';
@@ -31,14 +32,14 @@ export class CreateComponent implements OnInit {
   wards: any = [];
   isWardDataLoaded: boolean = false;
   img: File | '';
+  email: string;
 
   locationsForm = new FormGroup({
-    name: new FormControl('', Validators.required),
+    name: new FormControl('', [Validators.required, Validators.maxLength(255)]),
     image: new FormControl(''),
     description: new FormControl(''),
     tel: new FormControl('', [Validators.required, Validators.pattern(/^(03|05|07|08|09)+([0-9]{8})$/)]),
-    email: new FormControl('', Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$/g)),
-
+    email: new FormControl('', [CustomValidators.email]),
     province_code: new FormControl(''),
     district_code: new FormControl(''),
     ward_code: new FormControl(''),
@@ -46,6 +47,7 @@ export class CreateComponent implements OnInit {
     status: new FormControl('', Validators.required),
     is_main: new FormControl('', Validators.required),
   });
+
 
   codeProvince: any;
   codeDistrict: any;
@@ -186,7 +188,7 @@ export class CreateComponent implements OnInit {
         this.ward.find((item) => item.id == this.codeWard)?.name ?? '';
       const nameProvince = this.province.find(
         (item) => item.id == this.codeProvince
-      )?.name;
+      )?.name ?? '';
       // console.log(nameProvince);
 
       const formData = new FormData();

@@ -142,11 +142,9 @@ export class ListComponent implements OnInit{
                   perPage: 10,
                 });
               dataTable.on('datatable.init', () => {
-                dataTable.destroy();
+                // dataTable.destroy();
                 this.addDeleteEventHandlers();
-
               });
-
               }
             }, 0);
           });

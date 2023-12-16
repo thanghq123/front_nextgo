@@ -7,6 +7,7 @@ import { GroupCustomersService } from 'src/app/service/group_customers/group-cus
 import { AresService } from 'src/app/service/ares/ares.service';
 import { Subject } from 'rxjs';
 import { debounceTime, switchMap } from 'rxjs/operators';
+import { CustomValidators } from 'ng2-validation';
 @Component({
   selector: 'app-edit',
   templateUrl: './edit.component.html',
@@ -32,7 +33,7 @@ export class EditComponent implements OnInit {
     province_code: new FormControl(''),
     district_code: new FormControl(''),
     ward_code: new FormControl(''),
-    email: new FormControl('', Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$/g)),
+    email: new FormControl('', [CustomValidators.email]),
     tel: new FormControl('', [Validators.required, Validators.pattern(/^(03|05|07|08|09)+([0-9]{8})$/)]),
     status: new FormControl(1),
     address_detail: new FormControl(''),

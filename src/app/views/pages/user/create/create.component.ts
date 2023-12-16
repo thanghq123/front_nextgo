@@ -9,6 +9,7 @@ import {LocationsService} from "../../../../service/locations/locations.service"
 import {UserService} from "../../../../service/user/user.service";
 import {LocalStorageService} from "../../../../service/localStorage/localStorage.service";
 import {AuthService} from "../../../../service/auth/auth.service";
+import { CustomValidators } from 'ng2-validation';
 
 @Component({
   selector: 'app-create',
@@ -25,7 +26,7 @@ export class CreateComponent implements OnInit {
 
   userForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
-    email: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]),
+    email: new FormControl('', [Validators.required, CustomValidators.email]),
     tel: new FormControl('', [Validators.required, Validators.pattern(/^(03|05|07|08|09)+([0-9]{8})$/)]),
     password: new FormControl('', [Validators.required]),
     location_id: new FormControl('', [Validators.required]),

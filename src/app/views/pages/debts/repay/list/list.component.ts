@@ -7,6 +7,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { Debts } from 'src/app/interface/debts/debts';
 import { DebtsService } from 'src/app/service/debts/debts.service';
+import { LocationsService } from 'src/app/service/locations/locations.service';
 
 @Component({
   selector: 'app-list',
@@ -21,21 +22,52 @@ export class ListRepayComponent implements OnInit {
   totalRevenue: number;
   uncollectedMoney: number;
 
+  inventory: any[] = [];
+  codeInventory: number;
+
   constructor(
     private _recoService: DebtsService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private _locationService: LocationsService
 
   ) {
     this.listRepay = new Observable();
    }
 
   ngOnInit(): void {
-    this.refreshData();
+    this.refreshData(null);
+    this._locationService.GetData().subscribe({
+      next: (res: any) => {
+        if (res.status == true) {
+          this.inventory = res.payload;
+          // console.log(this.inventory);
+        }
+      },
+    });
+  }
+  onInventory() {
+    if (this.codeInventory) {
+      // console.log(this.codeInventory);
+      this.refreshData(this.codeInventory);
+    } else {
+      this.refreshData(null);
+    }
   }
 
-  refreshData(): void{
+  refreshData(id: any): void{
     this.isLoading = true;
-    this._recoService.getAllRepay({type: 1}).subscribe({
+    let dataSend = null;
+    if (id != null) {
+      dataSend = {
+        location_id: id,
+        type: 1,
+      };
+    } else {
+      dataSend = {
+        type: 1,
+      };
+    }
+    this._recoService.getAllRepay(dataSend).subscribe({
       next: (res: any) => {
         // console.log(res.data);
         if(res.status == true){
@@ -58,6 +90,7 @@ export class ListRepayComponent implements OnInit {
               setTimeout(() => {
                 const db = new DataTable('#dataTableExample');
                 db.on('datatable.init', () => {
+                  db.destroy();
                   // this.addDeleteEventHandlers();
               });
               }, 0)
