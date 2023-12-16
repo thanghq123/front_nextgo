@@ -36,10 +36,12 @@ export class ListComponent implements OnInit {
       },
     });
   }
+  
   onInventory() {
     if(this.codeInventory){
-      // console.log(this.codeInventory);
       this.refreshData(this.codeInventory);
+    }else{
+      this.refreshData(null);
     }
   }
 

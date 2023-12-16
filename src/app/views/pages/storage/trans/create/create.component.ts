@@ -171,11 +171,11 @@ export class CreateComponent implements OnInit {
   }
 
   onSubmit(): void {
-    // const submitBtn = document.querySelector('#submitBtn');
+    const submitBtn = document.querySelector('#submitBtn');
     if (this.storageTransForm.valid && this.products.length > 0) {
-      // if (submitBtn) {
-      //   submitBtn.setAttribute('disabled', 'disabled');
-      // }
+      if (submitBtn) {
+        submitBtn.setAttribute('disabled', 'disabled');
+      }
       let flag = true;
       const dataSend = {
         reason: this.storageTransForm.value.reason,
@@ -224,9 +224,9 @@ export class CreateComponent implements OnInit {
                 `../storage/trans/list`,
               ]);
             } else {
-              // if (submitBtn) {
-              //   submitBtn.removeAttribute('disabled');
-              // }
+              if (submitBtn) {
+                submitBtn.removeAttribute('disabled');
+              }
               // console.log(response);
               const errorMessages = [];
               if (response.meta && typeof response.meta === 'object') {
@@ -244,9 +244,9 @@ export class CreateComponent implements OnInit {
             }
           },
           (error) => {
-            // if (submitBtn)
-            //   submitBtn.removeAttribute('disabled');
-            // }
+            if (submitBtn){
+              submitBtn.removeAttribute('disabled');
+            }
             // console.log(error);
             Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
           }
