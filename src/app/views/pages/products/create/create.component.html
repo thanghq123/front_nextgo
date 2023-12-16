@@ -200,7 +200,7 @@
                           <th>Giá nhập</th>
                           <th>Giá bán</th>
                           <th>SKU</th>
-                          <th>Barcode/UPC</th>
+                          <!-- <th>Barcode/UPC</th> -->
                         </tr>
                       </thead>
 
@@ -216,7 +216,7 @@
                             <td> <input type="number" id="price_import"  formControlName="price_import"  class="form-control"></td>
                             <td><input type="number" id="price_export"  formControlName="price_export"  class="form-control"></td>
                             <td> <input type="text" id="sku"  formControlName="sku" placeholder="Nhập SKU" class="form-control"></td>
-                            <td><input type="text" id="barcode" formControlName="barcode" placeholder="Nhập BARCODE/UPC"  class="form-control"></td>
+                            <!-- <td><input type="text" id="barcode" formControlName="barcode" placeholder="Nhập BARCODE/UPC"  class="form-control"></td> -->
                           </ng-container>
                           </tr>
 
@@ -261,7 +261,7 @@
       <div class="col-12 d-flex mt-4">
         <label class="form-label" style="width: 20%;">Giá trị</label>
         <div class="w-100">
-          <input type="text" class="form-control"  [(ngModel)]="simpleItems[indexItem].newItemText" (keyup.enter)="addItem(indexItem)" (input)="checkDataModalTarget($event)" placeholder="Nhập giá trị và ấn enter">
+          <input type="text" class="form-control"  [(ngModel)]="simpleItems[indexItem].newItemText" (keyup.enter)="addItem(indexItem)"  placeholder="Nhập giá trị và ấn enter">
         <ul class="list-group mt-2" [sortablejs]="simpleItems[indexItem].attribute_values">
             <li class="list-group-item d-flex mt-1  align-items-center justify-content-between p-1" *ngFor="let item of simpleItems[indexItem].attribute_values let i = index">
               <div>

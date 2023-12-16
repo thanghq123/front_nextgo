@@ -79,7 +79,7 @@ export class ListComponent implements OnInit {
         if(response.status == true){
           this.ListsProducts =of(response.payload);
           // console.log(this.ListsCategories);
-          console.log(this.ListsProducts);
+          console.log(response.payload);
 
           this.ListsProducts.subscribe((categories) => {
             setTimeout(() => {

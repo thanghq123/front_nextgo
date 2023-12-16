@@ -911,8 +911,15 @@ export class TabshopComponent implements OnInit {
 
     let dataUpdate = null;
     if (!itemsUpdate.status) {
+      console.log(
+        this.dataBtnPayment[this.tabDefault].length
+      );
+      
       // if(itemsUpdate.pricePayment >= this.priceBill && itemsUpdate.status == false){
-
+        if(this.dataBtnPayment[this.tabDefault].length === 1 && type == 2){
+        itemsUpdate.pricePayment = this.priceBill;
+        itemsUpdate.status = true;
+      }
       itemsUpdate.payment_method = this.modelTypePay;
       itemsUpdate.pricePayment = +itemsUpdate.pricePayment;
       console.log(this.dataBtnPayment);
@@ -936,38 +943,43 @@ export class TabshopComponent implements OnInit {
         this.cashPrice = 0;
       }
     } else {
-      if (this.pricePayment < this.priceBill) {
-        console.log(type);
-
-        if (type == 2) {
-          this.dataBtnPayment[this.tabDefault].push({
-            payment_method: 2,
-            pricePayment: this.paymentPrice,
-            status: true,
-          });
-
-          this.pricePayment = this.dataBtnPayment[this.tabDefault].reduce(
-            (acc: number, item: any) => acc + item.pricePayment,
-            0
-          );
-
-          if (this.pricePayment > this.priceBill) {
-            this.changeBill = this.pricePayment - this.priceBill;
-            this.paymentPrice = 0;
+      console.log(this.dataBtnPayment[this.tabDefault].length + "test");
+    
+        if (this.pricePayment < this.priceBill) {
+          console.log(type);
+  
+          if (type == 2) {
+            this.dataBtnPayment[this.tabDefault].push({
+              payment_method: 2,
+              pricePayment: this.paymentPrice,
+              status: true,
+            });
+  
+            this.pricePayment = this.dataBtnPayment[this.tabDefault].reduce(
+              (acc: number, item: any) => acc + item.pricePayment,
+              0
+            );
+  
+            if (this.pricePayment > this.priceBill) {
+              this.changeBill = this.pricePayment - this.priceBill;
+              this.paymentPrice = 0;
+            } else {
+              this.changeBill = 0;
+              this.paymentPrice = this.priceBill - this.pricePayment;
+            }
           } else {
-            this.changeBill = 0;
-            this.paymentPrice = this.priceBill - this.pricePayment;
+            this.dataBtnPayment[this.tabDefault].push({
+              payment_method: type,
+              pricePayment: 0,
+              status: false,
+            });
           }
-        } else {
-          this.dataBtnPayment[this.tabDefault].push({
-            payment_method: type,
-            pricePayment: 0,
-            status: false,
-          });
-        }
+  
+          dataUpdate = this.dataBtnPayment;
 
-        dataUpdate = this.dataBtnPayment;
-      }
+    }
+
+      
     }
 
     localStorage.setItem('dataPayment', JSON.stringify(this.dataBtnPayment));
@@ -1010,29 +1022,51 @@ export class TabshopComponent implements OnInit {
   }
 
   addProduct(item: any) {
+
+    
     this.modalData = JSON.parse(localStorage.getItem('TabModal')!);
     console.log(this.modalData);
     const ResultFind = this.listProductCart[this.tabDefault].find(
       (itemCurrent: any) => itemCurrent.id === item.id
     );
+    console.log(ResultFind);
+    
 
     if (ResultFind) {
+      if(ResultFind.quanity >= ResultFind.quantity){
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 3000,
+          title: 'Thất bại!',
+          text: 'Đã đạt giới hạn sản phẩm cho phép vui lòng nhập thêm để thêm tiếp!',
+          icon: 'error',
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer);
+            toast.addEventListener('mouseleave', Swal.resumeTimer);
+          },
+        });
+        return;
+      }
       ResultFind.quanity = ResultFind.quanity + 1;
-      ResultFind.result = ResultFind.quanity * ResultFind.price_export;
-      Swal.fire({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3000,
-        title: 'Thành công!',
-        text: 'Cập nhật sản phẩm thành công!',
-        icon: 'success',
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.addEventListener('mouseenter', Swal.stopTimer);
-          toast.addEventListener('mouseleave', Swal.resumeTimer);
-        },
-      });
+        ResultFind.result = ResultFind.quanity * ResultFind.price_export;
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 3000,
+          title: 'Thành công!',
+          text: 'Cập nhật sản phẩm thành công!',
+          icon: 'success',
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer);
+            toast.addEventListener('mouseleave', Swal.resumeTimer);
+          },
+        });
+      
     } else {
       console.log(item);
 
@@ -2186,6 +2220,29 @@ export class TabshopComponent implements OnInit {
   }
 
   increaseQuantity(id: number) {
+    console.log(this.listProductCart[this.tabDefault]);
+    const ResultFind = this.listProductCart[this.tabDefault].find(
+      (itemCurrent: any) => itemCurrent.id === id
+    );
+    console.log(ResultFind);
+    if(ResultFind.quanity >= ResultFind.quantity){
+       Swal.fire({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 3000,
+              title: 'Thất bại!',
+              text: 'Vui lòng nhập thêm sản phẩm vào kho để thêm tiếp!!',
+              icon: 'error',
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer);
+                toast.addEventListener('mouseleave', Swal.resumeTimer);
+              },
+            });
+            return;
+    }
+    
     let inputValue = <HTMLInputElement>document.getElementById(`${id}`);
     const count = 1 + Number(inputValue.value);
     this.updateQuantity(

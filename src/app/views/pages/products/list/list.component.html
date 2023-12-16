@@ -22,8 +22,8 @@
                                 <th data-sortable="false">
                                     <input type="checkbox" class="form-check-input" id="checkChecked">
                                   </th>
-                                <th>ID</th>
-                                <th>Hình ảnh</th>
+                                <th>Mã sản phẩm</th>
+                                <!-- <th>Hình ảnh</th> -->
                                 <th>Sản phẩm</th>
                                 <th>Danh mục</th>
                                 <th>Số phiên bản</th>
@@ -36,8 +36,8 @@
                                 <td>
                                     <input type="checkbox" class="form-check-input" id="checkChecked">
                                   </td>
-                                <td>{{ cate.id }}</td>
-                                <td>{{ cate.image == null  ? "Chưa có ảnh" : cate.image }}</td>
+                                <td>{{ cate.variations[0].sku }}</td>
+                                <!-- <td>{{ cate.image == null  ? "Chưa có ảnh" : cate.image }}</td> -->
                                 <td>{{ cate.name }}</td>
                                 <td>{{ cate.manage_type == 0 ? "Mặc định" : 'Theo lô/HSD' }}</td>
                                 <td>{{ cate.variations.length }}</td>
