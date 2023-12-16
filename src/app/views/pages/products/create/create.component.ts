@@ -309,38 +309,28 @@ export class CreateComponent implements OnInit {
 
   }
 
-  checkDataModalTarget(e: any) {
-    console.log(e.target.value);
-    if (this.checkValueInput(e.target.value) == false) {
-      e.target.value = '';
-      Swal.fire({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3000,
-        title: 'Lỗi!',
-        text: 'Vui lòng không nhập kí tự đặc biệt!',
-        icon: 'error',
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.addEventListener('mouseenter', Swal.stopTimer);
-          toast.addEventListener('mouseleave', Swal.resumeTimer);
-        },
-      });
-    }
-  }
+  // checkDataModalTarget(e: any) {
+  //   console.log(e.target.value);
+  //   if (this.checkValueInput(e.target.value) == false) {
+  //     e.target.value = '';
+  //     Swal.fire({
+  //       toast: true,
+  //       position: 'top-end',
+  //       showConfirmButton: false,
+  //       timer: 3000,
+  //       title: 'Lỗi!',
+  //       text: 'Vui lòng không nhập kí tự đặc biệt!',
+  //       icon: 'error',
+  //       timerProgressBar: true,
+  //       didOpen: (toast) => {
+  //         toast.addEventListener('mouseenter', Swal.stopTimer);
+  //         toast.addEventListener('mouseleave', Swal.resumeTimer);
+  //       },
+  //     });
+  //   }
+  // }
 
-  checkValueInput(value: string) {
-   // Sử dụng biểu thức chính quy để kiểm tra chuỗi
-  var pattern = /^[a-zA-Z0-9\s]+$/;
-
-  // Kiểm tra xem chuỗi có chứa ký tự không mong muốn hay không
-  if (!pattern.test(value)) {
-    return false;
-  }
-
-  return true;
-  }
+ 
 
 
   CheckStatusform() {
