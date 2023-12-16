@@ -16,6 +16,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CustomersService } from 'src/app/service/customers/customers.service';
 import { DebtsService } from 'src/app/service/debts/debts.service';
 import { PaymentService } from 'src/app/service/payment/payment.service';
+import { LocalStorageService } from 'src/app/service/localStorage/localStorage.service';
 
 @Component({
   selector: 'app-edit',
@@ -54,13 +55,14 @@ export class EditRecoveryComponent implements OnInit {
     note: '',
   };
   totalPayment: any;
+  location_id: number;
 
   constructor(
     private _debtService: DebtsService,
     private _paymentService: PaymentService,
     private router: Router,
     private route: ActivatedRoute,
-    private modalService: NgbModal
+    private modalService: NgbModal,
   ) {}
 
   ngOnInit(): void {
@@ -277,7 +279,7 @@ export class EditRecoveryComponent implements OnInit {
               toast.addEventListener('mouseleave', Swal.resumeTimer);
             },
           });
-          location.reload();
+          // location.reload();
         } else {
           if (submitBtn) {
             submitBtn.removeAttribute('disabled');

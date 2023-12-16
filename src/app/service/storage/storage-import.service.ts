@@ -44,8 +44,8 @@ export class StorageImportService extends CRUDServiceService<any> {
   }
 
   //trans
-  getAllTrans() {
-    return this.http.post(`${this.apiUrl}` + '/trans', this.handleData(),this.header);
+  getAllTrans(data: any) {
+    return this.http.post(`${this.apiUrl}` + '/trans', this.handleData(data),this.header);
   }
   createTrans(data: any): Observable<any> {
     return this.http.post(

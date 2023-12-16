@@ -274,7 +274,7 @@ export class DetailRepayComponent implements OnInit {
               toast.addEventListener('mouseleave', Swal.resumeTimer);
             },
           });
-          location.reload();
+          // location.reload();
         } else {
           if (submitBtn) {
             submitBtn.removeAttribute('disabled');

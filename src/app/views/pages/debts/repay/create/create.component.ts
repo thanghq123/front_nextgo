@@ -13,6 +13,7 @@ import {
 import {Observable, Subject} from 'rxjs';
 import {CustomersService} from 'src/app/service/customers/customers.service';
 import {DebtsService} from 'src/app/service/debts/debts.service';
+import { LocalStorageService } from 'src/app/service/localStorage/localStorage.service';
 
 @Component({
   selector: 'app-create',
@@ -31,12 +32,14 @@ export class RepayCreateComponent implements OnInit {
     note: new FormControl(''),
   });
   listCustomer: any[] = [];
+  location_id: number;
   flag = false;
 
   constructor(
     private _customerService: CustomersService,
     private _debtService: DebtsService,
-    private router: Router
+    private router: Router,
+    private _localStorage: LocalStorageService,
   ) {
   }
 
@@ -45,6 +48,7 @@ export class RepayCreateComponent implements OnInit {
       this.listCustomer = res.payload;
       // console.log(this.listCustomer);
     });
+    this.location_id = this._localStorage.get('inventory').location_id;
   }
 
   searchTerm: any[] = [];
@@ -81,6 +85,7 @@ export class RepayCreateComponent implements OnInit {
         amount_paid: 0,
         note: String(this.repayForm.value.note),
         status: Number(1),
+        location_id: Number(this.location_id)
       };
       // console.log(dataSend);
       this._debtService.createDebts(dataSend).subscribe(

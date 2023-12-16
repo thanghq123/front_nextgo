@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 import {ActivatedRoute, Router} from '@angular/router';
 import {debounceTime, switchMap} from 'rxjs/operators';
 import {Subject} from 'rxjs';
+import { CustomValidators } from 'ng2-validation';
 
 import {LocationsService} from 'src/app/service/locations/locations.service';
 import {AresService} from 'src/app/service/ares/ares.service';
@@ -32,7 +33,7 @@ export class EditComponent implements OnInit {
 
   locationsForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
-    email: new FormControl('', Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$/g)),
+    email: new FormControl('', [CustomValidators.email]),
     imageUpdate: new FormControl(''),
     description: new FormControl(''),
     tel: new FormControl('', [Validators.required, Validators.pattern(/^(03|05|07|08|09)+([0-9]{8})$/)]),
