@@ -44,12 +44,14 @@ export class NavbarComponent implements OnInit {
       this.locationService.GetData().subscribe((response: any) => {
         if (response.status) {
           this.locations = response.payload;
-          const tatCaObject = {...this.locations[response.payload.length-1]};
+          const is_main = this.locations.find(value => value.is_main == true);
+          // console.log(is_main);
+          const tatCaObject = {...is_main};
           tatCaObject.id = tatCaObject.id || 0
           tatCaObject.name = "Tất cả"
           // Add 'tất cả' object to the beginning of the locations array
           this.locations = [tatCaObject, ...response.payload];
-          // console.log(this.locations);
+          console.log(this.locations);
 
         }
       });
