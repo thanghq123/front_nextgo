@@ -25,7 +25,7 @@ export class DebtsService extends CRUDServiceService<Debts> {
 
  createDebts(data : any){
   console.log(this.handleData(data));
-  
+
   return this.http.post(`${this.apiUrl}/store`, this.handleData(data), this.header);
  }
 
@@ -40,7 +40,7 @@ export class DebtsService extends CRUDServiceService<Debts> {
   return {
     domain_name: this.domain_name,
     ...data,
-    location_id : this.settingService.location.id
+    // location_id : this.settingService.location.id
   };
 }
 }
