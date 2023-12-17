@@ -1,4 +1,4 @@
-import {Component, OnInit, TemplateRef} from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import {
   FormGroup,
   FormBuilder,
@@ -6,16 +6,16 @@ import {
   Validators,
   FormArray,
 } from '@angular/forms';
-import {ProductsService} from 'src/app/service/products/products.service';
-import {CategoriesService} from 'src/app/service/categories/categories.service';
-import {WarrantiesService} from 'src/app/service/warranties/warranties.service';
-import {ItemUnitsService} from 'src/app/service/item_units/item-units.service';
-import {BrandsService} from 'src/app/service/brands/brands.service';
-import {of} from 'rxjs';
-import {map, expand, take} from 'rxjs/operators';
+import { ProductsService } from 'src/app/service/products/products.service';
+import { CategoriesService } from 'src/app/service/categories/categories.service';
+import { WarrantiesService } from 'src/app/service/warranties/warranties.service';
+import { ItemUnitsService } from 'src/app/service/item_units/item-units.service';
+import { BrandsService } from 'src/app/service/brands/brands.service';
+import { of } from 'rxjs';
+import { map, expand, take } from 'rxjs/operators';
 import Swal from 'sweetalert2';
-import {Router} from '@angular/router';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import { Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-create',
@@ -79,8 +79,7 @@ export class CreateComponent implements OnInit {
     private WarrantiesService: WarrantiesService,
     private modalService: NgbModal,
     private fb: FormBuilder
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     if (this.countCreate == 0) {
@@ -93,8 +92,8 @@ export class CreateComponent implements OnInit {
       this.indexOld = 0;
     }
     this.manage_type = [
-      {id: 0, name: 'Thường'},
-      {id: 1, name: 'Theo Lô/HSD'},
+      { id: 0, name: 'Thường' },
+      { id: 1, name: 'Theo Lô/HSD' },
     ];
     // this.ItemUnitsService.GetData().subscribe((data: any) => {
     //   this.item_units = data.payload.data;
@@ -120,7 +119,7 @@ export class CreateComponent implements OnInit {
       this.warranties = data.payload;
     });
 
-    this.renderVersion({status: false});
+    this.renderVersion({ status: false });
 
     this.isLoading = false;
   }
@@ -149,20 +148,20 @@ export class CreateComponent implements OnInit {
   }
 
   renderVersion({
-                  dataDefalut = [
-                    {
-                      sku: null,
-                      barcode: null,
-                      variation_name: "Mặc định",
-                      display_name: "Mặc định",
-                      image: null,
-                      price_import: 0,
-                      price_export: 0,
-                      status: 1,
-                    },
-                  ],
-                  status = true,
-                } = {}) {
+    dataDefalut = [
+      {
+        sku: null,
+        barcode: null,
+        variation_name: 'Mặc định',
+        display_name: 'Mặc định',
+        image: null,
+        price_import: 0,
+        price_export: 0,
+        status: 1,
+      },
+    ],
+    status = true,
+  } = {}) {
     console.log(dataDefalut);
 
     if (status) {
@@ -264,7 +263,7 @@ export class CreateComponent implements OnInit {
   }
 
   addItem(index: number) {
-    // console.log(index);
+    // this.CheckStatusform();
     if (
       this.simpleItems[index].newItemText.trim() !== '' &&
       this.simpleItems[index].attribute_values
@@ -289,15 +288,29 @@ export class CreateComponent implements OnInit {
           },
         });
       } else {
+        this.CheckStatusform();
+        console.log(this.simpleItems[index].newItemText);
         this.simpleItems[index].attribute_values.push({
           value: this.simpleItems[index].newItemText,
         });
         this.simpleItems[index].newItemText = '';
-        console.log(this.simpleItems);
         this.statusVersionDefault = true;
-        this.CheckStatusform();
       }
+    } else {
+      console.log(this.simpleItems[index].newItemText.trim());
+      console.log(this.simpleItems[index].attribute_values);
+
+      this.checkValueProperty(
+        this.simpleItems[index].newItemText,
+        this.simpleItems[index].attribute_values
+      );
+      this.CheckStatusform();
     }
+  }
+
+  deleteRecordAttr(index : number){
+    const btnDelete = document.querySelector('.rowPropeties'+index);
+    btnDelete?.remove();
   }
 
   removeItem(index: number, indexValue: number) {
@@ -305,9 +318,7 @@ export class CreateComponent implements OnInit {
     this.simpleItems[indexValue].attribute_values.splice(index, 1);
   }
 
-  checkValueAttribite(e: any) {
-
-  }
+  checkValueAttribite(e: any) {}
 
   // checkDataModalTarget(e: any) {
   //   console.log(e.target.value);
@@ -330,8 +341,24 @@ export class CreateComponent implements OnInit {
   //   }
   // }
 
- 
-
+  checkValueProperty(valueProperties: string, attr: any) {
+    if (valueProperties.length == 0 || attr.length == 0) {
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        title: 'Thất bại!',
+        text: 'Giá trị không được để trống!',
+        icon: 'error',
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.addEventListener('mouseenter', Swal.stopTimer);
+          toast.addEventListener('mouseleave', Swal.resumeTimer);
+        },
+      });
+    }
+  }
 
   CheckStatusform() {
     this.statusFormType = true;
@@ -344,24 +371,7 @@ export class CreateComponent implements OnInit {
           showConfirmButton: false,
           timer: 3000,
           title: 'Thất bại!',
-          text: 'Thuộc tính không được để trống!',
-          icon: 'error',
-          timerProgressBar: true,
-          didOpen: (toast) => {
-            toast.addEventListener('mouseenter', Swal.stopTimer);
-            toast.addEventListener('mouseleave', Swal.resumeTimer);
-          },
-        });
-        this.statusFormType = false;
-        return;
-      } else if (item.attribute_values.length === 0) {
-        Swal.fire({
-          toast: true,
-          position: 'top-end',
-          showConfirmButton: false,
-          timer: 3000,
-          title: 'Thất bại!',
-          text: 'Giá trị không được để trống!',
+          text: 'Tên Thuộc tính không được để trống!',
           icon: 'error',
           timerProgressBar: true,
           didOpen: (toast) => {
@@ -379,7 +389,7 @@ export class CreateComponent implements OnInit {
           showConfirmButton: false,
           timer: 3000,
           title: 'Thất bại!',
-          text: 'nameAttribute không được trùng!',
+          text: 'Tên thuộc tính không được trùng!',
           icon: 'error',
           timerProgressBar: true,
           didOpen: (toast) => {
@@ -412,17 +422,16 @@ export class CreateComponent implements OnInit {
     this.modalService
       .open(content, {})
       .result.then((result) => {
-      // this.dataAttributes = "Modal closed" + result
-      // console.log('Modal closed with:', result);
-      // console.log('Weight value:', this.weightValue);
-      // console.log('abc:',this.simpleItems);
-      if (result) {
-        this.renderValue();
-        this.CheckStatusform();
-      }
-    })
-      .catch((res) => {
-      });
+        // this.dataAttributes = "Modal closed" + result
+        // console.log('Modal closed with:', result);
+        // console.log('Weight value:', this.weightValue);
+        // console.log('abc:',this.simpleItems);
+        if (result) {
+          this.renderValue();
+          // this.CheckStatusform();
+        }
+      })
+      .catch((res) => {});
   }
 
   onSubmit() {
@@ -453,12 +462,15 @@ export class CreateComponent implements OnInit {
         status: Number(this.productsForm.value.status),
         attributes: this.checkAtribute(),
         variations: this.originalArray.map((item) => {
-          const newItem = {...item};
+          const newItem = { ...item };
           if (newItem.sku === null) {
             newItem.sku = this.generateRandomString(10);
           }
 
-          if (newItem.variation_name == "Mặc định" || newItem.display_name == "Mặc định") {
+          if (
+            newItem.variation_name == 'Mặc định' ||
+            newItem.display_name == 'Mặc định'
+          ) {
             newItem.variation_name = this.productsForm.value.name;
             newItem.display_name = this.productsForm.value.name;
           }
@@ -529,7 +541,14 @@ export class CreateComponent implements OnInit {
   }
 
   checkAtribute() {
-    if (this.simpleItems.every(item => item.name === '' && item.attribute_values.length === 0 && item.newItemText === '')) {
+    if (
+      this.simpleItems.every(
+        (item) =>
+          item.name === '' &&
+          item.attribute_values.length === 0 &&
+          item.newItemText === ''
+      )
+    ) {
       return null;
     } else {
       return this.simpleItems;
