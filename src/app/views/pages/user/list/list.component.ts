@@ -7,6 +7,7 @@ import {User} from "../../../../interface/user/user";
 import {DataTable} from "simple-datatables";
 import {of} from "rxjs";
 import Swal from 'sweetalert2';
+import { LocalStorageService } from 'src/app/service/localStorage/localStorage.service';
 
 @Component({
   selector: 'app-list',
@@ -23,6 +24,7 @@ export class ListComponent implements OnInit {
 
   constructor(
     private userService: UserService,
+    private _localStorage: LocalStorageService,
   ) {
   }
 
@@ -81,7 +83,19 @@ export class ListComponent implements OnInit {
 
   getUsers() {
     this.isLoading = true;
-    this.userService.GetData().subscribe({
+    let inventory = this._localStorage.get('location');
+    let dataSend = null;
+    if (inventory.name != "Tất cả") {
+      dataSend = {
+        location_id: inventory.id,
+        // trans_type: 0,
+      };
+    } else {
+      dataSend = {
+        // trans_type: 0,
+      };
+    }
+    this.userService.GetAllUser(dataSend).subscribe({
       next: (res: any) => {
         this.users = res.payload;
         // console.log(res.payload);

@@ -149,7 +149,12 @@ export class EditComponent implements OnInit {
 			<h3><strong>Th&agrave;nh tiền</strong></h3>
 			</td>
 		</tr>
-		{Listproducts}
+		<tr>
+			<td style="text-align:justify; width:40%">{Listproducts}</td>
+			<td style="text-align:justify">&nbsp;</td>
+			<td style="text-align:justify">&nbsp;</td>
+			<td style="text-align:justify">&nbsp;</td>
+		</tr>
 		<tr>
 			<td>Cộng tiền h&agrave;ng</td>
 			<td>&nbsp;</td>
@@ -234,6 +239,8 @@ export class EditComponent implements OnInit {
 <h3 style="text-align:center"><strong>CẢM ƠN QU&Yacute; KH&Aacute;CH V&Agrave; HẸN GẶP LẠI</strong></h3>
 
 <h3 style="text-align:center"><strong>Powered by NextGo</strong></h3>
+</div>
+
 </div>
         <script type="text/javascript">
             function checkAndHideId(targetId, condition, containerIds) {

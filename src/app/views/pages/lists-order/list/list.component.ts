@@ -5,6 +5,7 @@ import { DataTable } from 'simple-datatables';
 import { ItemUnitsService } from 'src/app/service/item_units/item-units.service';
 import { OrderService } from 'src/app/service/order/order.service';
 import { Order } from 'src/app/interface/order/order';
+import { LocalStorageService } from 'src/app/service/localStorage/localStorage.service';
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
@@ -15,7 +16,8 @@ export class ListComponent implements OnInit {
   isLoading = false;
   constructor(
     private _unitsService: ItemUnitsService,
-    private OrderService:OrderService
+    private OrderService:OrderService,
+    private _localStorage: LocalStorageService,
     ) {
       this.fakeData = new Observable();
   }
@@ -95,7 +97,19 @@ export class ListComponent implements OnInit {
 
   refreshData(): void{
     this.isLoading = true;
-    this.OrderService.GetData().subscribe({
+    let inventory = this._localStorage.get('location');
+    let dataSend = null;
+    if (inventory.name != "Tất cả") {
+      dataSend = {
+        location_id: inventory.id,
+        // trans_type: 0,
+      };
+    } else {
+      dataSend = {
+        // trans_type: 0,
+      };
+    }
+    this.OrderService.GetAllOrder(dataSend).subscribe({
       next: (res: any) => {
         // console.log(res.status);
         if(res.status == true){
