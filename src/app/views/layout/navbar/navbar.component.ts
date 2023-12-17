@@ -51,7 +51,7 @@ export class NavbarComponent implements OnInit {
           tatCaObject.name = "Tất cả"
           // Add 'tất cả' object to the beginning of the locations array
           this.locations = [tatCaObject, ...response.payload];
-          console.log(this.locations);
+          // console.log(this.locations);
 
         }
       });

@@ -141,6 +141,22 @@ export class ListComponent implements OnInit {
           this.inventoryStorageList = of(res.payload);
           this.isLoading = false;
           // console.log(res.payload);
+          this.inventoryStorageList.subscribe((categories) => {
+            setTimeout(() => {
+              const dataTableElement =
+                document.getElementById('dataTableExample');
+              if (dataTableElement) {
+                const dataTable = new DataTable('#dataTableExample', {
+                  searchable: true,
+                  perPage: 10,
+                });
+              dataTable.on('datatable.init', () => {
+                // dataTable.destroy();
+                this.addDeleteEventHandlers();
+              });
+              }
+            }, 0);
+          });
         }
       },
       error: (err: any) => {
