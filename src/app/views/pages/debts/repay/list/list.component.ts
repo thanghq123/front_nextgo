@@ -8,6 +8,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Debts } from 'src/app/interface/debts/debts';
 import { DebtsService } from 'src/app/service/debts/debts.service';
 import { LocationsService } from 'src/app/service/locations/locations.service';
+import { LocalStorageService } from 'src/app/service/localStorage/localStorage.service';
 
 @Component({
   selector: 'app-list',
@@ -28,7 +29,8 @@ export class ListRepayComponent implements OnInit {
   constructor(
     private _recoService: DebtsService,
     private modalService: NgbModal,
-    private _locationService: LocationsService
+    private _locationService: LocationsService,
+    private _localStorage: LocalStorageService,
 
   ) {
     this.listRepay = new Observable();
@@ -56,10 +58,11 @@ export class ListRepayComponent implements OnInit {
 
   refreshData(id: any): void{
     this.isLoading = true;
+    let inventory = this._localStorage.get('location');
     let dataSend = null;
-    if (id != null) {
+    if (inventory.name != "Tất cả") {
       dataSend = {
-        location_id: id,
+        location_id: inventory.id,
         type: 1,
       };
     } else {
@@ -90,7 +93,7 @@ export class ListRepayComponent implements OnInit {
               setTimeout(() => {
                 const db = new DataTable('#dataTableExample');
                 db.on('datatable.init', () => {
-                  db.destroy();
+                  // db.destroy();
                   // this.addDeleteEventHandlers();
               });
               }, 0)
