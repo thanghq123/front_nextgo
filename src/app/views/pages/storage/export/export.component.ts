@@ -4,6 +4,7 @@ import { Observable, of } from 'rxjs';
 import Swal from 'sweetalert2';
 import { StorageImport } from 'src/app/interface/storage/storage-import';
 import { StorageImportService } from 'src/app/service/storage/storage-import.service';
+import { LocalStorageService } from 'src/app/service/localStorage/localStorage.service';
 
 @Component({
   selector: 'app-export',
@@ -13,7 +14,10 @@ import { StorageImportService } from 'src/app/service/storage/storage-import.ser
 export class ExportComponent implements OnInit {
   isLoading = false;
   listStorageExport: Observable<any>;
-  constructor(private _storageService: StorageImportService) {
+  constructor(
+    private _storageService: StorageImportService,
+    private _localStorage: LocalStorageService
+  ) {
     this.listStorageExport = new Observable();
   }
 
@@ -142,10 +146,19 @@ export class ExportComponent implements OnInit {
 
   refreshData(): void {
     this.isLoading = true;
-    const data = {
-      trans_type: 1,
-    };
-    this._storageService.getAll(data).subscribe({
+    let inventory = this._localStorage.get('location');
+    let dataSend = null;
+    if (inventory.name != "Tất cả") {
+      dataSend = {
+        inventory_id: inventory.id,
+        trans_type: 1,
+      };
+    } else {
+      dataSend = {
+        trans_type: 1,
+      };
+    }
+    this._storageService.getAll(dataSend).subscribe({
       next: (res: any) => {
         // console.log(res.status);
         if (res.status == true) {
