@@ -51,6 +51,6 @@ export class TenantService {
       headers: new HttpHeaders()
         .set('Authorization', `${token}`)
     }
-    return this.http.post<any>(`${this.tenantApi}`, {domain_name: tenant.name}, header);
+    return this.http.post<any>(`${this.tenantApi}tenant`, {domain_name: tenant.name}, header);
   }
 }
