@@ -75,12 +75,12 @@
             <div class="card-footer">
                 <ngb-accordion [closeOthers]="true" activeIds="static-1">
                     <ngb-panel id="static-1" title="Danh sách sản phẩm">
-                        <ng-template ngbPanelContent>
-                            <div class="row">
+                        <ng-template ngbPanelContent >
+                            <div class="row" id="listproductAdd">
                                 <div class="col-4" *ngFor="let items of ListProducts">
 
                                     <div class="card d-block" *ngIf="items.length > 1; else showFirstItem">
-                                        <div class="card-body p-2 d-flex align-items-center justify-content-evenly">
+                                        <div class="card-body p-2 d-flex align-items-center justify-content-between">
                                             <div class="d-flex align-items-center">
                                                 <div class="img-products">
                                                     <img width="100%"
@@ -112,7 +112,7 @@
                                     <!-- Không biến thể -->
                                     <ng-template #showFirstItem>
                                         <div class="card d-block mt-2">
-                                            <div class="card-body p-2 d-flex align-items-center justify-content-evenly">
+                                            <div class="card-body p-2 d-flex align-items-center justify-content-between">
                                                 <div class="d-flex align-items-center">
                                                     <div class="img-products">
                                                         <img width="100%"
@@ -180,7 +180,7 @@
                                 <td class="align-middle">Thuế tổng đơn (%)</td>
                                 <td class="text-end"><input type="number"
                                         class="form-control  text-end border-0 border-bottom " value="{{ singleTax }}"
-                                        [(ngModel)]="singleTax" (input)="resultBill(tabDefault);checkDataModalTarget($event)"></td>
+                                        [(ngModel)]="singleTax" (input)="resultBill(tabDefault);checkDataModalTargetTax($event);checkDataTax($event);"></td>
                             </tr>
                             <tr>
                                 <td class="text-bold-800 align-middle">Chiết khấu ({{ modelRadioBill == 1 ? '%' : 'đ'
@@ -305,7 +305,7 @@
         <div class="mb-3">
             <label for="unit_price" class="form-label">Đơn giá</label>
             <input type="number" class="form-control" [(ngModel)]="priceFormModal" id="unit_price" autocomplete="off"
-                value="{{ currentPrice }}" (input)="checkDataModalTarget($event)" name="price">
+                value="{{ currentPrice }}" (input)="checkDataModalTarget($event);checkmaxLimit($event);" name="price">
         </div>
         <div class="mb-3 ">
             <label for="Discount" class="form-label">Chiết khấu</label>
@@ -425,14 +425,14 @@
             <label for="Discount" class="form-label">Chiết khấu</label>
             <div class="position-relative">
                 <input type="number" class="form-control p-3" id="Discount" [(ngModel)]="DiscountBill"
-                   (input)="checkDataModalTarget($event);checkDataModalDiscount($event)" placeholder="Email" value="0">
+                   (input)="checkDataModalTarget($event);checkDataModalDiscount($event)" placeholder="Chiết khấu đơn hàng" value="0">
                 <div class="btn-group position-absolute top-50 end-0 translate-middle-y" role="group"
                     aria-label="Basic radio toggle button group">
-                    <input type="radio" class="btn-check" [(ngModel)]="modelRadioBill" [value]="0" name="btnradio"
+                    <input type="radio" class="btn-check" [(ngModel)]="modelRadioBill"  [value]="0" name="btnradio"
                         id="btnradio2" autocomplete="off">
                     <label class="btn btn-outline-primary" for="btnradio2">đ</label>
 
-                    <input type="radio" class="btn-check" checked [(ngModel)]="modelRadioBill" [value]="1"
+                    <input type="radio" class="btn-check" checked [(ngModel)]="modelRadioBill"   [value]="1"
                         name="btnradio" id="btnradio3" autocomplete="off">
                     <label class="btn btn-outline-primary" for="btnradio3">%</label>
                 </div>

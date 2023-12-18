@@ -470,14 +470,18 @@ export class TabshopComponent implements OnInit {
     }
   }
 
+
   checkDataModalDiscount(e : any){
     // console.log(+e.target.value);
-    // console.log(this.modelRadioBill);
+    console.log(this.totalMoney);
     if (this.modelRadioBill === 1) {
         if(+e.target.value > 100) {
           this.DiscountBill = 100;
           e.target.value = 100;
         }
+    }else if(+e.target.value > this.totalMoney){
+      e.target.value = this.totalMoney;
+      this.DiscountBill = this.totalMoney;
     }
   }
 
@@ -545,13 +549,17 @@ export class TabshopComponent implements OnInit {
   resultTotal(e: any) {
     if (+e.target.value > 0) {
       console.log(+e.target.value);
-
-      this.updateQuantity(
-        this.listProductCart[this.tabDefault],
-        +e.target.id,
-        +e.target.value,
-        e.target.name
-      );
+      if(e.target.value.length < 11){ 
+        this.updateQuantity(
+          this.listProductCart[this.tabDefault],
+          +e.target.id,
+          +e.target.value,
+          e.target.name
+        );
+      }else {
+        e.target.value = 1000;
+      }
+      
     } else {
       console.log(+e.target.value);
       e.target.value = 0;
@@ -787,6 +795,68 @@ export class TabshopComponent implements OnInit {
     } else {
       e.target.value = this.removeLeadingZeros(e.target.value);
     }
+  }
+
+  checkmaxLimitInpput2(e: any){
+    e.target.value =  '1';
+    if(e.target.value.length > 11){
+      e.target.value =  0;
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        title: 'Thất bại!',
+        text: 'Giá tiền nhập dưới 11 số',
+        icon: 'success',
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.addEventListener('mouseenter', Swal.stopTimer);
+          toast.addEventListener('mouseleave', Swal.resumeTimer);
+        },
+      });
+    }
+  }
+
+
+  checkmaxLimit(e: any){
+    if(e.target.value.length > 11){
+      e.target.value =  1000;
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        title: 'Thất bại!',
+        text: 'Giá tiền nhập dưới 11 số',
+        icon: 'success',
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.addEventListener('mouseenter', Swal.stopTimer);
+          toast.addEventListener('mouseleave', Swal.resumeTimer);
+        },
+      });
+    }
+  }
+
+  checkDataTax(e: any){
+    if(+e.target.value > 100){
+      e.target.value = '100';
+      this.singleTax = 100;
+    }
+  }
+
+  checkDataModalTargetTax(e: any) {
+    console.log(e.target.value);
+    
+    if (this.checkValueInput(e.target.value) == false) {
+      e.target.value = '0';
+      this.singleTax = 0;
+    } else {
+      e.target.value = this.removeLeadingZeros(e.target.value);
+    }
+
+    
   }
 
   checkDataModalNumber(e: any) {
