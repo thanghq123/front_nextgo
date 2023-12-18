@@ -13,13 +13,13 @@
         <!-- <button routerLink="/storage/import/create" type="button" class="btn btn-primary">
           Thêm mới đơn nhập
         </button> -->
-        <ng-select *ngIf="!isLoading" (change)="onInventory()" [(ngModel)]="codeInventory" [items]="inventory"
+        <!-- <ng-select *ngIf="!isLoading" (change)="onInventory()" [(ngModel)]="codeInventory" [items]="inventory"
           bindLabel="name"
           bindValue="id"
           [searchable]="false"
           placeholder="Chọn kho quản lý"
           >
-        </ng-select>
+        </ng-select> -->
         <div class="table-responsive">
           <div *ngIf="isLoading" class="d-flex justify-content-center">
             <div class="spinner-border" role="status">

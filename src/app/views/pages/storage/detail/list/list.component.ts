@@ -7,6 +7,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { StorageImport } from 'src/app/interface/storage/storage-import';
 import { StorageImportService } from 'src/app/service/storage/storage-import.service';
 import { LocationsService } from 'src/app/service/locations/locations.service';
+import { LocalStorageService } from 'src/app/service/localStorage/localStorage.service';
 
 @Component({
   selector: 'app-list',
@@ -20,7 +21,8 @@ export class ListComponent implements OnInit {
   codeInventory: number;
   constructor(
     private _storageService: StorageImportService,
-    private _locationService: LocationsService
+    private _locationService: LocationsService,
+    private _localStorage: LocalStorageService,
   ) {
     this.inventoryStorageList = new Observable();
   }
@@ -36,7 +38,7 @@ export class ListComponent implements OnInit {
       },
     });
   }
-  
+
   onInventory() {
     if(this.codeInventory){
       this.refreshData(this.codeInventory);
@@ -115,10 +117,22 @@ export class ListComponent implements OnInit {
   refreshData(id: any): void {
     // console.log(id);
     this.isLoading = true;
+    // let dataSend = null;
+    // if (id != null) {
+    //   dataSend = {
+    //     inventory_id: id,
+    //   };
+    // }
+    let inventory = this._localStorage.get('location');
     let dataSend = null;
-    if (id != null) {
+    if (inventory.name != "Tất cả") {
       dataSend = {
-        inventory_id: id,
+        inventory_id: inventory.id,
+        // trans_type: 0,
+      };
+    } else {
+      dataSend = {
+        // trans_type: 0,
       };
     }
     this._storageService.getAllVariation(dataSend).subscribe({
@@ -127,6 +141,22 @@ export class ListComponent implements OnInit {
           this.inventoryStorageList = of(res.payload);
           this.isLoading = false;
           // console.log(res.payload);
+          this.inventoryStorageList.subscribe((categories) => {
+            setTimeout(() => {
+              const dataTableElement =
+                document.getElementById('dataTableExample');
+              if (dataTableElement) {
+                const dataTable = new DataTable('#dataTableExample', {
+                  searchable: true,
+                  perPage: 10,
+                });
+              dataTable.on('datatable.init', () => {
+                // dataTable.destroy();
+                this.addDeleteEventHandlers();
+              });
+              }
+            }, 0);
+          });
         }
       },
       error: (err: any) => {

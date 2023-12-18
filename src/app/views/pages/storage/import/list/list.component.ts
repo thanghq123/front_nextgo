@@ -5,6 +5,8 @@ import Swal from 'sweetalert2';
 import { StorageImport } from 'src/app/interface/storage/storage-import';
 import { StorageImportService } from 'src/app/service/storage/storage-import.service';
 import { LocationsService } from 'src/app/service/locations/locations.service';
+import { LocalStorageService } from 'src/app/service/localStorage/localStorage.service';
+
 
 @Component({
   selector: 'app-list',
@@ -20,7 +22,8 @@ export class ListComponent implements OnInit{
 
   constructor(
     private _storageService: StorageImportService,
-    private _locationService: LocationsService
+    private _locationService: LocationsService,
+    private _localStorage: LocalStorageService,
   ) {
     this.listStorageImport = new Observable();
   }
@@ -115,10 +118,11 @@ export class ListComponent implements OnInit{
 
   refreshData(id: any): void {
     this.isLoading = true;
+    let inventory = this._localStorage.get('location');
     let dataSend = null;
-    if (id != null) {
+    if (inventory.name != "Tất cả") {
       dataSend = {
-        inventory_id: id,
+        inventory_id: inventory.id,
         trans_type: 0,
       };
     } else {
