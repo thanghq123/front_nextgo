@@ -40,7 +40,7 @@ export class DebtsService extends CRUDServiceService<Debts> {
   return {
     domain_name: this.domain_name,
     ...data,
-    // location_id : this.settingService.location.id
+    location_id : this.settingService.location.id
   };
 }
 }

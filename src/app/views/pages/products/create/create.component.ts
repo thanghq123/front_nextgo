@@ -311,6 +311,9 @@ export class CreateComponent implements OnInit {
   deleteRecordAttr(index : number){
     const btnDelete = document.querySelector('.rowPropeties'+index);
     btnDelete?.remove();
+    this.originalArray.splice(index, 1);
+    console.log(this.originalArray);
+
   }
 
   removeItem(index: number, indexValue: number) {

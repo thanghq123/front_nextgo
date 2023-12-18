@@ -434,7 +434,7 @@ export class TabshopComponent implements OnInit {
       console.log(response);
       if (response.payload.length > 0) {
         this.people.forEach((person: any) => {
-          person.displayName = `${person.name} - ${person.tel}`;
+          person.displayName = `${person.name} - ${person.tel == null ? "Không có SĐT" : person.tel }`;
         });
       }
     });

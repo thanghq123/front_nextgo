@@ -129,6 +129,10 @@ export class ListComponent implements OnInit, AfterViewInit {
                 this.addDeleteEventHandlers();
               });
 
+              db.on('datatable.sort', () => {
+                this.addDeleteEventHandlers();
+              });
+
               }, 0)
             })
 
