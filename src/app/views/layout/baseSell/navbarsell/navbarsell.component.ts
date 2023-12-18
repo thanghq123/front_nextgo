@@ -227,9 +227,10 @@ export class NavbarsellComponent implements OnInit {
 
   onLogout(e: Event) {
     e.preventDefault();
-    localStorage.removeItem('isLoggedin');
 
-    if (!localStorage.getItem('isLoggedin')) {
+    this.authService.logout();
+
+    if (!this.localStorageService.get('isLoggedin')) {
       this.router.navigate(['/auth/login']);
     }
   }
