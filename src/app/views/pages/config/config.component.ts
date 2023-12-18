@@ -16,6 +16,7 @@ import {AuthService} from '../../../service/auth/auth.service';
 import {PricingService} from '../../../service/pricing/pricing.service';
 import {SubcriptionOrderService} from '../../../service/subcription-order/subcription-order.service';
 import {Pricing} from "../../../interface/pricing/pricing";
+import {TenantService} from "../../../service/tenant/tenant.service";
 
 @Component({
   selector: 'app-config',
@@ -106,18 +107,20 @@ export class ConfigComponent implements OnInit {
     private authService: AuthService,
     private pricingService: PricingService,
     private subcriptionOrderService: SubcriptionOrderService,
+    private tenantService: TenantService,
   ) {
-    this.tenant = this.settingService.tenant;
-    this.order.name = this.tenant.name;
     this.order.tel = this.authService.user.tel ?? '';
   }
 
   ngOnInit(): void {
 
+    this.getTenant()
+
     this.getConfig();
     // this.onProvinceChange();
     // this.onDistrictChange();
     this.getBusinessFields();
+
 
     this.getPricing();
 
@@ -174,6 +177,13 @@ export class ConfigComponent implements OnInit {
   getBusinessFields() {
     this.businessFieldService.getBusinessFields().subscribe((response: any) => {
       this.businessFields = response.payload;
+    });
+  }
+
+  getTenant() {
+    this.tenantService.tenant.subscribe((response: any) => {
+      this.tenant = response.payload;
+      this.order.name = this.tenant.name;
     });
   }
 
