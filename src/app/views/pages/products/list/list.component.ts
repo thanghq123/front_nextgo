@@ -60,12 +60,12 @@ export class ListComponent implements OnInit {
         this.ProductsService.delete(id).subscribe(
           (response) => {
 
-            Swal.fire('Đã xóa!', 'Danh mục của bạn đã được xóa.', 'success');
+            Swal.fire('Đã xóa!', 'Sản phẩm đã được xóa.', 'success');
             // Navigate to the list after successful deletion
             location.reload();
           },
           (error) => {
-            Swal.fire('Lỗi!', 'Có lỗi xảy ra khi xóa danh mục.', 'error');
+            Swal.fire('Lỗi!', 'Có lỗi xảy ra khi xóa!', 'error');
           }
         );
       }
@@ -107,7 +107,7 @@ export class ListComponent implements OnInit {
         // Navigate to the list after successful deletion
       },
       (error) => {
-        Swal.fire('Lỗi!', 'Có lỗi xảy ra khi xóa danh mục.', 'error');
+        Swal.fire('Lỗi!', 'Có lỗi xảy ra khi xóa', 'error');
       }
     );
 

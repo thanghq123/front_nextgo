@@ -76,7 +76,7 @@ export class ListComponent implements OnInit {
             location.reload();
           },
           (error) => {
-            Swal.fire('Lỗi!', 'Có lỗi xảy ra khi xóa danh mục.', 'error');
+            Swal.fire('Lỗi!', 'Có lỗi xảy ra khi xóa bảo hành.', 'error');
           }
         );
       }
@@ -110,7 +110,7 @@ export class ListComponent implements OnInit {
         // Navigate to the list after successful deletion
       },
       (error) => {
-        Swal.fire('Lỗi!', 'Có lỗi xảy ra khi xóa danh mục.', 'error');
+        Swal.fire('Lỗi!', 'Có lỗi xảy ra', 'error');
       }
     );
 
