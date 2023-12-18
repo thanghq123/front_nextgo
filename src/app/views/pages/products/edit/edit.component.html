@@ -190,7 +190,7 @@
                       <table class="table table-striped">
                         <thead>
                           <tr>
-                            <th *ngIf="statusRequestvaribles" >Hình ảnh</th>
+                            <!-- <th *ngIf="statusRequestvaribles" >Hình ảnh</th> -->
                             <th >Tên phiên bản</th>
                             <th>Tên hiển thị</th>
                             <th>Giá nhập</th>
@@ -205,7 +205,7 @@
                           <tbody  *ngIf="originalArray && originalArray.length > 0">
                             <tr formArrayName="rows"  *ngFor="let item of rows.controls; let i = index" >
                               <ng-container [formGroupName]="i">
-                                <td *ngIf="statusRequestvaribles">{{ rows.at(i).get('image')?.value }}</td>
+                                <!-- <td *ngIf="statusRequestvaribles">{{ rows.at(i).get('image')?.value }}</td> -->
                                 <td>{{ rows.at(i).get('variation_name')?.value }}</td>
                               <td>
                                 <input type="text" id="display_name"  formControlName="display_name"  class="form-control"></td>

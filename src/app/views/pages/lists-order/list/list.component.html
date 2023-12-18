@@ -33,7 +33,7 @@
                 <td > <a [routerLink]="['detail', value.id]"  class="text-black">{{ value.created_at  }}</a></td>
                 <td  > <a [routerLink]="['detail', value.id]"><span class="status">{{ value.status === 0 ? 'Hủy' :'Hoàn thành' }}</span></a> </td>
                 <td > <a [routerLink]="['detail', value.id]"  class="text-black">{{ value.customer_data.name }}</a></td>
-                <td > <a [routerLink]="['detail', value.id]"  class="text-black">{{ value.total_price   }}</a></td>
+                <td > <a [routerLink]="['detail', value.id]"  class="text-black">{{ value.total_price | currency:'VND'  }}</a></td>
                 <td > <a [routerLink]="['detail', value.id]" ><span class="status">
                   {{ 
                       value.payment_status == 0 

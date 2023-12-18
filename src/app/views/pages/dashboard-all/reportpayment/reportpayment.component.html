@@ -38,7 +38,7 @@
                     <tr *ngFor="let item of payments.title; let i=index">
                     <td>{{ item }}</td>
                     <td>{{ payments.count[i].total_count }}</td>
-                    <td>{{ payments.count[i].total_price }}</td>
+                    <td>{{ payments.count[i].total_price | currency:'đ' }}</td>
                     </tr>
                 </tbody>
                 </table>

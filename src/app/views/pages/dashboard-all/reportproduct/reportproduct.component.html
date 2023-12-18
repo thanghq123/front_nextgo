@@ -35,11 +35,11 @@
                 <tbody>
                     <tr *ngFor="let item of products">
                     <td>{{ item.variation_id }}</td>
-                    <td>{{ item.sku }}</td>
+                    <td>{{ item.sku == null ? 'Không có mã sku' : item.sku}}</td>
                     <td>{{ item.variation_name }}</td>
                     <td>{{ item.total_quantity }}</td>
-                    <td>{{ item.total_price_import }}</td>
-                    <td>{{ item.total_price_sell }}</td>
+                    <td>{{ item.total_price_import | currency:'đ' }}</td>
+                    <td>{{ item.total_price_sell | currency:'đ'}}</td>
                     </tr>
                     <tr>
                         <td>Tổng</td>
@@ -47,7 +47,7 @@
                         <td></td>
                         <td>{{  result.quanlityResult }}</td>
                         <td></td>
-                        <td>{{  result.quanlitySell }}</td>
+                        <td>{{  result.quanlitySell  | currency:'đ'}}</td>
                     </tr>
                 </tbody>
                 <tfoot>

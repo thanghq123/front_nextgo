@@ -94,6 +94,10 @@ export class ListComponent implements OnInit {
                   this.addDeleteEventHandlers();
                 });
 
+                dataTable.on('datatable.sort', () => {
+                  this.addDeleteEventHandlers();
+                });
+
             }, 0);
 
         });

@@ -217,7 +217,7 @@
                             <td> <input type="number" id="price_import"  formControlName="price_import"  class="form-control"></td>
                             <td><input type="number" id="price_export"  formControlName="price_export"  class="form-control"></td>
                             <td> <input type="text" id="sku"  formControlName="sku" placeholder="Nhập SKU" class="form-control"></td>
-                            <td><button class="btn btn-danger" (click)="deleteRecordAttr(i)">Xóa</button></td>
+                            <td><button class="btn btn-danger"  [disabled]="!statusVersionDefault" (click)="deleteRecordAttr(i)">Xóa</button></td>
                             <!-- <td><input type="text" id="barcode" formControlName="barcode" placeholder="Nhập BARCODE/UPC"  class="form-control"></td> -->
                           </ng-container>
                           </tr>
