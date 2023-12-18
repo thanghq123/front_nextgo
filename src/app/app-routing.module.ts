@@ -56,13 +56,6 @@ const routes: Routes = [
               ),
           },
           {
-            path: 'ListOrders',
-            loadChildren: () =>
-              import('./views/pages/lists-order/lists-order.module').then(
-                (m) => m.ListsOrderModule
-              ),
-          },
-          {
             path: 'customers',
             loadChildren: () =>
               import('./views/pages/customers/customers.module').then(
@@ -117,6 +110,13 @@ const routes: Routes = [
         path: '',
         canActivate: [AdminGuard],
         children: [
+          {
+            path: 'ListOrders',
+            loadChildren: () =>
+              import('./views/pages/lists-order/lists-order.module').then(
+                (m) => m.ListsOrderModule
+              ),
+          },
           {
             path: 'storage/import',
             loadChildren: () =>
