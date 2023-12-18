@@ -57,7 +57,7 @@ export class CreateComponent implements OnInit {
   productsForm = new FormGroup({
     name: new FormControl('', Validators.required),
     weight: new FormControl(0),
-    description: new FormControl(''),
+    description: new FormControl('', [Validators.maxLength(100)]),
     manage_type: new FormControl(0),
     brand_id: new FormControl(0),
     warranty_id: new FormControl(0),
@@ -145,6 +145,49 @@ export class CreateComponent implements OnInit {
       attribute_values: [],
       newItemText: '',
     });
+    this.statusFormType = false;
+  }
+
+  validateNuberVersion(e : any){
+    console.log(e.target.value);
+    if(!this.isStringValid(e.target.value) ||+e.target.value < 0){
+      e.target.value = 0;
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        title: 'Thất bại!',
+        text: 'Không nhập giá trị nhỏ hơn 0 hoặc kí tự đặc biệt',
+        icon: 'error',
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.addEventListener('mouseenter', Swal.stopTimer);
+          toast.addEventListener('mouseleave', Swal.resumeTimer);
+        },
+      });
+    }else if(+e.target.value > 0) {
+      e.target.value =  this.removeLeadingZeroes(e.target.value);
+    } 
+
+  }
+
+  removeLeadingZeroes(str :  string) {
+    if (str.length > 1 && str[0] === '0') {
+      return str.slice(1);
+    }
+    return str;
+  }
+
+  isStringValid(value: string): boolean {
+    // Kiểm tra xem chuỗi có trống không
+    if (!value.trim()) {
+      return false;
+    }
+  
+    // Kiểm tra xem chuỗi có chứa kí tự đặc biệt không
+    const regex = /^[a-zA-Z0-9\s]+$/; // Chấp nhận chữ cái, số và dấu cách
+    return regex.test(value);
   }
 
   renderVersion({
@@ -262,6 +305,11 @@ export class CreateComponent implements OnInit {
     }
   }
 
+
+
+
+  
+
   addItem(index: number) {
     // this.CheckStatusform();
     if (
@@ -290,11 +338,29 @@ export class CreateComponent implements OnInit {
       } else {
         this.CheckStatusform();
         console.log(this.simpleItems[index].newItemText);
-        this.simpleItems[index].attribute_values.push({
-          value: this.simpleItems[index].newItemText,
-        });
-        this.simpleItems[index].newItemText = '';
-        this.statusVersionDefault = true;
+        if(this.simpleItems[index].newItemText.length < 30){
+          this.simpleItems[index].attribute_values.push({
+            value: this.simpleItems[index].newItemText,
+          });
+          this.simpleItems[index].newItemText = '';
+          this.statusVersionDefault = true;
+        }else {
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            title: 'Thất bại!',
+            text: 'Vượt quá giới hạn cho phép!',
+            icon: 'error',
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer);
+              toast.addEventListener('mouseleave', Swal.resumeTimer);
+            },
+          });
+        }
+     
       }
     } else {
       console.log(this.simpleItems[index].newItemText.trim());
@@ -311,7 +377,21 @@ export class CreateComponent implements OnInit {
   deleteRecordAttr(index : number){
     const btnDelete = document.querySelector('.rowPropeties'+index);
     btnDelete?.remove();
+    this.originalArray.splice(index, 1);
+    console.log(this.originalArray);
+
   }
+  // limitDescription(event: any): void {
+  //   const maxLength = 100; // Số ký tự tối đa cho phép
+  //   const inputText = event.target.value;
+  //   console.log(event.target.value);
+  //   if (inputText.length > maxLength) {
+  //     // Giới hạn số ký tự
+
+      
+  //     this.productsForm.value.description = inputText.substring(0, maxLength);
+  //   }
+  // }
 
   removeItem(index: number, indexValue: number) {
     // console.log(this.simpleItems);

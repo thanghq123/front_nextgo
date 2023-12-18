@@ -54,6 +54,10 @@
             <div class="mb-3">
               <label for="description" class="form-label">Mô tả</label>
               <textarea class="form-control" id="description" formControlName="description"  rows="5"></textarea>
+              <div *ngIf="productsForm.controls.description.hasError('maxlength') && productsForm.controls.description.touched"
+                class="alert alert-danger mt-2">
+                Khí tự chỉ được nhập tối đa 200 kí tự
+              </div>
             </div>
 
           </div>
@@ -190,7 +194,7 @@
                       <table class="table table-striped">
                         <thead>
                           <tr>
-                            <th *ngIf="statusRequestvaribles" >Hình ảnh</th>
+                            <!-- <th *ngIf="statusRequestvaribles" >Hình ảnh</th> -->
                             <th >Tên phiên bản</th>
                             <th>Tên hiển thị</th>
                             <th>Giá nhập</th>
@@ -205,12 +209,12 @@
                           <tbody  *ngIf="originalArray && originalArray.length > 0">
                             <tr formArrayName="rows"  *ngFor="let item of rows.controls; let i = index" >
                               <ng-container [formGroupName]="i">
-                                <td *ngIf="statusRequestvaribles">{{ rows.at(i).get('image')?.value }}</td>
+                                <!-- <td *ngIf="statusRequestvaribles">{{ rows.at(i).get('image')?.value }}</td> -->
                                 <td>{{ rows.at(i).get('variation_name')?.value }}</td>
                               <td>
                                 <input type="text" id="display_name"  formControlName="display_name"  class="form-control"></td>
-                              <td> <input type="number" id="price_import"  formControlName="price_import"  class="form-control"></td>
-                              <td><input type="number" id="price_export"  formControlName="price_export"  class="form-control"></td>
+                              <td> <input type="number" id="price_import"  formControlName="price_import" (input)="validateNuberVersion($event)" class="form-control"></td>
+                              <td><input type="number" id="price_export"  formControlName="price_export" (input)="validateNuberVersion($event)" class="form-control"></td>
                               <td> <input type="text" id="sku"  formControlName="sku" placeholder="Nhập SKU" class="form-control"></td>
                               <!-- <td><input type="text" id="barcode" formControlName="barcode" placeholder="Nhập BARCODE/UPC"  class="form-control"></td> -->
                             </ng-container>

@@ -100,6 +100,10 @@ export class ListComponent implements OnInit {
                 dataTable.on('datatable.page', () => {
                   this.addDeleteEventHandlers();
                 });
+
+                dataTable.on('datatable.sort', () => {
+                  this.addDeleteEventHandlers();
+                });
             }, 0);
         });
         }

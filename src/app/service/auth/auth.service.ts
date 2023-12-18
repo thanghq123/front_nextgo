@@ -119,6 +119,9 @@ export class AuthService {
     this.localStorageService.remove('tenant');
 
     this.localStorageService.remove('menus');
+
+    this.localStorageService.remove('tabOrder');
+
   }
 
   get role(): string {

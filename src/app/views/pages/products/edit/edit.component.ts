@@ -62,7 +62,7 @@ export class EditComponent implements OnInit {
   productsForm = new FormGroup({
     name: new FormControl('', Validators.required),
     weight: new FormControl(0),
-    description: new FormControl(''),
+    description: new FormControl('', Validators.maxLength(200)),
     manage_type: new FormControl(0),
     brand_id: new FormControl(0),
     warranty_id: new FormControl(0),
@@ -90,6 +90,7 @@ export class EditComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  
     if (this.countCreate == 0) {
       this.simpleItems.push({
         name: '',
@@ -161,6 +162,48 @@ export class EditComponent implements OnInit {
     });
   }
 
+
+  validateNuberVersion(e : any){
+    console.log(e.target.value);
+    if(!this.isStringValid(e.target.value) ||+e.target.value < 0){
+      e.target.value = 0;
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        title: 'Thất bại!',
+        text: 'Không nhập giá trị nhỏ hơn 0 hoặc kí tự đặc biệt',
+        icon: 'error',
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.addEventListener('mouseenter', Swal.stopTimer);
+          toast.addEventListener('mouseleave', Swal.resumeTimer);
+        },
+      });
+    }else if(+e.target.value > 0) {
+      e.target.value =  this.removeLeadingZeroes(e.target.value);
+    } 
+
+  }
+
+  removeLeadingZeroes(str :  string) {
+    if (str.length > 1 && str[0] === '0') {
+      return str.slice(1);
+    }
+    return str;
+  }
+
+  isStringValid(value: string): boolean {
+    // Kiểm tra xem chuỗi có trống không
+    if (!value.trim()) {
+      return false;
+    }
+  
+    // Kiểm tra xem chuỗi có chứa kí tự đặc biệt không
+    const regex = /^[a-zA-Z0-9\s]+$/; // Chấp nhận chữ cái, số và dấu cách
+    return regex.test(value);
+  }
 
   createItemFormGroup(item: any): FormGroup {
     let formGroup = this.fb.group({
@@ -479,6 +522,7 @@ export class EditComponent implements OnInit {
           },
         });
       } else {
+        if(this.simpleItems[index].newItemText.length < 30){
         this.simpleItems[index].attribute_values.push({
           value: this.simpleItems[index].newItemText,
         });
@@ -486,6 +530,22 @@ export class EditComponent implements OnInit {
         this.statusVersionDefault = true;
         console.log(this.simpleItems);
         this.CheckStatusform();
+      }else {
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 3000,
+          title: 'Thất bại!',
+          text: 'Vượt quá giới hạn cho phép!',
+          icon: 'error',
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer);
+            toast.addEventListener('mouseleave', Swal.resumeTimer);
+          },
+        });
+      }
       }
     }
   }

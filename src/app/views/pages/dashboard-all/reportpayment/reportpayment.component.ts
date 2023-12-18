@@ -111,11 +111,30 @@ export class ReportpaymentComponent implements OnInit {
         );
       },
     });
-    // this.chart.destroy();
+    this.chart.destroy();
     console.log(this.start_time,this.end_time);
     this.ReportService.payment('fromTo',this.start_time,this.end_time).subscribe((response: any) => {
       this.payments = response.payload;
-  
+      this.chart = new Chart('canvas', {
+        type: 'bar',
+        data: {
+          labels: response.payload.title,
+          datasets: [
+            {
+              label: 'Doanh thu',
+              data: response.payload.data,
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+            },
+          },
+        },
+      });
     });
   }
   

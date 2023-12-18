@@ -36,10 +36,10 @@
                     <tr *ngFor="let item of customer">
                     <td>{{ item.customer_id }}</td>
                     <td>{{ item.name }}</td>
-                    <td>{{ item.tel }}</td>
+                    <td>{{ item.tel == null ? 'không có sdt' : item.tel }}</td>
                     <td>{{ item.total_bill }}</td>
                     <td>{{ item.total_product }}</td>
-                    <td>{{ item.total_price }}</td>
+                    <td>{{ item.total_price | currency :'đ' }}</td>
                     </tr>
                     <tr>
                         <td>Tổng</td>
@@ -47,7 +47,7 @@
                         <td></td>
                         <td></td>
                         <td>{{  result.quanlityResult }}</td>
-                        <td>{{  result.quanlitySell }}</td>
+                        <td>{{  result.quanlitySell | currency:'đ' }}</td>
                     </tr>
                 </tbody>
                 <tfoot>

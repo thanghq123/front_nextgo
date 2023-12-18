@@ -24,7 +24,7 @@
           </div>
           <div class="mb-3">
             <label for="nameProducts" class="form-label">Tên sản phẩm</label>
-            <input type="text" class="form-control" id="nameProducts" formControlName="name" autocomplete="off"
+            <input type="text" class="form-control" id="nameProducts" formControlName="name" 
               placeholder="Nhập tên sản phẩm">
             <div *ngIf="productsForm.controls.name.invalid && productsForm.controls.name.touched"
               class="alert alert-danger mt-2">
@@ -53,7 +53,7 @@
 
           <div class="mb-3">
             <label for="description" class="form-label">Mô tả</label>
-            <textarea class="form-control" id="description" formControlName="description"  rows="5"></textarea>
+            <textarea class="form-control" id="description" formControlName="description" rows="5"></textarea>
           </div>
 
         </div>
@@ -214,10 +214,10 @@
                               <td>{{ rows.at(i).get('variation_name')?.value }}</td>
                             <td *ngIf="statusVersionDefault">
                               <input type="text" id="display_name"  formControlName="display_name"  class="form-control"></td>
-                            <td> <input type="number" id="price_import"  formControlName="price_import"  class="form-control"></td>
-                            <td><input type="number" id="price_export"  formControlName="price_export"  class="form-control"></td>
+                            <td> <input type="number" id="price_import"  formControlName="price_import" (input)="validateNuberVersion($event)"  class="form-control"></td>
+                            <td><input type="number" id="price_export"  formControlName="price_export" (input)="validateNuberVersion($event)"  class="form-control"></td>
                             <td> <input type="text" id="sku"  formControlName="sku" placeholder="Nhập SKU" class="form-control"></td>
-                            <td><button class="btn btn-danger" (click)="deleteRecordAttr(i)">Xóa</button></td>
+                            <td><button class="btn btn-danger"  [disabled]="!statusVersionDefault" (click)="deleteRecordAttr(i)">Xóa</button></td>
                             <!-- <td><input type="text" id="barcode" formControlName="barcode" placeholder="Nhập BARCODE/UPC"  class="form-control"></td> -->
                           </ng-container>
                           </tr>
@@ -263,7 +263,7 @@
       <div class="col-12 d-flex mt-4">
         <label class="form-label" style="width: 20%;">Giá trị</label>
         <div class="w-100">
-          <input type="text" class="form-control"  [(ngModel)]="simpleItems[indexItem].newItemText" (keyup.enter)="addItem(indexItem)"  placeholder="Nhập giá trị và ấn enter">
+          <input type="text" class="form-control"  [(ngModel)]="simpleItems[indexItem].newItemText" (keyup.enter)="addItem(indexItem)"   placeholder="Nhập giá trị và ấn enter">
         <ul class="list-group mt-2" [sortablejs]="simpleItems[indexItem].attribute_values">
             <li class="list-group-item d-flex mt-1  align-items-center justify-content-between p-1" *ngFor="let item of simpleItems[indexItem].attribute_values let i = index">
               <div>

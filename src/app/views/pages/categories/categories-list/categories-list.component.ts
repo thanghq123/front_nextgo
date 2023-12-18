@@ -91,6 +91,10 @@ export class CategoriesListComponent implements OnInit, AfterViewInit {
               dataTable.on('datatable.page', () => {
                 this.addDeleteEventHandlers();
               });
+
+              dataTable.on('datatable.sort', () => {
+                this.addDeleteEventHandlers();
+              });
             }, 0);
           });
         }

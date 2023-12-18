@@ -19,9 +19,9 @@
                     <table id="dataTableExamples"  class="table">
                         <thead>
                             <tr>
-                                <th data-sortable="false">
+                                <!-- <th data-sortable="false">
                                     <input type="checkbox" class="form-check-input" id="checkChecked">
-                                  </th>
+                                  </th> -->
                                 <th>Mã sản phẩm</th>
                                 <!-- <th>Hình ảnh</th> -->
                                 <th>Sản phẩm</th>
@@ -33,9 +33,9 @@
                         </thead>
                         <tbody>
                             <tr *ngFor="let cate of ListsProducts | async">
-                                <td>
+                                <!-- <td>
                                     <input type="checkbox" class="form-check-input" id="checkChecked">
-                                  </td>
+                                  </td> -->
                                 <td>{{ cate.variations[0].sku }}</td>
                                 <!-- <td>{{ cate.image == null  ? "Chưa có ảnh" : cate.image }}</td> -->
                                 <td>{{ cate.name }}</td>
