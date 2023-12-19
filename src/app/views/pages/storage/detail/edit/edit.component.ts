@@ -20,7 +20,7 @@ export class EditComponent implements OnInit {
     product_name: new FormControl(''),
     variation_name: new FormControl(''),
     quantity: new FormControl(''),
-    adjust: new FormControl('', Validators.required),
+    adjust: new FormControl('', [Validators.required, Validators.pattern('[0-9]{1,11}')]),
     result: new FormControl(''),
   });
   adjust: any;

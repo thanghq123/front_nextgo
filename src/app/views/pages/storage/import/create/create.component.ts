@@ -196,6 +196,10 @@ export class CreateComponent implements OnInit {
           flag = false;
           this.showNextMessage(['Giá nhập hoặc số lượng phải lớn hơn 0'])
         }
+        if(value.quantity >= 999999999){
+          flag = false;
+          this.showNextMessage(['Số lượng nhập quá lớn!'])
+        }
 
       });
       // console.log(flag);
@@ -222,9 +226,7 @@ export class CreateComponent implements OnInit {
                 `../storage/import/detail/${response.payload}`,
               ]);
             } else {
-              if (submitBtn) {
-                submitBtn.removeAttribute('disabled');
-              }
+
               // console.log(response);
               const errorMessages = [];
               for (const key in response.meta.errors) {
@@ -234,6 +236,9 @@ export class CreateComponent implements OnInit {
                 }
               }
               this.showNextMessage(errorMessages);
+              if (submitBtn) {
+                submitBtn.removeAttribute('disabled');
+              }
             }
           },
           (error) => {
