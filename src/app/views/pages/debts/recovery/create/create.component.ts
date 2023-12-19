@@ -25,7 +25,7 @@ export class CreateRecoveryComponent implements OnInit {
 
   recoveryForm = new FormGroup({
     name: new FormControl('', Validators.required),
-    principal: new FormControl('', Validators.required),
+    principal: new FormControl('', [Validators.required, Validators.pattern('[0-9]{1,11}')]),
     debit_at: new FormControl('', Validators.required),
     due_at: new FormControl('', Validators.required),
     partner: new FormControl(''),
