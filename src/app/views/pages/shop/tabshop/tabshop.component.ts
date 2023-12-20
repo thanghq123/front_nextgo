@@ -1540,7 +1540,7 @@ export class TabshopComponent implements OnInit {
                   showConfirmButton: false,
                   timer: 3000,
                   title: 'Thất Bại!',
-                  text: 'Vui lòng tạo mới khách hàng!!',
+                  text: 'Khách vãng lai không thể ghi nợ!!',
                   icon: 'error',
                   timerProgressBar: true,
                   didOpen: (toast) => {
