@@ -122,6 +122,16 @@ export class AuthService {
 
     this.localStorageService.remove('tabOrder');
 
+    this.localStorageService.remove('TabModal');
+
+    this.localStorageService.remove('dataBatches');
+
+    this.localStorageService.remove('TabCurrentIndex');
+
+    this.localStorageService.remove('dataPayment');
+
+    this.localStorageService.remove('dataBill');
+
   }
 
   get role(): string {

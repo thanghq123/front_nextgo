@@ -43,7 +43,7 @@ export class ConfigComponent implements OnInit {
   types = [
     {
       value: 0,
-      name: 'Nâng cấp',
+      name: 'Thay đổi gói',
     },
     {
       value: 1,
@@ -190,13 +190,14 @@ export class ConfigComponent implements OnInit {
   getPricing() {
     this.pricingService.list.subscribe((response: any) => {
       this.pricings = response.payload;
+      this.pricings.shift();
     });
   }
 
   getCurrentPricing() {
     this.pricingService.get().subscribe((response: any) => {
       this.pricing = response.payload;
-      this.order.pricing_id = this.pricing.id;
+      this.order.pricing_id = this.pricing.id == 1 ? "" : this.pricing.id;
     });
   }
 
