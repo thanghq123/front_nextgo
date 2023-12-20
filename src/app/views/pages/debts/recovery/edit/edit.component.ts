@@ -26,7 +26,7 @@ import { LocalStorageService } from 'src/app/service/localStorage/localStorage.s
 export class EditRecoveryComponent implements OnInit {
   recoveryFormEdit = new FormGroup({
     name: new FormControl('', Validators.required),
-    amount_debt: new FormControl('', Validators.required),
+    amount_debt: new FormControl('', [Validators.required,Validators.pattern('[0-9]{1,11}')]),
     debit_at: new FormControl('', Validators.required),
     due_at: new FormControl('', Validators.required),
     note: new FormControl(''),

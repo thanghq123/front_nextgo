@@ -2,11 +2,11 @@
   [formGroup]="configForm"
   (ngSubmit)="onSubmit()"
 >
-<div *ngIf="isLoading" class="d-flex justify-content-center">
-  <div class="spinner-border" role="status">
-    <span class="visually-hidden">Loading...</span>
+  <div *ngIf="isLoading" class="d-flex justify-content-center">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
   </div>
-</div>
   <div *ngIf="!isLoading" class="row">
     <div class="col-12">
       <div class="row">
@@ -283,39 +283,45 @@
       <div class="card">
         <div class="card-body pb-1">
           <div class="row">
-            <div class="col-lg-12 row">
+            <div class="col-lg-12 row align-items-center">
               <label class="col-form-label col-lg-3 font-size-14 font-weight-bold">Gói dịch vụ</label>
-              <div class="col-lg-9">
-                <span class="d-inline-block" style="min-width: 200px">: {{ pricing.name }}</span>
+              <div class="col-lg-9 d-flex align-items-center">
+                <span class="d-inline-block me-3">: {{ pricing?.name }}</span>
+                <span (click)="openBasicModal(pricingInfo)" class="cursor-pointer" title="Thông tin gói dịch vụ">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                       class="feather feather-info">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                  </svg>
+                </span>
                 <!-- <button type="button" class="btn btn-secondary ms-5">Thông tin gói</button> -->
               </div>
             </div>
           </div>
           <div class="row">
-            <div class="col-lg-12 row">
+            <div class="col-lg-12 row align-items-center">
               <label class="col-form-label col-lg-3 font-size-14 font-weight-bold">Địa chỉ đăng nhập</label>
-              <div class="col-lg-9"><span class="d-inline-block"
-                                          style="min-width: 200px">: https://nextgo.vn/s/{{ tenant.name }}</span></div>
+              <div class="col-lg-9"><span class="d-inline-block">: https://nextgo.vn/s/{{ tenant.name }}</span></div>
             </div>
           </div>
           <div class="row">
-            <div class="col-lg-12 row">
+            <div class="col-lg-12 row align-items-center">
               <label class="col-form-label col-lg-3 font-size-14 font-weight-bold">Ngày tạo</label>
-              <div class="col-lg-9"><span class="d-inline-block"
-                                          style="min-width: 200px">: {{ handleDate(tenant.created_at) }} </span></div>
+              <div class="col-lg-9"><span class="d-inline-block">: {{ handleDate(tenant.created_at) }} </span></div>
             </div>
           </div>
           <div class="row">
-            <div class="col-lg-12 row">
+            <div class="col-lg-12 row align-items-center">
               <label class="col-form-label col-lg-3 font-size-14 font-weight-bold">Ngày hết hạn</label>
-              <div class="col-lg-9"><span class="d-inline-block"
-                                          style="min-width: 200px">: {{ handleDate(tenant.due_at) }} </span></div>
+              <div class="col-lg-9"><span class="d-inline-block">: {{ handleDate(tenant.due_at) }} </span></div>
             </div>
           </div>
         </div>
         <div class="card-footer">
           <div class="px-1">
-            <button type="button" class="btn btn-success" (click)="openBasicModal(basicModal)"> Gia hạn/Nâng cấp
+            <button type="button" class="btn btn-success" (click)="openBasicModal(basicModal)"> Gia hạn/Thay đổi gói
             </button>
           </div>
         </div>
@@ -327,7 +333,8 @@
       <div class="footer-custom">
         <div class="d-flex align-items-center justify-content-end px-1">
           <!--  -->
-          <button type="submit" id="submitBtn" class="btn btn-primary" [disabled]="configForm.invalid" > Cập nhật</button>
+          <button type="submit" id="submitBtn" class="btn btn-primary" [disabled]="configForm.invalid"> Cập nhật
+          </button>
         </div>
       </div>
     </div>
@@ -335,7 +342,7 @@
 </form>
 <ng-template #basicModal let-modal>
   <div class="modal-header">
-    <h5 class="modal-title" id="exampleModalLabel">Gửi yêu cầu gia hạn hoặc nâng cấp gói</h5>
+    <h5 class="modal-title" id="exampleModalLabel">Gửi yêu cầu gia hạn hoặc thay đổi gói gói</h5>
     <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
   </div>
   <div class="modal-body">
@@ -357,7 +364,14 @@
       <div class="col-md-12">
         <label class="form-label">Gói dịch vụ: <span class="text-danger">(*)</span></label>
         <ng-select [searchable]="true" placeholder="Gói dịch vụ" [(ngModel)]="order.pricing_id">
-          <ng-option *ngFor="let item of pricings" [value]="item.id">{{item.name}}</ng-option>
+          <ng-option value="">Chọn gói dịch vụ</ng-option>
+          <ng-option
+            *ngFor="let item of pricings"
+            [value]="item.id"
+            [style.display]="item.id == 1 ? 'none' : 'block'"
+          >
+            {{item.name}}
+          </ng-option>
         </ng-select>
       </div>
     </div>
@@ -373,5 +387,38 @@
   <div class="modal-footer">
     <button type="button" class="btn btn-secondary" (click)="modal.close('by: close button')">Đóng</button>
     <button type="button" class="btn btn-primary" (click)="modal.close('by: save button')">Hoàn tất</button>
+  </div>
+</ng-template>
+<ng-template #pricingInfo let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="pricingInfo">Thông tin gói dịch vụ: {{ pricing.name }}</h5>
+    <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-lg-12 row align-items-center">
+        <label class="col-form-label col-lg-6 font-size-14 font-weight-bold">Giá</label>
+        <div class="col-lg-6"><span
+          class="d-inline-block">: {{ pricing.price | currency:'VNĐ ':'symbol':'1.0-0' }}</span></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12 row align-items-center">
+        <label class="col-form-label col-lg-6 font-size-14 font-weight-bold">Số chi nhánh tối đa</label>
+        <div class="col-lg-6"><span class="d-inline-block">: {{ pricing.max_locations }} chi nhánh</span></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12 row align-items-center">
+        <label class="col-form-label col-lg-6 font-size-14 font-weight-bold">Số tài khoản tối đa</label>
+        <div class="col-lg-6"><span class="d-inline-block">: {{ pricing.max_users }} tài khoản</span></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12 row align-items-center">
+        <label class="col-form-label col-lg-6 font-size-14 font-weight-bold">Số ngày sử dụng</label>
+        <div class="col-lg-6"><span class="d-inline-block">: {{ pricing.expiry_day }} ngày</span></div>
+      </div>
+    </div>
   </div>
 </ng-template>

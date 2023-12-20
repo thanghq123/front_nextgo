@@ -16,6 +16,7 @@ import {AuthService} from '../../../service/auth/auth.service';
 import {PricingService} from '../../../service/pricing/pricing.service';
 import {SubcriptionOrderService} from '../../../service/subcription-order/subcription-order.service';
 import {Pricing} from "../../../interface/pricing/pricing";
+import {TenantService} from "../../../service/tenant/tenant.service";
 
 @Component({
   selector: 'app-config',
@@ -42,7 +43,7 @@ export class ConfigComponent implements OnInit {
   types = [
     {
       value: 0,
-      name: 'Nâng cấp',
+      name: 'Thay đổi gói',
     },
     {
       value: 1,
@@ -106,18 +107,20 @@ export class ConfigComponent implements OnInit {
     private authService: AuthService,
     private pricingService: PricingService,
     private subcriptionOrderService: SubcriptionOrderService,
+    private tenantService: TenantService,
   ) {
-    this.tenant = this.settingService.tenant;
-    this.order.name = this.tenant.name;
     this.order.tel = this.authService.user.tel ?? '';
   }
 
   ngOnInit(): void {
 
+    this.getTenant()
+
     this.getConfig();
     // this.onProvinceChange();
     // this.onDistrictChange();
     this.getBusinessFields();
+
 
     this.getPricing();
 
@@ -177,16 +180,24 @@ export class ConfigComponent implements OnInit {
     });
   }
 
+  getTenant() {
+    this.tenantService.tenant.subscribe((response: any) => {
+      this.tenant = response.payload;
+      this.order.name = this.tenant.name;
+    });
+  }
+
   getPricing() {
     this.pricingService.list.subscribe((response: any) => {
       this.pricings = response.payload;
+      this.pricings.shift();
     });
   }
 
   getCurrentPricing() {
     this.pricingService.get().subscribe((response: any) => {
       this.pricing = response.payload;
-      this.order.pricing_id = this.pricing.id;
+      this.order.pricing_id = this.pricing.id == 1 ? "" : this.pricing.id;
     });
   }
 
