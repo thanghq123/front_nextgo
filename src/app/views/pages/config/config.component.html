@@ -321,7 +321,7 @@
         </div>
         <div class="card-footer">
           <div class="px-1">
-            <button type="button" class="btn btn-success" (click)="openBasicModal(basicModal)"> Gia hạn/Nâng cấp
+            <button type="button" class="btn btn-success" (click)="openBasicModal(basicModal)"> Gia hạn/Thay đổi gói
             </button>
           </div>
         </div>
@@ -342,7 +342,7 @@
 </form>
 <ng-template #basicModal let-modal>
   <div class="modal-header">
-    <h5 class="modal-title" id="exampleModalLabel">Gửi yêu cầu gia hạn hoặc nâng cấp gói</h5>
+    <h5 class="modal-title" id="exampleModalLabel">Gửi yêu cầu gia hạn hoặc thay đổi gói gói</h5>
     <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
   </div>
   <div class="modal-body">
@@ -364,7 +364,14 @@
       <div class="col-md-12">
         <label class="form-label">Gói dịch vụ: <span class="text-danger">(*)</span></label>
         <ng-select [searchable]="true" placeholder="Gói dịch vụ" [(ngModel)]="order.pricing_id">
-          <ng-option *ngFor="let item of pricings" [value]="item.id">{{item.name}}</ng-option>
+          <ng-option value="">Chọn gói dịch vụ</ng-option>
+          <ng-option
+            *ngFor="let item of pricings"
+            [value]="item.id"
+            [style.display]="item.id == 1 ? 'none' : 'block'"
+          >
+            {{item.name}}
+          </ng-option>
         </ng-select>
       </div>
     </div>
@@ -391,7 +398,8 @@
     <div class="row">
       <div class="col-lg-12 row align-items-center">
         <label class="col-form-label col-lg-6 font-size-14 font-weight-bold">Giá</label>
-        <div class="col-lg-6"><span class="d-inline-block">: {{ pricing.price | currency:'VNĐ ':'symbol':'1.0-0' }}</span></div>
+        <div class="col-lg-6"><span
+          class="d-inline-block">: {{ pricing.price | currency:'VNĐ ':'symbol':'1.0-0' }}</span></div>
       </div>
     </div>
     <div class="row">
