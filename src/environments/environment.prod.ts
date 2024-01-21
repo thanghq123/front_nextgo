@@ -1,4 +1,4 @@
-const urlRoot = 'https://mrbinh.link';
+const urlRoot = 'https://admin-nextgo.nguyenduyquangvinh.me';
 export const environment = {
   production: true,
 apiTennatv1 : `${urlRoot}/tenant/api/v1/`,
